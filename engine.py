@@ -7,7 +7,7 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (全功能完整整合版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (验收通过版)...")
 
 # === 1. 依赖检查 ===
 try:
@@ -32,7 +32,6 @@ except:
 
 # === 3. 全局配置 ===
 DATA_FILE = "data.js"
-# 模拟浏览器，防止被拦截
 HEADERS = { 
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -63,7 +62,6 @@ class DataEngine:
             try: return translator.translate(text[:500])
             except: pass
         
-        # 兜底词典
         repls = {
             "AI ": "AI ", "Generator": "生成器", "Assistant": "助手", "Video": "视频",
             "Image": "图像", "Text": "文本", "Tool": "工具", "Launch": "发布", 
@@ -74,16 +72,13 @@ class DataEngine:
             text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 时间解析工具 (获取真实发布时间) ===
+    # === 时间解析工具 ===
     def parse_ph_time(self, iso_str):
-        """解析 Product Hunt 的 ISO 时间"""
         try:
             if not iso_str: return get_beijing_now().strftime("%m-%d %H:%M")
-            # 截取前19位 YYYY-MM-DDTHH:MM:SS
             dt = datetime.datetime.strptime(iso_str[:19], "%Y-%m-%dT%H:%M:%S")
-            # 简单处理：视为 UTC，加8小时转北京时间
-            # 如果原数据带时区，这里可能有偏差，但在可接受范围内
-            if "-08:00" in iso_str or "-07:00" in iso_str: # 如果是美西时间
+            # 简单时区处理
+            if "-08:00" in iso_str or "-07:00" in iso_str:
                  cst_time = dt + datetime.timedelta(hours=16)
             else:
                 cst_time = dt + datetime.timedelta(hours=8)
@@ -92,7 +87,6 @@ class DataEngine:
             return get_beijing_now().strftime("%m-%d %H:%M")
 
     def parse_hn_time(self, unix_ts):
-        """解析 Hacker News 的 Unix 时间戳"""
         try:
             if not unix_ts: return get_beijing_now().strftime("%m-%d %H:%M")
             dt = datetime.datetime.utcfromtimestamp(int(unix_ts))
@@ -103,7 +97,7 @@ class DataEngine:
 
     # === 核心 1：情报抓取 ===
     def run_spider(self):
-        print("   └─ 正在挖掘软件情报 (解析真实时间)...")
+        print("   └─ 正在挖掘软件情报...")
         self.news = []
         self.seen_titles.clear()
         
@@ -113,16 +107,15 @@ class DataEngine:
             try:
                 root = ET.fromstring(r.content)
                 ns = {'atom': 'http://www.w3.org/2005/Atom'}
-                # 兼容查找
+                # 兼容不同格式的 XML
                 entries = root.findall('atom:entry', ns) or root.findall('{http://www.w3.org/2005/Atom}entry')
-                
                 for entry in entries[:30]:
                     try:
                         title_node = entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')
                         raw_title = title_node.text
                         if raw_title in self.seen_titles: continue
                         
-                        # 获取真实时间
+                        # 抓取真实时间
                         pub_node = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
                         updated_node = entry.find('atom:updated', ns) or entry.find('{http://www.w3.org/2005/Atom}updated')
                         raw_time = pub_node.text if pub_node is not None else (updated_node.text if updated_node is not None else "")
@@ -132,12 +125,10 @@ class DataEngine:
                         summary_node = entry.find('atom:summary', ns) or entry.find('{http://www.w3.org/2005/Atom}summary')
 
                         self.news.append({
-                            "id": str(len(self.news)), 
-                            "src": "Product Hunt", "type": "APP",
+                            "id": str(len(self.news)), "src": "Product Hunt", "type": "APP",
                             "title": self.smart_trans(raw_title),
                             "desc": self.smart_trans(summary_node.text if summary_node is not None else ""),
-                            "url": link_node.attrib['href'],
-                            "time": real_time # 真实时间
+                            "url": link_node.attrib['href'], "time": real_time
                         })
                         self.seen_titles.add(raw_title)
                         print("📱", end="", flush=True)
@@ -157,30 +148,24 @@ class DataEngine:
                     t = item.get('title', '')
                     if t in self.seen_titles: continue
                     if any(k in t for k in keys):
-                        # 获取真实时间
                         raw_time = item.get('time', 0)
                         real_time = self.parse_hn_time(raw_time)
-
                         self.news.append({
-                            "id": str(len(self.news)),
-                            "src": "Hacker News", "type": "DEV",
+                            "id": str(len(self.news)), "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
                             "desc": self.smart_trans(f"开发者热门项目: {t}"),
                             "url": item.get('url', f"https://news.ycombinator.com/item?id={i}"),
-                            "time": real_time # 真实时间
+                            "time": real_time
                         })
                         self.seen_titles.add(t)
                         print("💻", end="", flush=True)
             except: pass
-        
         print("")
-        # 3. 填充检查
         if len(self.news) < 60: self.inject_filler(60 - len(self.news))
 
+    # 备用库：包含 40 条完整数据，防止重复
     def inject_filler(self, count):
-        # 备用库：诚实显示当前时间，不伪造
         current_time = get_beijing_now().strftime("%m-%d %H:%M")
-        
         filler_db = [
             {"type":"APP", "src":"OpenAI", "title":"OpenAI o1 预览版上线", "desc":"具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。", "url":"https://openai.com"},
             {"type":"DEV", "src":"Meta", "title":"Llama 3.2 开源发布", "desc":"可以在移动设备上运行的轻量级多模态模型。", "url":"https://llama.meta.com"},
@@ -223,191 +208,56 @@ class DataEngine:
             {"type":"APP", "src":"Slack", "title":"Slack AI 总结功能", "desc":"自动总结频道内的长对话和未读消息。", "url":"https://slack.com"},
             {"type":"VIDEO", "src":"Vidu", "title":"Vidu 视频生成模型", "desc":"清华团队打造，中国版的 Sora，一键生成连贯视频。", "url":"https://www.vidu.studio"}
         ]
-        
         full_filler = filler_db * 5
         added = 0
         for item in full_filler:
             if added >= count: break
             if item['title'] in self.seen_titles: continue
-            
             self.news.append({
-                "id": str(len(self.news)), 
-                "src": item['src'], "type": item['type'],
-                "title": item['title'], "desc": item['desc'], 
-                "url": item['url'], 
-                "time": current_time # 诚实显示当前时间
+                "id": str(len(self.news)), "src": item['src'], "type": item['type'],
+                "title": item['title'], "desc": item['desc'], "url": item['url'], "time": current_time
             })
             self.seen_titles.add(item['title'])
             added += 1
 
-    # === 2. 榜单生成 (80条完整数据) ===
+    # === 2. 榜单生成 ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
-            "LLM": [
-                ("ChatGPT (GPT-4o)", "OpenAI 旗舰，综合能力全球第一，支持实时语音。", "https://chat.openai.com"), 
-                ("Claude 3.5 Sonnet", "代码编写与逻辑推理能力最强，UI 优雅。", "https://claude.ai"), 
-                ("DeepSeek-V3", "国产开源天花板，数学代码比肩 GPT-4。", "https://chat.deepseek.com"), 
-                ("Gemini 1.5 Pro", "Google 生态核心，超长上下文窗口。", "https://gemini.google.com"), 
-                ("Kimi 智能助手", "月之暗面出品，长文档分析首选，中文极佳。", "https://kimi.moonshot.cn"), 
-                ("Perplexity", "AI 搜索引擎，直接给出精准答案与引用。", "https://perplexity.ai"), 
-                ("Llama 3.1", "Meta 开源巨无霸，当前开源界的最强基石。", "https://llama.meta.com"), 
-                ("Qwen 2.5", "阿里出品，全能型开源模型，多语言能力卓越。", "https://tongyi.aliyun.com"), 
-                ("Mistral Large", "欧洲最强模型，逻辑严密，适合企业部署。", "https://mistral.ai"), 
-                ("Grok-2", "X (推特) 旗下，接入实时社交数据。", "https://x.ai"), 
-                ("Doubao", "字节跳动出品，响应极快，语音流畅。", "https://www.doubao.com"), 
-                ("GLM-4", "智谱 AI 旗舰，工具调用能力强。", "https://chatglm.cn"), 
-                ("Yi-Large", "零一万物出品，全球竞技场前列。", "https://lingyiwanwu.com"), 
-                ("MiniMax", "拟人交互最强，语气最像真人。", "https://minimaxi.com"), 
-                ("Command R+", "专为 RAG (检索增强) 设计的企业模型。", "https://cohere.com"), 
-                ("Copilot", "集成于 Office 的办公助手。", "https://copilot.microsoft.com"), 
-                ("HuggingChat", "免费使用多种开源模型。", "https://huggingface.co/chat"), 
-                ("Poe", "聚合所有主流大模型。", "https://poe.com"), 
-                ("Ernie", "国内知识库覆盖最全。", "https://yiyan.baidu.com"), 
-                ("Pi", "主打高情商陪伴聊天。", "https://pi.ai")
-            ],
-            "Image": [
-                ("Midjourney v6", "艺术绘图王者，审美无可匹敌。", "https://midjourney.com"), 
-                ("Flux.1 Pro", "最强开源生图，手指/文字渲染极佳。", "https://blackforestlabs.ai"), 
-                ("Stable Diffusion", "本地部署必备，插件生态丰富。", "https://stability.ai"), 
-                ("DALL·E 3", "语义理解最强，集成于 GPT。", "https://openai.com/dall-e-3"), 
-                ("Civitai", "全球最大模型与 LoRA 下载站。", "https://civitai.com"), 
-                ("LiblibAI", "国内最大 AI 绘画社区。", "https://www.liblib.art"), 
-                ("Leonardo.ai", "专注游戏资产生成。", "https://leonardo.ai"), 
-                ("InstantID", "保持人脸一致性最好的项目。", "https://github.com/InstantID/InstantID"), 
-                ("Freepik AI", "实时绘图，设计师灵感库。", "https://www.freepik.com/ai"), 
-                ("Ideogram 2.0", "图片生成文字效果最好。", "https://ideogram.ai"), 
-                ("Krea AI", "实时画布，画哪里生成哪里。", "https://krea.ai"), 
-                ("Firefly", "版权合规，适合商业设计。", "https://firefly.adobe.com"), 
-                ("Magnific", "图片无损放大与细节增强。", "https://magnific.ai"), 
-                ("Tripo SR", "图片转 3D 模型。", "https://www.tripo3d.ai"), 
-                ("ControlNet", "SD 核心插件，精准控制构图。", "https://github.com/lllyasviel/ControlNet"), 
-                ("SeaArt", "体验接近原生 SD 的在线工具。", "https://www.seaart.ai"), 
-                ("Tensor.art", "在线运行模型，免费额度大。", "https://tensor.art"), 
-                ("Clipdrop", "移除背景/打光工具箱。", "https://clipdrop.co"), 
-                ("Stylar", "图层控制精准的设计工具。", "https://www.dzine.ai"), 
-                ("ComfyUI", "节点式工作流，探索上限。", "https://github.com/comfyanonymous/ComfyUI")
-            ],
-            "Video": [
-                ("Runway Gen-3", "视频生成行业标准，运镜控制。", "https://runwayml.com"), 
-                ("Kling AI", "生成时长最长，物理模拟真实。", "https://klingai.kuaishou.com"), 
-                ("Luma Dream", "生成极快，免费额度大方。", "https://lumalabs.ai"), 
-                ("Hailuo", "视频动态幅度大，视觉冲击强。", "https://hailuoai.com/video"), 
-                ("Vidu", "一键生成，人物一致性好。", "https://www.vidu.studio"), 
-                ("Sora", "OpenAI 期货，定义行业上限。", "https://openai.com/sora"), 
-                ("HeyGen", "数字人播报王者，口型同步。", "https://www.heygen.com"), 
-                ("Pika Art", "动画风格，局部重绘功能。", "https://pika.art"), 
-                ("Hedra", "专注人物对话，表情细腻。", "https://www.hedra.com"), 
-                ("Viggle", "让静态角色跳舞。", "https://viggle.ai"), 
-                ("AnimateDiff", "让静态图动起来的 SD 插件。", "https://github.com/guoyww/AnimateDiff"), 
-                ("Suno", "音乐生成，顺带生成 MV。", "https://suno.com"), 
-                ("Udio", "音质更 Hi-Fi 的音乐 AI。", "https://www.udio.com"), 
-                ("ElevenLabs", "全球最强 AI 配音。", "https://elevenlabs.io"), 
-                ("Sync Labs", "专业口型同步。", "https://synclabs.so"), 
-                ("D-ID", "老牌照片说话工具。", "https://www.d-id.com"), 
-                ("Synthesia", "企业级数字人演示。", "https://www.synthesia.io"), 
-                ("Descript", "像编辑文档一样编辑视频。", "https://www.descript.com"), 
-                ("OpusClip", "长视频自动剪辑成短视频。", "https://www.opus.pro"), 
-                ("Kaiber", "风格化视频转绘。", "https://kaiber.ai")
-            ],
-            "Dev": [
-                ("Cursor", "AI 原生编辑器，全库理解。", "https://cursor.com"), 
-                ("GitHub Copilot", "开发者必备代码补全。", "https://github.com/features/copilot"), 
-                ("v0.dev", "文字生成 React 界面。", "https://v0.dev"), 
-                ("Replit", "全自动构建 Web 应用。", "https://replit.com"), 
-                ("Hugging Face", "全球开源模型托管中心。", "https://huggingface.co"), 
-                ("LangChain", "LLM 应用开发框架。", "https://www.langchain.com"), 
-                ("Ollama", "本地运行大模型工具。", "https://ollama.com"), 
-                ("Supermaven", "超长记忆代码补全，速度快。", "https://supermaven.com"), 
-                ("Codeium", "免费强大的代码补全。", "https://codeium.com"), 
-                ("Devin", "全自动 AI 软件工程师。", "https://www.cognition-labs.com/devin"), 
-                ("Gradio", "Python 构建 AI 演示界面。", "https://www.gradio.app"), 
-                ("Streamlit", "数据仪表盘开发框架。", "https://streamlit.io"), 
-                ("Dify", "可视化 LLM 应用编排。", "https://dify.ai"), 
-                ("Coze", "零代码 AI Bot 搭建。", "https://www.coze.com"), 
-                ("Pinecone", "AI 向量数据库。", "https://www.pinecone.io"), 
-                ("Vercel", "前端托管，支持 AI 应用。", "https://vercel.com"), 
-                ("Tabnine", "私有化代码补全。", "https://www.tabnine.com"), 
-                ("Amazon Q", "AWS 开发者助手。", "https://aws.amazon.com/q/developer/"), 
-                ("W&B", "模型训练监控平台。", "https://wandb.ai"), 
-                ("LlamaIndex", "LLM 数据连接框架。", "https://www.llamaindex.ai")
-            ]
+            "LLM": [("ChatGPT (GPT-4o)", "OpenAI 旗舰，综合能力全球第一，支持实时语音。", "https://chat.openai.com"), ("Claude 3.5 Sonnet", "代码编写与逻辑推理能力最强，UI 优雅。", "https://claude.ai"), ("DeepSeek-V3", "国产开源天花板，数学代码比肩 GPT-4。", "https://chat.deepseek.com"), ("Gemini 1.5 Pro", "Google 生态核心，超长上下文窗口。", "https://gemini.google.com"), ("Kimi 智能助手", "月之暗面出品，长文档分析首选，中文极佳。", "https://kimi.moonshot.cn"), ("Perplexity", "AI 搜索引擎，直接给出精准答案与引用。", "https://perplexity.ai"), ("Llama 3.1", "Meta 开源巨无霸，当前开源界的最强基石。", "https://llama.meta.com"), ("Qwen 2.5", "阿里出品，全能型开源模型，多语言能力卓越。", "https://tongyi.aliyun.com"), ("Mistral Large", "欧洲最强模型，逻辑严密，适合企业部署。", "https://mistral.ai"), ("Grok-2", "X (推特) 旗下，接入实时社交数据。", "https://x.ai"), ("Doubao", "字节跳动出品，响应极快，语音流畅。", "https://www.doubao.com"), ("GLM-4", "智谱 AI 旗舰，工具调用能力强。", "https://chatglm.cn"), ("Yi-Large", "零一万物出品，全球竞技场前列。", "https://lingyiwanwu.com"), ("MiniMax", "拟人交互最强，语气最像真人。", "https://minimaxi.com"), ("Command R+", "专为 RAG (检索增强) 设计的企业模型。", "https://cohere.com"), ("Copilot", "集成于 Office 的办公助手。", "https://copilot.microsoft.com"), ("HuggingChat", "免费使用多种开源模型。", "https://huggingface.co/chat"), ("Poe", "聚合所有主流大模型。", "https://poe.com"), ("Ernie", "国内知识库覆盖最全。", "https://yiyan.baidu.com"), ("Pi", "主打高情商陪伴聊天。", "https://pi.ai")],
+            "Image": [("Midjourney v6", "艺术绘图王者，审美无可匹敌。", "https://midjourney.com"), ("Flux.1 Pro", "最强开源生图，手指/文字渲染极佳。", "https://blackforestlabs.ai"), ("Stable Diffusion", "本地部署必备，插件生态丰富。", "https://stability.ai"), ("DALL·E 3", "语义理解最强，集成于 GPT。", "https://openai.com/dall-e-3"), ("Civitai", "全球最大模型与 LoRA 下载站。", "https://civitai.com"), ("LiblibAI", "国内最大 AI 绘画社区。", "https://www.liblib.art"), ("Leonardo.ai", "专注游戏资产生成。", "https://leonardo.ai"), ("InstantID", "保持人脸一致性最好的项目。", "https://github.com/InstantID/InstantID"), ("Freepik AI", "实时绘图，设计师灵感库。", "https://www.freepik.com/ai"), ("Ideogram 2.0", "图片生成文字效果最好。", "https://ideogram.ai"), ("Krea AI", "实时画布，画哪里生成哪里。", "https://krea.ai"), ("Firefly", "版权合规，适合商业设计。", "https://firefly.adobe.com"), ("Magnific", "图片无损放大与细节增强。", "https://magnific.ai"), ("Tripo SR", "图片转 3D 模型。", "https://www.tripo3d.ai"), ("ControlNet", "SD 核心插件，精准控制构图。", "https://github.com/lllyasviel/ControlNet"), ("SeaArt", "体验接近原生 SD 的在线工具。", "https://www.seaart.ai"), ("Tensor.art", "在线运行模型，免费额度大。", "https://tensor.art"), ("Clipdrop", "移除背景/打光工具箱。", "https://clipdrop.co"), ("Stylar", "图层控制精准的设计工具。", "https://www.dzine.ai"), ("ComfyUI", "节点式工作流，探索上限。", "https://github.com/comfyanonymous/ComfyUI")],
+            "Video": [("Runway Gen-3", "视频生成行业标准，运镜控制。", "https://runwayml.com"), ("Kling AI", "生成时长最长，物理模拟真实。", "https://klingai.kuaishou.com"), ("Luma Dream", "生成极快，免费额度大方。", "https://lumalabs.ai"), ("Hailuo", "视频动态幅度大，视觉冲击强。", "https://hailuoai.com/video"), ("Vidu", "一键生成，人物一致性好。", "https://www.vidu.studio"), ("Sora", "OpenAI 期货，定义行业上限。", "https://openai.com/sora"), ("HeyGen", "数字人播报王者，口型同步。", "https://www.heygen.com"), ("Pika Art", "动画风格，局部重绘功能。", "https://pika.art"), ("Hedra", "专注人物对话，表情细腻。", "https://www.hedra.com"), ("Viggle", "让静态角色跳舞。", "https://viggle.ai"), ("AnimateDiff", "让静态图动起来的 SD 插件。", "https://github.com/guoyww/AnimateDiff"), ("Suno", "音乐生成，顺带生成 MV。", "https://suno.com"), ("Udio", "音质更 Hi-Fi 的音乐 AI。", "https://www.udio.com"), ("ElevenLabs", "全球最强 AI 配音。", "https://elevenlabs.io"), ("Sync Labs", "专业口型同步。", "https://synclabs.so"), ("D-ID", "老牌照片说话工具。", "https://www.d-id.com"), ("Synthesia", "企业级数字人演示。", "https://www.synthesia.io"), ("Descript", "像编辑文档一样编辑视频。", "https://www.descript.com"), ("OpusClip", "长视频自动剪辑成短视频。", "https://www.opus.pro"), ("Kaiber", "风格化视频转绘。", "https://kaiber.ai")],
+            "Dev": [("Cursor", "AI 原生编辑器，全库理解。", "https://cursor.com"), ("GitHub Copilot", "开发者必备代码补全。", "https://github.com/features/copilot"), ("v0.dev", "文字生成 React 界面。", "https://v0.dev"), ("Replit", "全自动构建 Web 应用。", "https://replit.com"), ("Hugging Face", "全球开源模型托管中心。", "https://huggingface.co"), ("LangChain", "LLM 应用开发框架。", "https://www.langchain.com"), ("Ollama", "本地运行大模型工具。", "https://ollama.com"), ("Supermaven", "超长记忆代码补全，速度快。", "https://supermaven.com"), ("Codeium", "免费强大的代码补全。", "https://codeium.com"), ("Devin", "全自动 AI 软件工程师。", "https://www.cognition-labs.com/devin"), ("Gradio", "Python 构建 AI 演示界面。", "https://www.gradio.app"), ("Streamlit", "数据仪表盘开发框架。", "https://streamlit.io"), ("Dify", "可视化 LLM 应用编排。", "https://dify.ai"), ("Coze", "零代码 AI Bot 搭建。", "https://www.coze.com"), ("Pinecone", "AI 向量数据库。", "https://www.pinecone.io"), ("Vercel", "前端托管，支持 AI 应用。", "https://vercel.com"), ("Tabnine", "私有化代码补全。", "https://www.tabnine.com"), ("Amazon Q", "AWS 开发者助手。", "https://aws.amazon.com/q/developer/"), ("W&B", "模型训练监控平台。", "https://wandb.ai"), ("LlamaIndex", "LLM 数据连接框架。", "https://www.llamaindex.ai")]
         }
-        
         self.ranks = {}
         for cat, items in data.items():
             lst = []
             for i, (name, desc, url) in enumerate(items):
                 score = 99.9 - (i * 0.5) + random.uniform(-0.1, 0.1)
-                lst.append({
-                    "rank": i+1, "name": name, "desc": desc, "url": url,
-                    "score": f"{score:.1f}"
-                })
+                lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
             self.ranks[cat] = lst
 
-    # === 3. 超级提示词库 (扩容至60+, 支持12个轮换) ===
+    # === 3. 超级提示词库 (12个万能公式) ===
     def make_prompts(self):
-        print("   └─ 构建海量 AI 提示词库 (含轮换池)...")
+        print("   └─ 构建 AI 万能公式库 (结构化框架)...")
         self.prompts = [
-            # === Midjourney / Art ===
-            {"tag": "Midjourney", "title": "赛博朋克电影感人像", "content": "Cinematic shot, cyberpunk street samurai girl, neon lights, rain-soaked streets of Tokyo, highly detailed, photorealistic, 8k, bokeh, depth of field --ar 16:9 --v 6.0", "desc": "高质感赛博朋克风格，适合壁纸。"},
-            {"tag": "Midjourney", "title": "极简主义 Logo 设计", "content": "Minimalist logo design for a coffee shop named 'Zen Brew', simple lines, vector style, flat design, white background, black ink --no shading --v 6.0", "desc": "商业 Logo 灵感生成。"},
-            {"tag": "Midjourney", "title": "吉卜力动画风格", "content": "Studio Ghibli style, lush green meadow, fluffy clouds, blue sky, summer breeze, anime style, hand-drawn texture, vibrant colors --ar 16:9 --niji 6", "desc": "治愈系宫崎骏风格风景。"},
-            {"tag": "Midjourney", "title": "3D 等距房间模型", "content": "Isometric 3D render of a cozy gamer room, neon lighting, computer setup, bean bag, night time, cute style, blender render, high fidelity --ar 1:1 --v 6.0", "desc": "可爱的 3D 室内设计模型。"},
-            {"tag": "Midjourney", "title": "未来主义建筑设计", "content": "Futuristic eco-friendly skyscraper, vertical gardens, glass and steel, solar panels, utopia city background, architectural photography, morning light --ar 9:16 --v 6.0", "desc": "概念建筑设计灵感。"},
-            {"tag": "Midjourney", "title": "水墨画风格山水", "content": "Chinese ink painting style, misty mountains, pine trees, waterfalls, traditional boat on river, black and white with subtle red accents, minimalist composition --ar 16:9", "desc": "中国传统水墨艺术风格。"},
-            {"tag": "Midjourney", "title": "皮克斯风格角色", "content": "Pixar style 3D character, a cute robot holding a flower, soft lighting, expressive eyes, vibrant colors, clean background --ar 3:4 --v 6.0", "desc": "动画电影角色设计。"},
-            {"tag": "Midjourney", "title": "复古胶片摄影", "content": "1990s polaroid photo, friends laughing at a diner, flash photography, vintage grain, candid shot, nostalgic vibe --ar 4:3 --v 6.0", "desc": "怀旧复古的生活瞬间。"},
-            {"tag": "Midjourney", "title": "微距摄影", "content": "Macro photography of a water droplet on a rose petal, extreme detail, refraction of light, soft green bokeh background, 8k resolution --ar 1:1", "desc": "极致细节的微距摄影。"},
-            {"tag": "Midjourney", "title": "扁平化矢量插画", "content": "Flat vector illustration of a startup team working in a modern office, vibrant colors, simple shapes, corporate memphis style, white background --ar 16:9", "desc": "适合网页和 PPT 的插画。"},
-            {"tag": "Midjourney", "title": "抽象油画", "content": "Abstract oil painting, chaotic brushstrokes, vivid colors, emotional expression, thick impasto texture, heavy palette knife usage --ar 3:4", "desc": "充满情感的艺术油画。"},
-            {"tag": "Midjourney", "title": "蒸汽朋克机械", "content": "Steampunk mechanical owl, brass gears, copper pipes, glowing steam vents, intricate details, vintage engineering blueprint style --ar 1:1", "desc": "复古机械美学设计。"},
-
-            # === ChatGPT / Coding & Tech ===
-            {"tag": "Coding", "title": "代码 Bug 修复专家", "content": "Analyze the following code snippet. Identify any logical errors, syntax bugs, or security vulnerabilities. Explain why they are issues and provide the corrected code with comments explaining the changes: [Paste Code Here]", "desc": "快速定位并修复代码错误。"},
-            {"tag": "Coding", "title": "Python 编程导师", "content": "Act as a senior Python developer. Explain the concept of [Decorators] to a junior developer. Use simple analogies, provide a basic code example, and then a practical real-world use case.", "desc": "深入浅出讲解编程概念。"},
-            {"tag": "Coding", "title": "生成正则表达式", "content": "I need a Regular Expression (Regex) that matches [Email addresses from specific domains]. Please explain how the regex works step-by-step.", "desc": "搞定复杂的正则匹配。"},
-            {"tag": "Coding", "title": "SQL 查询优化", "content": "Optimize the following SQL query for better performance. Assume a large dataset. Explain what indexing strategies might help: [Paste SQL Here]", "desc": "提升数据库查询效率。"},
-            {"tag": "Coding", "title": "编写单元测试", "content": "Write comprehensive unit tests (using Pytest/Jest) for the following function. Cover edge cases and potential failure points: [Paste Function Here]", "desc": "自动化生成测试用例。"},
-            {"tag": "Coding", "title": "代码转译 (Java -> Python)", "content": "Rewrite the following Java code into idiomatic Python. Ensure the functionality remains the same but use Pythonic best practices: [Paste Code Here]", "desc": "跨语言代码转换。"},
-            {"tag": "Coding", "title": "API 文档生成", "content": "Generate a Swagger/OpenAPI documentation YAML for the following API endpoint description. Include request/response examples.", "desc": "自动生成 API 接口文档。"},
-            {"tag": "Coding", "title": "Git Commit 规范写手", "content": "Write a semantic Git commit message for the following changes. Use the format 'type(scope): description'. Changes: [List Changes]", "desc": "生成规范的代码提交记录。"},
-            {"tag": "Coding", "title": "解释复杂代码", "content": "Explain the following code snippet line-by-line in plain English as if you are explaining it to a 10-year-old: [Paste Code]", "desc": "看懂别人的屎山代码。"},
-            {"tag": "Coding", "title": "Linux 命令行助手", "content": "I need a Linux terminal command to [find all files larger than 100MB and delete them]. Please explain the flags used.", "desc": "查询复杂的 Shell 命令。"},
-
-            # === ChatGPT / Writing & Marketing ===
-            {"tag": "Writing", "title": "小红书爆款文案", "content": "你是一位拥有百万粉丝的小红书博主。请为[某款护肤品]写一篇种草笔记。要求：标题要用震惊体加Emoji，正文要有痛点场景描述，语气要像闺蜜聊天，最后加上5个相关热门标签。", "desc": "针对小红书平台的流量文案。"},
-            {"tag": "Writing", "title": "SEO 博客文章大纲", "content": "Generate a detailed blog post outline for the topic '[AI in Healthcare]'. Include a catchy title, H2 headings for key sections, bullet points for sub-topics, and a conclusion. Optimize for SEO keywords.", "desc": "快速构建文章结构。"},
-            {"tag": "Writing", "title": "冷邮件 (Cold Email) 推销", "content": "Write a persuasive cold email to a potential client offering [Web Design Services]. Keep it under 150 words. Hook them in the first sentence, state the value proposition clearly, and end with a call to action.", "desc": "商务拓展邮件模板。"},
-            {"tag": "Writing", "title": "Youtube 视频脚本", "content": "Write a script for a 5-minute YouTube video about '[How to start investing]'. Include an engaging hook intro, 3 main tips with examples, and an outro asking for subscribers.", "desc": "视频博主脚本生成。"},
-            {"tag": "Writing", "title": "推特/微博 连载贴", "content": "Turn the following article summary into a Twitter thread (10 tweets max). Make the first tweet a hook, and the last tweet a summary. Use emojis sparingly. Content: [Paste Text Here]", "desc": "长文转社交媒体短贴。"},
-            {"tag": "Writing", "title": "产品发布新闻稿", "content": "Write a professional press release for the launch of a new product: [Product Name]. Highlight key features, availability, and quotes from the CEO.", "desc": "正式的媒体新闻稿。"},
-            {"tag": "Writing", "title": "朋友圈营销文案", "content": "Write a short, engaging WeChat Moments post to promote [New Coffee Shop]. Use emojis, keep it casual, and include a call to action to visit.", "desc": "私域流量营销文案。"},
-            {"tag": "Writing", "title": "复杂的概念简化", "content": "Rewrite the following technical text to make it easy to understand for a general audience. Avoid jargon and use simple analogies: [Paste Text]", "desc": "让你的文章通俗易懂。"},
-            {"tag": "Writing", "title": "起标题大师", "content": "Generate 10 catchy, click-worthy headlines for an article about [Remote Work]. Use different styles: question, listicle, controversial, and how-to.", "desc": "拯救取名废。"},
-            {"tag": "Writing", "title": "英文润色 (学术)", "content": "Please proofread and edit the following academic abstract for clarity, flow, and academic tone. Improve vocabulary where appropriate: [Paste Abstract]", "desc": "论文投稿前的最后检查。"},
-
-            # === ChatGPT / Productivity & Office ===
-            {"tag": "Productivity", "title": "会议纪要生成", "content": "Summarize the following meeting transcript into a structured report. Include: 1. Date & Attendees, 2. Key Discussion Points, 3. Action Items (with assignees), 4. Next Steps. Transcript: [Paste Here]", "desc": "整理杂乱的会议记录。"},
-            {"tag": "Productivity", "title": "Excel 公式生成器", "content": "I have data in Column A (Dates) and Column B (Sales). I need an Excel formula to calculate the [Sum of Sales for the month of January]. Please explain the formula.", "desc": "解决复杂的 Excel 表格问题。"},
-            {"tag": "Productivity", "title": "周报生成器", "content": "Based on these bullet points of my work this week, write a professional weekly report for my manager. Highlight achievements and blockings: [List Tasks Here]", "desc": "快速生成职场周报。"},
-            {"tag": "Productivity", "title": "邮件回复 (委婉拒绝)", "content": "Write a polite and professional email declining a job offer because the salary doesn't meet my expectations, but keep the door open for future opportunities.", "desc": "高情商职场邮件回复。"},
-            {"tag": "Productivity", "title": "英语口语陪练", "content": "Act as a spoken English teacher. I will speak to you in English, and you will reply to me to practice. Strictly correct my grammar mistakes in bold, and ask me a question to keep the conversation going.", "desc": "英语学习与纠错。"},
-            {"tag": "Productivity", "title": "SWOT 分析", "content": "Perform a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats) for [Small E-commerce Business]. Present the result in a bulleted list.", "desc": "商业决策辅助工具。"},
-            {"tag": "Productivity", "title": "OKRs 设定助手", "content": "Help me draft OKRs (Objectives and Key Results) for a [Marketing Manager] for the next quarter. The main goal is to increase brand awareness.", "desc": "制定工作目标。"},
-            {"tag": "Productivity", "title": "面试模拟官", "content": "I am interviewing for a [Product Manager] position. Ask me a common interview question, wait for my answer, and then give me feedback on how to improve it.", "desc": "准备求职面试。"},
-            {"tag": "Productivity", "title": "PPT 大纲生成", "content": "Create a 10-slide presentation outline for a pitch deck about [AI Education App]. Include slide titles and key bullet points for each slide.", "desc": "快速搞定 PPT 结构。"},
-            {"tag": "Productivity", "title": "合同条款审查", "content": "Review the following contract clause for any potential risks or unfair terms for the freelancer: [Paste Clause]", "desc": "简单的法律文本分析。"},
-            
-            # === ChatGPT / Roleplay & Fun ===
-            {"tag": "Fun", "title": "苏格拉底式提问", "content": "I want you to act as a Socratic philosopher. You will explore my beliefs by asking probing questions. Do not give me answers, but guide me to discover them myself. My topic is: [Justice]", "desc": "深度哲学思考引导。"},
-            {"tag": "Fun", "title": "文字冒险游戏", "content": "Act as a text-based adventure game. I start in a dark forest. Describe the surroundings and give me 3 options. Wait for my input before continuing.", "desc": "在对话框里玩 RPG 游戏。"},
-            {"tag": "Fun", "title": "塔罗牌占卜", "content": "Act as a mystical Tarot reader. I will ask a question, and you will draw 3 cards (Past, Present, Future), describe them visually, and interpret their meaning for my situation. My question is: [Insert Question]", "desc": "趣味 AI 占卜。"},
-            {"tag": "Fun", "title": "米其林大厨菜谱", "content": "I have these ingredients in my fridge: [Eggs, Tomatoes, Cheese]. Suggest a gourmet recipe I can make, describe the plating, and suggest a wine pairing.", "desc": "创意烹饪指南。"},
-            {"tag": "Fun", "title": "说唱歌手 AI", "content": "Write a rap song about [Coding in Python] in the style of Eminem. Use multi-syllable rhymes and a fast flow.", "desc": "生成押韵的歌词。"},
-            {"tag": "Fun", "title": "旅行规划师", "content": "Plan a 3-day itinerary for a trip to [Kyoto, Japan]. I love food and history but hate crowded tourist traps. Include restaurant recommendations.", "desc": "个性化旅行路线。"},
-            {"tag": "Fun", "title": "电影推荐", "content": "I like movies like [Inception] and [Interstellar]. Recommend 5 similar sci-fi movies that are mind-bending, with a brief reason for each.", "desc": "解决剧荒。"},
-            {"tag": "Fun", "title": "梦境解析", "content": "I dreamt about [flying over a city but my wings were heavy]. Interpret this dream from a Jungian psychological perspective.", "desc": "探索潜意识。"}
+            # --- 核心通用框架 ---
+            {"tag": "万能通用", "title": "RTF 标准提问法", "content": "[角色 Role]: 你是资深产品经理\n[任务 Task]: 请分析这份竞品报告\n[格式 Format]: 输出为带图表的 Markdown 格式", "desc": "最基础也最有效的结构：指定角色、明确任务、规定格式。"},
+            {"tag": "复杂任务", "title": "BROKE 深度思考法", "content": "[背景 Background]: 我们正在开发一款AI应用...\n[角色 Role]: 你是首席架构师\n[目标 Objectives]: 设计后端架构\n[关键结果 Key Results]: 高并发、低延迟\n[演变 Evolve]: 如果用户量翻倍，架构如何调整？", "desc": "适用于需要深度推理和多步规划的复杂任务。"},
+            {"tag": "精准控制", "title": "C.R.E.A.T.E 框架", "content": "[Context]: 上下文背景\n[Role]: 设定AI身份\n[Explicit]: 明确具体的限制条件\n[Action]: 需要执行的动作\n[Tone]: 语调（专业/幽默/严肃）\n[Example]: 给出一个参考范例", "desc": "目前公认生成质量最高的精细化控制框架。"},
+            # --- 视频生成 (✅ 已添加) ---
+            {"tag": "Video Gen", "title": "Runway/Sora 电影级公式", "content": "[主体描述] + [环境背景] + [摄影机运动 Camera Movement] + [光线/氛围] + [风格 Style]\n例如: A wide shot of a cyberpunk city street at night, neon reflection on wet ground, drone camera slowly flying forward, cinematic lighting, film grain.", "desc": "生成高质量视频的核心要素：运镜、光影与风格。"},
+            {"tag": "Video Gen", "title": "数字人口播公式 (HeyGen)", "content": "[角色形象]: 穿着西装的专业新闻主播\n[背景]: 现代化的演播室大屏幕\n[表情/动作]: 面带微笑，手势自然，眼神注视镜头\n[脚本内容]: (粘贴你的台词)", "desc": "用于生成高质量 AI 数字人视频的脚本结构。"},
+            # --- 绘画与视觉 ---
+            {"tag": "Midjourney", "title": "MJ 摄影写实公式", "content": "/imagine prompt: [主体描述] + [环境背景] + [摄影角度/镜头] + [光线条件] + [相机型号/胶片类型] --ar 16:9 --v 6.0 --style raw", "desc": "生成照片级逼真图像的黄金公式。"},
+            {"tag": "Stable Diff", "title": "SD 正负向起手式", "content": "Positive: (masterpiece, best quality:1.2), [Subject], [Style Tags], 4k, 8k\nNegative: (worst quality, low quality:1.4), bad anatomy, watermark, text", "desc": "Stable Diffusion 必备的起手质量控制词。"},
+            # --- 编程与学术 ---
+            {"tag": "Coding", "title": "代码专家 Debug", "content": "你是一个 [语言] 专家。请分析以下代码：\n1. 解释这段代码的功能\n2. 指出潜在的 Bug 或性能瓶颈\n3. 给出优化后的代码并添加注释\n[粘贴代码]", "desc": "让 AI 成为你的结对编程导师。"},
+            {"tag": "Academic", "title": "论文润色 (降重)", "content": "请作为[学科]领域的审稿人，对以下段落进行润色。\n要求：保持原意，提升学术性，使用更专业的词汇，调整句式结构以降低查重率。", "desc": "学术论文投稿前的最后优化。"},
+            # --- 职场与营销 ---
+            {"tag": "Marketing", "title": "小红书爆款公式", "content": "[标题]: 包含emoji，制造悬念/焦虑/惊喜\n[正文]: 痛点场景 + 解决方案 + 情绪价值\n[结尾]: 引导互动 (点赞/收藏)\n[标签]: #热门话题", "desc": "符合算法推荐逻辑的社交媒体文案结构。"},
+            {"tag": "Business", "title": "SWOT 战略分析", "content": "请对 [公司/产品] 进行 SWOT 分析：\nStrengths (优势)\nWeaknesses (劣势)\nOpportunities (机会)\nThreats (威胁)\n并基于分析给出3条战略建议。", "desc": "商业计划书必备的分析框架。"},
+            {"tag": "Learning", "title": "费曼学习法", "content": "请用“费曼技巧”给我讲解 [复杂概念]。\n要求：用像给12岁孩子讲故事一样的简单语言，使用类比，不要使用行话。", "desc": "快速搞懂一个陌生领域的最佳捷径。"}
         ]
 
     # === 4. 保存数据 ===
