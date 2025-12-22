@@ -4,361 +4,91 @@ window.AI_DATA = {
       "id": "0",
       "src": "OpenAI",
       "type": "APP",
-      "title": "OpenAI o1 预览版上线",
-      "desc": "具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。",
+      "title": "OpenAI o1 模型预览版上线",
+      "desc": "OpenAI 发布的全新 o1 系列模型（原草莓项目），引入了‘思维链’推理技术。这意味着模型在回答问题前会像人类一样进行深思熟虑，从而在复杂的数学、编程和科学推理任务上表现出卓越的能力，准确率大幅超越 GPT-4o。",
       "url": "https://openai.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "1",
       "src": "Meta",
       "type": "DEV",
-      "title": "Llama 3.2 开源发布",
-      "desc": "可以在移动设备上运行的轻量级多模态模型。",
+      "title": "Llama 3.2 开源多模态模型",
+      "desc": "Meta 再次震撼开源界！Llama 3.2 是首个能够同时处理图像和文本的轻量级开源模型。它包含 11B 和 90B 两个版本，甚至还有能在手机端流畅运行的 1B/3B 版本，为边缘计算和移动端 AI 应用开发打开了新的大门。",
       "url": "https://llama.meta.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "2",
       "src": "Anthropic",
       "type": "APP",
-      "title": "Claude 3.5 Sonnet 更新",
-      "desc": "代码能力进一步增强，引入 Artifacts 实时预览功能。",
+      "title": "Claude 3.5 Sonnet 重大更新",
+      "desc": "Anthropic 发布了 Claude 3.5 Sonnet 的升级版，这次更新引入了革命性的 'Computer Use' 功能，允许 AI 像人一样控制鼠标和键盘操作电脑。此外，其代码生成能力和逻辑推理速度也得到了进一步优化，是目前开发者首选的编程助手。",
       "url": "https://claude.ai",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "3",
       "src": "Runway",
       "type": "VIDEO",
-      "title": "Gen-3 Alpha 视频生成开放",
-      "desc": "好莱坞级别的视频生成模型，支持精准的运镜控制。",
+      "title": "Gen-3 Alpha 视频生成全面开放",
+      "desc": "好莱坞级别的 AI 视频生成工具 Runway Gen-3 Alpha 现已向公众开放。它支持极其精准的运动控制（Motion Brush）和运镜指令，能够生成长达 10 秒的高清、连贯视频，光影效果和物理规律模拟几乎达到了以假乱真的地步。",
       "url": "https://runwayml.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "4",
       "src": "Cursor",
       "type": "APP",
-      "title": "Cursor 编辑器 Composer",
-      "desc": "允许在一个窗口同时编辑多个文件，编程效率革命。",
+      "title": "Cursor 编辑器推出 Composer",
+      "desc": "VS Code 的最强竞争对手 Cursor 推出了 'Composer' 功能。它允许用户在一个窗口中同时编辑多个文件，通过自然语言指令重构整个项目的代码结构。这不仅是一个代码补全工具，更像是一个能够理解整个工程架构的 AI 结对程序员。",
       "url": "https://cursor.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "5",
       "src": "BlackForest",
       "type": "IMAGE",
       "title": "Flux.1 Pro 图像模型发布",
-      "desc": "目前开源界最强的生图模型，文字渲染能力极佳。",
+      "desc": "由原 Stable Diffusion 核心团队打造的 FLUX.1 横空出世。该模型在文字渲染（Text Rendering）和手指细节处理上完爆了 Midjourney v6。作为目前最强的开源生图模型，它支持本地部署，并且对提示词的语义理解达到了新的高度。",
       "url": "https://blackforestlabs.ai",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "6",
       "src": "Google",
       "type": "APP",
-      "title": "NotebookLM 音频概览",
-      "desc": "将你的文档一键转化为两个 AI 主持人的播客对话。",
+      "title": "NotebookLM 音频概览功能",
+      "desc": "Google 的 NotebookLM 增加了一个病毒式传播的功能：Audio Overview。它可以将你上传的任何 PDF、文档或链接，一键转化成一段两名 AI 主持人之间的精彩播客对话。语气自然、充满幽默感，是学习新知识的神器。",
       "url": "https://notebooklm.google.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "7",
       "src": "Kuaishou",
       "type": "VIDEO",
       "title": "可灵 AI (Kling) 网页版上线",
-      "desc": "生成时长可达 10 秒，物理规律模拟极其真实。",
+      "desc": "快手团队研发的‘可灵’视频生成大模型，被誉为中国版的 Sora。它支持生成长达 2 分钟的视频（需延长），并且在人物动作幅度、吞咽食物等物理模拟上表现惊人。现在网页版已面向全球用户开放，支持图生视频和文生视频。",
       "url": "https://klingai.kuaishou.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "8",
       "src": "Midjourney",
       "type": "APP",
       "title": "Midjourney 网页编辑器公测",
-      "desc": "新增局部重绘和画布扩展的 Web 端交互界面，无需 Discord。",
+      "desc": "Midjourney 终于摆脱了 Discord！全新的网页版编辑器上线，支持局部重绘（Inpainting）、画布扩展（Outpainting）以及通过拖拽来修改图片构图。这是一个巨大的交互飞跃，让不懂代码的设计师也能轻松使用顶级 AI 绘画。",
       "url": "https://midjourney.com",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     },
     {
       "id": "9",
       "src": "Perplexity",
       "type": "APP",
-      "title": "Perplexity Pro 搜索升级",
-      "desc": "引入推理模型进行深度搜索，提供更精准的学术引用。",
+      "title": "Perplexity Pro 推出深度推理",
+      "desc": "AI 搜索引擎 Perplexity 引入了 o1 级别的推理模型。当你询问复杂的学术或分析类问题时，它会进行多步骤的深度搜索和逻辑链推导，最后给出一份引用详实、逻辑严密的专业报告，而非简单的搜索摘要。",
       "url": "https://perplexity.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "10",
-      "src": "Luma",
-      "type": "VIDEO",
-      "title": "Dream Machine 1.5 发布",
-      "desc": "视频生成速度提升 2 倍，且质量更加稳定。",
-      "url": "https://lumalabs.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "11",
-      "src": "Suno",
-      "type": "APP",
-      "title": "Suno v3.5 音乐生成更新",
-      "desc": "支持生成 4 分钟完整歌曲，结构更像真实音乐。",
-      "url": "https://suno.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "12",
-      "src": "Mistral",
-      "type": "DEV",
-      "title": "Mistral Large 2 发布",
-      "desc": "在编码和推理任务上超越了 Llama 3 405B。",
-      "url": "https://mistral.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "13",
-      "src": "Notion",
-      "type": "APP",
-      "title": "Notion AI 连接其它应用",
-      "desc": "现在可以搜索 Slack 和 Google Drive 中的内容。",
-      "url": "https://notion.so",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "14",
-      "src": "Ideogram",
-      "type": "IMAGE",
-      "title": "Ideogram 2.0 字体生成",
-      "desc": "目前在图片中生成海报级文字效果最好的模型。",
-      "url": "https://ideogram.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "15",
-      "src": "ChatGPT",
-      "type": "APP",
-      "title": "ChatGPT 高级语音模式",
-      "desc": "实时打断、情感丰富，就像和真人打电话一样。",
-      "url": "https://openai.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "16",
-      "src": "HeyGen",
-      "type": "VIDEO",
-      "title": "HeyGen 互动数字人 API",
-      "desc": "可以在 Zoom 会议中实时互动的 AI 数字分身。",
-      "url": "https://heygen.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "17",
-      "src": "Zapier",
-      "type": "APP",
-      "title": "Zapier Central 发布",
-      "desc": "教 AI 机器人跨越 6000+ 应用自动执行任务。",
-      "url": "https://zapier.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "18",
-      "src": "LangChain",
-      "type": "DEV",
-      "title": "LangGraph 稳定版发布",
-      "desc": "构建复杂、有状态的多智能体应用的全新框架。",
-      "url": "https://langchain.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "19",
-      "src": "Krea",
-      "type": "IMAGE",
-      "title": "Krea AI 实时画布更新",
-      "desc": "画笔画哪里，AI 就实时生成哪里，延迟极低。",
-      "url": "https://krea.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "20",
-      "src": "ElevenLabs",
-      "type": "APP",
-      "title": "Reader App 阅读器",
-      "desc": "用极其逼真的 AI 语音朗读任何文章和 PDF。",
-      "url": "https://elevenlabs.io",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "21",
-      "src": "Vercel",
-      "type": "DEV",
-      "title": "v0.dev 企业版发布",
-      "desc": "支持生成多页面应用，并导出高质量 React 代码。",
-      "url": "https://v0.dev",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "22",
-      "src": "Figma",
-      "type": "APP",
-      "title": "Figma AI 设计助手",
-      "desc": "通过文本描述自动生成 UI 界面和图层结构。",
-      "url": "https://figma.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "23",
-      "src": "Pika",
-      "type": "VIDEO",
-      "title": "Pika Art 1.5 特效更新",
-      "desc": "新增 Pikalert 等趣味特效，让视频物体甚至融化。",
-      "url": "https://pika.art",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "24",
-      "src": "GitHub",
-      "type": "APP",
-      "title": "Copilot Workspace 预览",
-      "desc": "从 issue 到 pull request 的全自动开发环境。",
-      "url": "https://githubnext.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "25",
-      "src": "HuggingFace",
-      "type": "DEV",
-      "title": "LeRobot 开源机器人库",
-      "desc": "将 AI 大模型引入实体机器人控制的开源项目。",
-      "url": "https://github.com/huggingface/lerobot",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "26",
-      "src": "Gamma",
-      "type": "APP",
-      "title": "Gamma 演示文稿生成",
-      "desc": "现在支持导入 Word 文档并一键转换为精美 PPT。",
-      "url": "https://gamma.app",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "27",
-      "src": "Arc",
-      "type": "APP",
-      "title": "Arc 浏览器 Browse for Me",
-      "desc": "为你浏览网页并生成摘要的 AI 搜索体验。",
-      "url": "https://arc.net",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "28",
-      "src": "NVIDIA",
-      "type": "DEV",
-      "title": "Nemotron-4 340B 开源",
-      "desc": "英伟达发布的最强开源合成数据生成模型。",
-      "url": "https://developer.nvidia.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "29",
-      "src": "Character.ai",
-      "type": "APP",
-      "title": "Character.ai 通话功能",
-      "desc": "现在可以与你创建的 AI 角色进行实时语音通话。",
-      "url": "https://character.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "30",
-      "src": "Sora",
-      "type": "VIDEO",
-      "title": "Sora 更多演示视频流出",
-      "desc": "展示了惊人的物理一致性和长视频生成能力。",
-      "url": "https://openai.com/sora",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "31",
-      "src": "Stability",
-      "type": "DEV",
-      "title": "Stable Audio Open",
-      "desc": "用于生成简短音频样本和音效的开源模型。",
-      "url": "https://stability.ai",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "32",
-      "src": "Microsoft",
-      "type": "APP",
-      "title": "Windows Recall 功能预览",
-      "desc": "Windows AI 能够“回忆”你在电脑上做过的任何事情。",
-      "url": "https://microsoft.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "33",
-      "src": "Apple",
-      "type": "APP",
-      "title": "Apple Intelligence 发布",
-      "desc": "集成于 iOS 18 的个人智能系统，深度整合 Siri。",
-      "url": "https://apple.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "34",
-      "src": "Cohere",
-      "type": "DEV",
-      "title": "Aya 23 多语言模型",
-      "desc": "支持 23 种语言的高性能开源大语言模型。",
-      "url": "https://cohere.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "35",
-      "src": "Adobe",
-      "type": "APP",
-      "title": "Lightroom 生成式移除",
-      "desc": "一键移除照片中不需要的物体，效果自然。",
-      "url": "https://adobe.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "36",
-      "src": "Canva",
-      "type": "APP",
-      "title": "Canva Magic Studio",
-      "desc": "全套 AI 设计工具更新，支持更多自动化排版。",
-      "url": "https://canva.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "37",
-      "src": "Groq",
-      "type": "DEV",
-      "title": "Groq API 速度测试",
-      "desc": "展示了每秒 500 token 的极速推理能力。",
-      "url": "https://groq.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "38",
-      "src": "Slack",
-      "type": "APP",
-      "title": "Slack AI 总结功能",
-      "desc": "自动总结频道内的长对话和未读消息。",
-      "url": "https://slack.com",
-      "time": "12-23 03:07"
-    },
-    {
-      "id": "39",
-      "src": "Vidu",
-      "type": "VIDEO",
-      "title": "Vidu 视频生成模型",
-      "desc": "清华团队打造，中国版的 Sora，一键生成连贯视频。",
-      "url": "https://www.vidu.studio",
-      "time": "12-23 03:07"
+      "time": "12-23 03:14"
     }
   ],
   "ranks": {
@@ -368,35 +98,35 @@ window.AI_DATA = {
         "name": "ChatGPT (GPT-4o)",
         "desc": "OpenAI 旗舰，综合能力全球第一，支持实时语音。",
         "url": "https://chat.openai.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Claude 3.5 Sonnet",
         "desc": "代码编写与逻辑推理能力最强，UI 优雅。",
         "url": "https://claude.ai",
-        "score": "99.5"
+        "score": "99.4"
       },
       {
         "rank": 3,
         "name": "DeepSeek-V3",
         "desc": "国产开源天花板，数学代码比肩 GPT-4。",
         "url": "https://chat.deepseek.com",
-        "score": "98.8"
+        "score": "99.0"
       },
       {
         "rank": 4,
         "name": "Gemini 1.5 Pro",
         "desc": "Google 生态核心，超长上下文窗口。",
         "url": "https://gemini.google.com",
-        "score": "98.5"
+        "score": "98.3"
       },
       {
         "rank": 5,
         "name": "Kimi 智能助手",
         "desc": "月之暗面出品，长文档分析首选，中文极佳。",
         "url": "https://kimi.moonshot.cn",
-        "score": "97.8"
+        "score": "97.9"
       },
       {
         "rank": 6,
@@ -410,7 +140,7 @@ window.AI_DATA = {
         "name": "Llama 3.1",
         "desc": "Meta 开源巨无霸，当前开源界的最强基石。",
         "url": "https://llama.meta.com",
-        "score": "96.9"
+        "score": "97.0"
       },
       {
         "rank": 8,
@@ -431,7 +161,7 @@ window.AI_DATA = {
         "name": "Grok-2",
         "desc": "X (推特) 旗下，接入实时社交数据。",
         "url": "https://x.ai",
-        "score": "95.4"
+        "score": "95.3"
       },
       {
         "rank": 11,
@@ -445,7 +175,7 @@ window.AI_DATA = {
         "name": "GLM-4",
         "desc": "智谱 AI 旗舰，工具调用能力强。",
         "url": "https://chatglm.cn",
-        "score": "94.3"
+        "score": "94.4"
       },
       {
         "rank": 13,
@@ -459,35 +189,35 @@ window.AI_DATA = {
         "name": "MiniMax",
         "desc": "拟人交互最强，语气最像真人。",
         "url": "https://minimaxi.com",
-        "score": "93.3"
+        "score": "93.4"
       },
       {
         "rank": 15,
         "name": "Command R+",
         "desc": "专为 RAG (检索增强) 设计的企业模型。",
         "url": "https://cohere.com",
-        "score": "92.9"
+        "score": "93.0"
       },
       {
         "rank": 16,
         "name": "Copilot",
         "desc": "集成于 Office 的办公助手。",
         "url": "https://copilot.microsoft.com",
-        "score": "92.4"
+        "score": "92.5"
       },
       {
         "rank": 17,
         "name": "HuggingChat",
         "desc": "免费使用多种开源模型。",
         "url": "https://huggingface.co/chat",
-        "score": "91.8"
+        "score": "92.0"
       },
       {
         "rank": 18,
         "name": "Poe",
         "desc": "聚合所有主流大模型。",
         "url": "https://poe.com",
-        "score": "91.5"
+        "score": "91.4"
       },
       {
         "rank": 19,
@@ -501,7 +231,7 @@ window.AI_DATA = {
         "name": "Pi",
         "desc": "主打高情商陪伴聊天。",
         "url": "https://pi.ai",
-        "score": "90.5"
+        "score": "90.4"
       }
     ],
     "Image": [
@@ -510,42 +240,42 @@ window.AI_DATA = {
         "name": "Midjourney v6",
         "desc": "艺术绘图王者，审美无可匹敌。",
         "url": "https://midjourney.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Flux.1 Pro",
         "desc": "最强开源生图，手指/文字渲染极佳。",
         "url": "https://blackforestlabs.ai",
-        "score": "99.4"
+        "score": "99.5"
       },
       {
         "rank": 3,
         "name": "Stable Diffusion",
         "desc": "本地部署必备，插件生态丰富。",
         "url": "https://stability.ai",
-        "score": "99.0"
+        "score": "98.9"
       },
       {
         "rank": 4,
         "name": "DALL·E 3",
         "desc": "语义理解最强，集成于 GPT。",
         "url": "https://openai.com/dall-e-3",
-        "score": "98.4"
+        "score": "98.3"
       },
       {
         "rank": 5,
         "name": "Civitai",
         "desc": "全球最大模型与 LoRA 下载站。",
         "url": "https://civitai.com",
-        "score": "97.9"
+        "score": "97.8"
       },
       {
         "rank": 6,
         "name": "LiblibAI",
         "desc": "国内最大 AI 绘画社区。",
         "url": "https://www.liblib.art",
-        "score": "97.4"
+        "score": "97.3"
       },
       {
         "rank": 7,
@@ -566,28 +296,28 @@ window.AI_DATA = {
         "name": "Freepik AI",
         "desc": "实时绘图，设计师灵感库。",
         "url": "https://www.freepik.com/ai",
-        "score": "95.8"
+        "score": "96.0"
       },
       {
         "rank": 10,
         "name": "Ideogram 2.0",
         "desc": "图片生成文字效果最好。",
         "url": "https://ideogram.ai",
-        "score": "95.4"
+        "score": "95.5"
       },
       {
         "rank": 11,
         "name": "Krea AI",
         "desc": "实时画布，画哪里生成哪里。",
         "url": "https://krea.ai",
-        "score": "94.9"
+        "score": "95.0"
       },
       {
         "rank": 12,
         "name": "Firefly",
         "desc": "版权合规，适合商业设计。",
         "url": "https://firefly.adobe.com",
-        "score": "94.5"
+        "score": "94.4"
       },
       {
         "rank": 13,
@@ -601,14 +331,14 @@ window.AI_DATA = {
         "name": "Tripo SR",
         "desc": "图片转 3D 模型。",
         "url": "https://www.tripo3d.ai",
-        "score": "93.3"
+        "score": "93.4"
       },
       {
         "rank": 15,
         "name": "ControlNet",
         "desc": "SD 核心插件，精准控制构图。",
         "url": "https://github.com/lllyasviel/ControlNet",
-        "score": "92.9"
+        "score": "92.8"
       },
       {
         "rank": 16,
@@ -622,21 +352,21 @@ window.AI_DATA = {
         "name": "Tensor.art",
         "desc": "在线运行模型，免费额度大。",
         "url": "https://tensor.art",
-        "score": "92.0"
+        "score": "91.9"
       },
       {
         "rank": 18,
         "name": "Clipdrop",
         "desc": "移除背景/打光工具箱。",
         "url": "https://clipdrop.co",
-        "score": "91.3"
+        "score": "91.5"
       },
       {
         "rank": 19,
         "name": "Stylar",
         "desc": "图层控制精准的设计工具。",
         "url": "https://www.dzine.ai",
-        "score": "90.9"
+        "score": "91.0"
       },
       {
         "rank": 20,
@@ -652,14 +382,14 @@ window.AI_DATA = {
         "name": "Runway Gen-3",
         "desc": "视频生成行业标准，运镜控制。",
         "url": "https://runwayml.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Kling AI",
         "desc": "生成时长最长，物理模拟真实。",
         "url": "https://klingai.kuaishou.com",
-        "score": "99.4"
+        "score": "99.3"
       },
       {
         "rank": 3,
@@ -680,35 +410,35 @@ window.AI_DATA = {
         "name": "Vidu",
         "desc": "一键生成，人物一致性好。",
         "url": "https://www.vidu.studio",
-        "score": "97.9"
+        "score": "97.8"
       },
       {
         "rank": 6,
         "name": "Sora",
         "desc": "OpenAI 期货，定义行业上限。",
         "url": "https://openai.com/sora",
-        "score": "97.4"
+        "score": "97.3"
       },
       {
         "rank": 7,
         "name": "HeyGen",
         "desc": "数字人播报王者，口型同步。",
         "url": "https://www.heygen.com",
-        "score": "96.8"
+        "score": "97.0"
       },
       {
         "rank": 8,
         "name": "Pika Art",
         "desc": "动画风格，局部重绘功能。",
         "url": "https://pika.art",
-        "score": "96.3"
+        "score": "96.5"
       },
       {
         "rank": 9,
         "name": "Hedra",
         "desc": "专注人物对话，表情细腻。",
         "url": "https://www.hedra.com",
-        "score": "95.9"
+        "score": "95.8"
       },
       {
         "rank": 10,
@@ -722,7 +452,7 @@ window.AI_DATA = {
         "name": "AnimateDiff",
         "desc": "让静态图动起来的 SD 插件。",
         "url": "https://github.com/guoyww/AnimateDiff",
-        "score": "95.0"
+        "score": "94.8"
       },
       {
         "rank": 12,
@@ -736,42 +466,42 @@ window.AI_DATA = {
         "name": "Udio",
         "desc": "音质更 Hi-Fi 的音乐 AI。",
         "url": "https://www.udio.com",
-        "score": "93.9"
+        "score": "93.8"
       },
       {
         "rank": 14,
         "name": "ElevenLabs",
         "desc": "全球最强 AI 配音。",
         "url": "https://elevenlabs.io",
-        "score": "93.4"
+        "score": "93.5"
       },
       {
         "rank": 15,
         "name": "Sync Labs",
         "desc": "专业口型同步。",
         "url": "https://synclabs.so",
-        "score": "93.0"
+        "score": "92.8"
       },
       {
         "rank": 16,
         "name": "D-ID",
         "desc": "老牌照片说话工具。",
         "url": "https://www.d-id.com",
-        "score": "92.5"
+        "score": "92.4"
       },
       {
         "rank": 17,
         "name": "Synthesia",
         "desc": "企业级数字人演示。",
         "url": "https://www.synthesia.io",
-        "score": "92.0"
+        "score": "91.9"
       },
       {
         "rank": 18,
         "name": "Descript",
         "desc": "像编辑文档一样编辑视频。",
         "url": "https://www.descript.com",
-        "score": "91.5"
+        "score": "91.3"
       },
       {
         "rank": 19,
@@ -785,7 +515,7 @@ window.AI_DATA = {
         "name": "Kaiber",
         "desc": "风格化视频转绘。",
         "url": "https://kaiber.ai",
-        "score": "90.5"
+        "score": "90.4"
       }
     ],
     "Dev": [
@@ -794,21 +524,21 @@ window.AI_DATA = {
         "name": "Cursor",
         "desc": "AI 原生编辑器，全库理解。",
         "url": "https://cursor.com",
-        "score": "99.9"
+        "score": "99.8"
       },
       {
         "rank": 2,
         "name": "GitHub Copilot",
         "desc": "开发者必备代码补全。",
         "url": "https://github.com/features/copilot",
-        "score": "99.5"
+        "score": "99.3"
       },
       {
         "rank": 3,
         "name": "v0.dev",
         "desc": "文字生成 React 界面。",
         "url": "https://v0.dev",
-        "score": "98.9"
+        "score": "98.8"
       },
       {
         "rank": 4,
@@ -822,7 +552,7 @@ window.AI_DATA = {
         "name": "Hugging Face",
         "desc": "全球开源模型托管中心。",
         "url": "https://huggingface.co",
-        "score": "97.9"
+        "score": "98.0"
       },
       {
         "rank": 6,
@@ -836,7 +566,7 @@ window.AI_DATA = {
         "name": "Ollama",
         "desc": "本地运行大模型工具。",
         "url": "https://ollama.com",
-        "score": "96.9"
+        "score": "96.8"
       },
       {
         "rank": 8,
@@ -857,7 +587,7 @@ window.AI_DATA = {
         "name": "Devin",
         "desc": "全自动 AI 软件工程师。",
         "url": "https://www.cognition-labs.com/devin",
-        "score": "95.4"
+        "score": "95.5"
       },
       {
         "rank": 11,
@@ -878,42 +608,42 @@ window.AI_DATA = {
         "name": "Dify",
         "desc": "可视化 LLM 应用编排。",
         "url": "https://dify.ai",
-        "score": "94.0"
+        "score": "93.9"
       },
       {
         "rank": 14,
         "name": "Coze",
         "desc": "零代码 AI Bot 搭建。",
         "url": "https://www.coze.com",
-        "score": "93.4"
+        "score": "93.3"
       },
       {
         "rank": 15,
         "name": "Pinecone",
         "desc": "AI 向量数据库。",
         "url": "https://www.pinecone.io",
-        "score": "92.9"
+        "score": "93.0"
       },
       {
         "rank": 16,
         "name": "Vercel",
         "desc": "前端托管，支持 AI 应用。",
         "url": "https://vercel.com",
-        "score": "92.3"
+        "score": "92.5"
       },
       {
         "rank": 17,
         "name": "Tabnine",
         "desc": "私有化代码补全。",
         "url": "https://www.tabnine.com",
-        "score": "91.9"
+        "score": "92.0"
       },
       {
         "rank": 18,
         "name": "Amazon Q",
         "desc": "AWS 开发者助手。",
         "url": "https://aws.amazon.com/q/developer/",
-        "score": "91.5"
+        "score": "91.3"
       },
       {
         "rank": 19,
