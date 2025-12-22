@@ -57,6 +57,7 @@
             display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px;
         }
         .section-title span { color: var(--text-secondary); font-weight: 400; font-size: 0.9em; margin-left: 8px; }
+        @media (max-width: 600px) { .section-title span { display: none; } }
         
         .prompts-grid {
             display: grid; gap: 20px;
@@ -95,30 +96,54 @@
         }
         @media (hover: hover) { .prompt-card:hover .copy-hint { opacity: 1; } }
 
-        /* === 4. 双栏布局 & News === */
+        /* === 4. 双栏布局 & 搜索过滤 === */
         .main-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 48px; }
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; gap: 40px; } }
         
+        /* 🔍 新增：搜索框与过滤栏容器 */
+        .filter-container {
+            display: flex; flex-direction: column; gap: 15px; margin-top: 15px;
+        }
+        @media (min-width: 768px) {
+            .filter-container { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        /* 搜索框样式 */
+        .search-box { position: relative; flex: 1; max-width: 100%; }
+        @media (min-width: 768px) { .search-box { max-width: 280px; } }
+        
+        .search-input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
+            padding: 10px 12px 10px 38px; border-radius: 10px; color: var(--text-primary);
+            font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--text-accent); background: rgba(255,255,255,0.08); }
+        .search-icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            font-size: 0.9rem; opacity: 0.6; color: var(--text-secondary);
+        }
+
+        /* Tab 按钮 */
         .filter-bar {
-            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-top: 10px;
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
         }
         .filter-btn {
             background: transparent; border: 1px solid var(--border-subtle);
-            color: var(--text-secondary); padding: 6px 12px; border-radius: 8px;
+            color: var(--text-secondary); padding: 8px 14px; border-radius: 8px;
             font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
         }
         .filter-btn:hover, .filter-btn.active { background: var(--text-accent); color: #0f172a; border-color: var(--text-accent); }
 
-        .news-list { display: flex; flex-direction: column; gap: 24px; margin-top: 20px; }
-        @media (max-width: 600px) { .news-list { gap: 16px; } }
+        .news-list { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+        @media (max-width: 600px) { .news-list { gap: 16px; margin-top: 20px; } }
         
-        /* News Item 改为 cursor: pointer 提示可点击 */
         .news-item {
             display: flex; gap: 20px; padding: 24px; background: var(--bg-card);
             border: 1px solid var(--border-subtle); border-radius: var(--radius-card); align-items: flex-start;
-            cursor: pointer; /* 👈 Changed */
+            cursor: pointer; transition: transform 0.2s;
         }
-        .news-item:hover { border-color: var(--text-secondary); background: var(--bg-card-hover); }
+        .news-item:hover { border-color: var(--text-secondary); background: var(--bg-card-hover); transform: translateY(-2px); }
         @media (max-width: 600px) { .news-item { padding: 16px; gap: 12px; } .news-icon { width: 40px; height: 40px; font-size: 1.2rem; } }
 
         .news-icon {
@@ -167,7 +192,7 @@
         footer { margin-top: 60px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border-subtle); padding-top: 30px; }
         .loading-text { text-align: center; padding: 40px; color: var(--text-secondary); }
 
-        /* === 6. 模态框 (Modal) - 详情页 === */
+        /* === 6. 模态框 (Modal) === */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
@@ -181,7 +206,7 @@
             width: 100%; max-width: 600px; border-radius: 20px;
             padding: 30px; position: relative;
             transform: translateY(20px); transition: transform 0.3s;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
         }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         
@@ -198,7 +223,7 @@
         .modal-meta { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-family: 'JetBrains Mono', monospace; }
         .modal-desc { 
             font-size: 1.05rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 30px; 
-            background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px;
+            background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; white-space: pre-wrap;
         }
         .modal-btn {
             display: block; width: 100%; padding: 14px; text-align: center;
@@ -234,13 +259,23 @@
 
         <div class="main-layout">
             <div class="left-col">
-                <div class="section-header"><div class="section-title">全球情报 <span>/ NEWS</span></div></div>
-                <div class="filter-bar">
-                    <button class="filter-btn active" onclick="filterNews('ALL')">全部 All</button>
-                    <button class="filter-btn" onclick="filterNews('APP')">🚀 Product Hunt</button>
-                    <button class="filter-btn" onclick="filterNews('DEV')">🛠️ Hacker News</button>
-                    <button class="filter-btn" onclick="filterNews('MEDIA')">🎬 媒体</button>
+                <div class="section-header">
+                    <div class="section-title">全球情报 <span>/ NEWS</span></div>
                 </div>
+                
+                <div class="filter-container">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="globalSearch()">
+                    </div>
+                    <div class="filter-bar">
+                        <button class="filter-btn active" onclick="filterNews('ALL')">全部 All</button>
+                        <button class="filter-btn" onclick="filterNews('APP')">🚀 Product</button>
+                        <button class="filter-btn" onclick="filterNews('DEV')">🛠️ Tech</button>
+                        <button class="filter-btn" onclick="filterNews('MEDIA')">🎬 Media</button>
+                    </div>
+                </div>
+
                 <div id="news-container" class="news-list"><div class="loading-text">Loading...</div></div>
             </div>
             <div class="right-col">
@@ -250,10 +285,10 @@
         </div>
     </div>
 
-    <footer><p>© 2025 AI NEXUS</p></footer>
+    <footer><p>© 2025 AI NEXUS • Automated Intelligence Radar</p></footer>
 
-    <div id="toast" class="toast">✅ 已复制到剪贴板</div>
-
+    <div id="toast" class="toast">✅ 已复制</div>
+    
     <div id="modal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal(event)">×</button>
@@ -272,34 +307,62 @@
         let allNews = [];
         let currentFilter = 'ALL';
 
-        // === 1. 模态框逻辑 (Sub-page) ===
-        function openNewsModal(index) {
-            // 根据当前显示的列表找到对应的数据
-            // 注意：因为有过滤功能，我们需要在渲染时绑定原始 ID 或者对象引用
-            // 这里简化逻辑：直接传递对象不太好传，我们用全局 allNews 查找
-            const item = allNews.find(n => n.id === String(index));
+        // === 1. 搜索与过滤逻辑 ===
+        function globalSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (!query) {
+                // 如果搜索为空，恢复当前的 Tab 过滤
+                filterNews(currentFilter);
+                return;
+            }
+            // 执行搜索（不分分类）
+            const filtered = allNews.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.desc.toLowerCase().includes(query) ||
+                item.src.toLowerCase().includes(query)
+            );
+            renderNews(filtered);
+        }
+
+        function filterNews(type) {
+            currentFilter = type;
+            // 清空搜索框，避免逻辑冲突
+            document.getElementById('search-input').value = '';
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active'); // Use currentTarget to be safe
+            
+            let filtered = [];
+            if (type === 'ALL') filtered = allNews;
+            else if (type === 'MEDIA') filtered = allNews.filter(i => i.type === 'VIDEO' || i.type === 'IMAGE');
+            else filtered = allNews.filter(i => i.type === type);
+            renderNews(filtered);
+        }
+
+        // === 2. 模态框逻辑 ===
+        function openNewsModal(id) {
+            const item = allNews.find(n => n.id === String(id));
             if (!item) return;
 
             document.getElementById('modal-title').innerText = item.title;
             document.getElementById('modal-meta').innerText = `${item.time} • ${item.src}`;
-            document.getElementById('modal-desc').innerText = item.desc; // 未来这里可以是更长的总结
+            document.getElementById('modal-desc').innerText = item.desc;
             document.getElementById('modal-link').href = item.url;
             
-            // 设置标签样式
             const tagClass = getSourceClass(item.src);
             document.getElementById('modal-tag-container').innerHTML = `<span class="source-tag ${tagClass}">${item.src}</span>`;
 
             document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal(e) {
             if (e) e.preventDefault();
             document.getElementById('modal').classList.remove('active');
-            document.body.style.overflow = ''; // 恢复滚动
+            document.body.style.overflow = '';
         }
 
-        // === 2. 提示词逻辑 ===
+        // === 3. 提示词逻辑 ===
         function renderPrompts() {
             const container = document.getElementById('prompt-container');
             const sliced = allPrompts.slice(0, 12);
@@ -317,24 +380,13 @@
             navigator.clipboard.writeText(text).then(() => { showToast('✨ 公式已复制！请替换 [ ] 内容'); });
         }
 
-        // === 3. 新闻逻辑 ===
-        function filterNews(type) {
-            currentFilter = type;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            let filtered = [];
-            if (type === 'ALL') filtered = allNews;
-            else if (type === 'MEDIA') filtered = allNews.filter(i => i.type === 'VIDEO' || i.type === 'IMAGE');
-            else filtered = allNews.filter(i => i.type === type);
-            renderNews(filtered);
-        }
-
+        // === 4. 基础渲染 ===
         function getIcon(type) { const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' }; return icons[type] || '📄'; }
         function getSourceClass(src) { if (src.includes('Product Hunt')) return 'src-ph'; if (src.includes('Hacker News')) return 'src-hn'; return 'src-default'; }
         
         function renderNews(data) {
             const container = document.getElementById('news-container');
-            if (!data || data.length === 0) { container.innerHTML = '<div class="loading-text">无内容</div>'; return; }
+            if (!data || data.length === 0) { container.innerHTML = '<div class="loading-text">No results found.</div>'; return; }
             container.innerHTML = data.map(item => `
                 <div class="news-item" onclick="openNewsModal('${item.id}')">
                     <div class="news-icon">${getIcon(item.type)}</div>
@@ -345,7 +397,6 @@
                 </div>`).join('');
         }
 
-        // === 4. 榜单逻辑 ===
         function renderRanks(data) {
             const container = document.getElementById('rank-container');
             container.innerHTML = '';
@@ -367,6 +418,7 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2000);
         }
 
+        // === 初始化 ===
         window.onload = function() {
             if (window.AI_DATA) {
                 const lastUpdate = window.AI_DATA.news[0]?.time || 'LIVE';
