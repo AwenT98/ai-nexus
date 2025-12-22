@@ -7,180 +7,97 @@
     <link rel="icon" href="favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* === 1. 核心设计系统 (Modern Clean Theme) === */
+        /* === 1. 核心设计系统 === */
         :root {
-            /* 背景色系：高级灰蓝 */
-            --bg-body: #0f172a;       /* 深沉背景 */
-            --bg-card: #1e293b;       /* 卡片背景 */
-            --bg-card-hover: #334155; /* 悬停高亮 */
-            
-            /* 文字色系：高对比度阅读 */
-            --text-primary: #f1f5f9;  /* 主标题白 */
-            --text-secondary: #94a3b8;/* 次要信息灰 */
-            --text-accent: #38bdf8;   /* 提亮色（天蓝） */
-
-            /* 边框与装饰 */
-            --border-subtle: rgba(148, 163, 184, 0.15);
-            --border-highlight: rgba(56, 189, 248, 0.5);
+            --bg-body: #0f172a; --bg-card: #1e293b; --bg-card-hover: #334155;
+            --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-accent: #38bdf8;
+            --border-subtle: rgba(148, 163, 184, 0.15); --border-highlight: rgba(56, 189, 248, 0.5);
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            
-            /* 布局参数 */
-            --radius-card: 16px;
-            --container-width: 1280px;
+            --radius-card: 16px; --container-width: 1280px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased; /* 文字抗锯齿，更清晰 */
+            font-family: 'Inter', sans-serif; background-color: var(--bg-body);
+            color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased;
             padding-bottom: 60px;
         }
-
-        /* 顶部装饰光晕 */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; height: 400px;
+            content: ''; position: fixed; top: 0; left: 0; right: 0; height: 400px;
             background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%);
-            z-index: -1;
-            pointer-events: none;
+            z-index: -1; pointer-events: none;
         }
-
-        .container {
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
+        .container { max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
         a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
 
-        /* === 2. 极简头部 (Header) === */
-        header {
-            padding: 60px 0 40px;
-            text-align: center;
-        }
-
+        /* === 2. 极简头部 === */
+        header { padding: 60px 0 40px; text-align: center; }
         .site-title {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 12px;
+            font-size: 3rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px;
             background: linear-gradient(to right, #fff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-
         .site-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--text-accent);
-            border-radius: 99px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            font-family: 'JetBrains Mono', monospace;
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px;
+            background: rgba(56, 189, 248, 0.1); color: var(--text-accent);
+            border-radius: 99px; font-size: 0.85rem; font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.2); font-family: 'JetBrains Mono', monospace;
         }
 
         /* === 3. 通用板块样式 === */
         .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end; /* 底部对齐 */
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-subtle);
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);
         }
-
         .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: -0.5px;
+            font-size: 1.25rem; font-weight: 700; color: var(--text-primary);
+            display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px;
         }
         .section-title span { color: var(--text-secondary); font-weight: 400; font-size: 0.9em; margin-left: 8px; }
 
-        .btn-refresh {
-            background: transparent;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .btn-refresh:hover {
-            border-color: var(--text-accent);
-            color: var(--text-accent);
-            background: rgba(56, 189, 248, 0.05);
-        }
-
-        /* === 4. 提示词网格 (12宫格完美对齐) === */
+        /* === 4. 提示词网格 (12宫格) === */
         .prompts-section { margin-bottom: 60px; }
-        
         .prompts-grid {
-            display: grid;
-            gap: 20px;
-            /* 桌面端：固定4列 */
-            grid-template-columns: repeat(4, 1fr);
+            display: grid; gap: 20px;
+            grid-template-columns: repeat(4, 1fr); /* 桌面4列 */
         }
-
-        /* 响应式：平板3列，手机2列 => 12都能整除，不留尾巴 */
         @media (max-width: 1024px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 640px) { .prompts-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .prompt-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            padding: 20px;
-            height: 160px; /* 固定高度，整齐划一 */
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card); padding: 20px;
+            height: 220px; 
+            display: flex; flex-direction: column; cursor: pointer;
+            position: relative; overflow: hidden;
             transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
         .prompt-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-highlight);
-            box-shadow: var(--shadow-card);
-            background: var(--bg-card-hover);
+            transform: translateY(-4px); border-color: var(--border-highlight);
+            box-shadow: var(--shadow-card); background: var(--bg-card-hover);
         }
         .prompt-tag {
             position: absolute; top: 16px; right: 16px;
-            font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);
-            background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;
+            font-size: 0.7rem; font-weight: 700; color: var(--text-accent);
+            background: rgba(56, 189, 248, 0.1); padding: 4px 8px; border-radius: 6px;
         }
         .prompt-title {
-            font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;
+            font-size: 1rem; font-weight: 700; margin-bottom: 12px;
             color: var(--text-primary); padding-right: 40px;
         }
         .prompt-text {
             flex: 1;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem; color: var(--text-secondary);
-            background: rgba(0,0,0,0.2);
-            padding: 10px; border-radius: 8px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.75rem; color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px; border-radius: 8px;
             overflow: hidden;
-            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
-            border-left: 3px solid transparent;
+            display: -webkit-box; -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            border: 1px solid var(--border-subtle);
+            white-space: pre-wrap;
         }
         .prompt-card:hover .prompt-text {
-            border-left-color: var(--text-accent);
-            color: #cbd5e1;
+            border-color: var(--text-accent); background: rgba(15, 23, 42, 0.8);
         }
         .copy-hint {
             position: absolute; bottom: 10px; right: 10px;
@@ -189,194 +106,103 @@
         }
         .prompt-card:hover .copy-hint { opacity: 1; }
 
-
         /* === 5. 双栏布局 (News & Rank) === */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr; /* 黄金比例分割 */
-            gap: 48px;
-        }
+        .main-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 48px; }
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
-
-        /* === 情报流 (News - 杂志风格) === */
         .news-list { display: flex; flex-direction: column; gap: 24px; }
-
         .news-item {
-            display: flex; gap: 20px;
-            padding: 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
+            display: flex; gap: 20px; padding: 24px; background: var(--bg-card);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-card);
             align-items: flex-start;
         }
-        .news-item:hover {
-            border-color: var(--text-secondary);
-            background: var(--bg-card-hover);
-        }
-
+        .news-item:hover { border-color: var(--text-secondary); background: var(--bg-card-hover); }
         .news-icon {
             width: 48px; height: 48px; flex-shrink: 0;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-subtle);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem;
         }
-
         .news-content { flex: 1; }
-
-        .news-meta {
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 8px; font-size: 0.8rem;
-        }
-        .source-tag {
-            font-weight: 700; padding: 4px 8px; border-radius: 6px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .news-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; }
+        .source-tag { font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         .src-ph { color: #f87171; background: rgba(248, 113, 113, 0.1); }
         .src-hn { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
         .src-default { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .news-time { color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        .news-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); line-height: 1.4; }
+        .news-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
 
-        .news-time {
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .news-title {
-            font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;
-            color: var(--text-primary); line-height: 1.4;
-        }
-        .news-desc {
-            font-size: 0.95rem; color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* === 权威榜单 (Rank - 清单风格) === */
+        /* === 权威榜单 (Rank) === */
         .rank-group { margin-bottom: 40px; }
         .rank-group-title {
             font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
             text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 16px; border-left: 3px solid var(--text-accent);
-            padding-left: 10px;
+            margin-bottom: 16px; border-left: 3px solid var(--text-accent); padding-left: 10px;
         }
-
         .rank-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 10px;
-            border-radius: 8px;
-            border-bottom: 1px solid var(--border-subtle);
-            transition: background 0.2s;
+            display: flex; align-items: center; gap: 12px; padding: 12px 10px;
+            border-radius: 8px; border-bottom: 1px solid var(--border-subtle); transition: background 0.2s;
         }
         .rank-item:hover { background: var(--bg-card-hover); border-bottom-color: transparent; }
         .rank-item:last-child { border-bottom: none; }
-
         .rank-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; font-size: 1.1rem;
-            width: 24px; text-align: center;
-            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem;
+            width: 24px; text-align: center; color: var(--text-secondary);
         }
-        /* 前三名奖牌色 */
-        .rank-item:nth-child(2) .rank-num { color: #fbbf24; } /* 1 */
-        .rank-item:nth-child(3) .rank-num { color: #94a3b8; } /* 2 */
-        .rank-item:nth-child(4) .rank-num { color: #b45309; } /* 3 */
-
+        .rank-item:nth-child(2) .rank-num { color: #fbbf24; }
+        .rank-item:nth-child(3) .rank-num { color: #94a3b8; }
+        .rank-item:nth-child(4) .rank-num { color: #b45309; }
         .rank-info { flex: 1; overflow: hidden; }
-        .rank-row {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 4px;
-        }
+        .rank-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
         .rank-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); }
-        
-        /* 🔥 热度分数胶囊 */
         .rank-score {
-            font-size: 0.75rem; font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(244, 63, 94, 0.15);
-            color: #fb7185;
-            padding: 2px 8px; border-radius: 12px;
-            display: flex; align-items: center; gap: 4px;
+            font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+            background: rgba(244, 63, 94, 0.15); color: #fb7185;
+            padding: 2px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;
         }
-
-        .rank-desc {
-            font-size: 0.8rem; color: var(--text-secondary);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-
-        /* === 页脚 === */
-        footer {
-            margin-top: 80px; text-align: center;
-            color: var(--text-secondary); font-size: 0.9rem;
-            border-top: 1px solid var(--border-subtle);
-            padding-top: 40px;
-        }
-
+        .rank-desc { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        footer { margin-top: 80px; text-align: center; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--border-subtle); padding-top: 40px; }
         .loading-text { text-align: center; padding: 40px; color: var(--text-secondary); }
     </style>
 </head>
 <body>
-
     <header>
         <div class="container">
             <h1 class="site-title">AI NEXUS</h1>
-            <div class="site-badge">
-                <span id="update-time">SYSTEM SYNCING...</span>
-            </div>
+            <div class="site-badge"><span id="update-time">SYSTEM SYNCING...</span></div>
         </div>
     </header>
-
     <div class="container">
-        
         <div class="prompts-section">
             <div class="section-header">
-                <div class="section-title">灵感指令库 <span>/ PROMPTS GALLERY</span></div>
-                <button class="btn-refresh" onclick="shufflePrompts()">
-                    🔄 换一批
-                </button>
+                <div class="section-title">万能公式库 <span>/ PROMPT FRAMEWORKS</span></div>
             </div>
             <div id="prompt-container" class="prompts-grid"></div>
         </div>
-
         <div class="main-layout">
-            
             <div class="left-col">
-                <div class="section-header">
-                    <div class="section-title">全球情报流 <span>/ NEWS STREAM</span></div>
-                </div>
-                <div id="news-container" class="news-list">
-                    <div class="loading-text">正在链接全球节点...</div>
-                </div>
+                <div class="section-header"><div class="section-title">全球情报流 <span>/ NEWS STREAM</span></div></div>
+                <div id="news-container" class="news-list"><div class="loading-text">正在链接全球节点...</div></div>
             </div>
-
             <div class="right-col">
-                <div class="section-header">
-                    <div class="section-title">权威热榜 <span>/ TOP TIER</span></div>
-                </div>
-                <div id="rank-container">
-                    </div>
+                <div class="section-header"><div class="section-title">权威热榜 <span>/ TOP TIER</span></div></div>
+                <div id="rank-container"></div>
             </div>
-
         </div>
-
     </div>
-
-    <footer>
-        <p>© 2025 AI NEXUS • Automated Intelligence Radar</p>
-    </footer>
-
+    <footer><p>© 2025 AI NEXUS • Automated Intelligence Radar</p></footer>
     <script src="data.js"></script>
-
     <script>
-        // === 1. 提示词逻辑：12宫格完美对齐 ===
+        // === 1. 提示词逻辑 ===
         let allPrompts = [];
         function renderPrompts() {
             const container = document.getElementById('prompt-container');
-            // 锁定 12 个，配合 CSS 的 4/3/2 列，永远整除
-            const count = 12; 
-            const shuffled = [...allPrompts].sort(() => 0.5 - Math.random()).slice(0, count);
+            const count = 12; // 锁定12个
+            const sliced = allPrompts.slice(0, count);
             
-            container.innerHTML = shuffled.map(p => `
-                <div class="prompt-card" onclick="copyPrompt('${p.content.replace(/'/g, "\\'")}')">
+            // 使用索引 index 调用复制，防止多行文本破坏 HTML 结构
+            container.innerHTML = sliced.map((p, index) => `
+                <div class="prompt-card" onclick="copyPrompt(${index})">
                     <div class="prompt-tag">${p.tag}</div>
                     <div class="prompt-title">${p.title}</div>
                     <div class="prompt-text">${p.content}</div>
@@ -384,103 +210,50 @@
                 </div>
             `).join('');
         }
-
-        function shufflePrompts() {
-            const container = document.getElementById('prompt-container');
-            container.style.opacity = '0.5';
-            setTimeout(() => {
-                renderPrompts();
-                container.style.opacity = '1';
-            }, 200);
+        function copyPrompt(index) {
+            const text = allPrompts[index].content;
+            navigator.clipboard.writeText(text).then(() => { alert('✅ 公式已复制！请替换 [ ] 内容使用。'); });
         }
 
-        function copyPrompt(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('指令已复制！');
-            });
-        }
-
-        // === 2. 新闻逻辑：高可读性 ===
-        function getIcon(type) {
-            const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' };
-            return icons[type] || '📄';
-        }
-
-        function getSourceClass(src) {
-            if (src.includes('Product Hunt')) return 'src-ph';
-            if (src.includes('Hacker News')) return 'src-hn';
-            return 'src-default';
-        }
-
+        // === 2 & 3. 基础渲染 ===
+        function getIcon(type) { const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' }; return icons[type] || '📄'; }
+        function getSourceClass(src) { if (src.includes('Product Hunt')) return 'src-ph'; if (src.includes('Hacker News')) return 'src-hn'; return 'src-default'; }
         function renderNews(data) {
             const container = document.getElementById('news-container');
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="loading-text">暂无数据更新</div>';
-                return;
-            }
-
+            if (!data || data.length === 0) { container.innerHTML = '<div class="loading-text">暂无数据更新</div>'; return; }
             container.innerHTML = data.map(item => `
                 <a href="${item.url}" target="_blank" class="news-item">
                     <div class="news-icon">${getIcon(item.type)}</div>
                     <div class="news-content">
-                        <div class="news-meta">
-                            <span class="source-tag ${getSourceClass(item.src)}">${item.src}</span>
-                            <span class="news-time">${item.time}</span>
-                        </div>
-                        <div class="news-title">${item.title}</div>
-                        <div class="news-desc">${item.desc}</div>
+                        <div class="news-meta"><span class="source-tag ${getSourceClass(item.src)}">${item.src}</span><span class="news-time">${item.time}</span></div>
+                        <div class="news-title">${item.title}</div><div class="news-desc">${item.desc}</div>
                     </div>
-                </a>
-            `).join('');
+                </a>`).join('');
         }
-
-        // === 3. 榜单逻辑：分数高亮 ===
         function renderRanks(data) {
             const container = document.getElementById('rank-container');
             container.innerHTML = '';
-
             Object.entries(data).forEach(([category, items]) => {
-                const topItems = items.slice(0, 5); // 仅展示前5
-                
-                let html = `<div class="rank-group">
-                                <div class="rank-group-title">${category} Top 5</div>`;
-                
+                const topItems = items.slice(0, 5);
+                let html = `<div class="rank-group"><div class="rank-group-title">${category} Top 5</div>`;
                 topItems.forEach(item => {
                     const score = item.score || (90 + Math.random() * 9).toFixed(1);
-                    
-                    html += `
-                    <a href="${item.url}" target="_blank" class="rank-item">
-                        <div class="rank-num">${item.rank}</div>
-                        <div class="rank-info">
-                            <div class="rank-row">
-                                <span class="rank-name">${item.name}</span>
-                                <span class="rank-score">🔥 ${score}</span>
-                            </div>
-                            <div class="rank-desc">${item.desc}</div>
-                        </div>
-                    </a>`;
+                    html += `<a href="${item.url}" target="_blank" class="rank-item"><div class="rank-num">${item.rank}</div><div class="rank-info"><div class="rank-row"><span class="rank-name">${item.name}</span><span class="rank-score">🔥 ${score}</span></div><div class="rank-desc">${item.desc}</div></div></a>`;
                 });
-
                 html += `</div>`;
                 container.innerHTML += html;
             });
         }
-
         // === 初始化 ===
         window.onload = function() {
             if (window.AI_DATA) {
-                // 时间显示
                 const lastUpdate = window.AI_DATA.news[0]?.time || 'LIVE';
                 document.getElementById('update-time').innerText = `UPDATED: ${lastUpdate}`;
-
                 renderNews(window.AI_DATA.news);
                 renderRanks(window.AI_DATA.ranks);
-                
                 allPrompts = window.AI_DATA.prompts || [];
                 renderPrompts();
-            } else {
-                document.getElementById('news-container').innerHTML = '<div class="loading-text">Data Load Failed.</div>';
-            }
+            } else { document.getElementById('news-container').innerHTML = '<div class="loading-text">Data Load Failed.</div>'; }
         };
     </script>
 </body>
