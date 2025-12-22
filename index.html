@@ -7,7 +7,7 @@
     <link rel="icon" href="favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* === 1. 核心设计系统 === */
+        /* === 1. 核心设计系统 (深色极简主题) === */
         :root {
             --bg-body: #0f172a; --bg-card: #1e293b; --bg-card-hover: #334155;
             --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-accent: #38bdf8;
@@ -22,13 +22,14 @@
             color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased;
             padding-bottom: 60px; overflow-x: hidden;
         }
+        /* 顶部极光背景特效 */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; height: 400px;
             background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%);
             z-index: -1; pointer-events: none;
         }
         .container { max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
-        @media (max-width: 600px) { .container { padding: 0 16px; } }
+        @media (max-width: 600px) { .container { padding: 0 16px; } } /* 手机端边距收缩 */
         a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
 
         /* === 2. 头部样式 === */
@@ -46,7 +47,7 @@
             border: 1px solid rgba(56, 189, 248, 0.2); font-family: 'JetBrains Mono', monospace;
         }
 
-        /* === 3. 提示词板块 === */
+        /* === 3. 提示词板块 (万能公式库) === */
         .prompts-section { margin-bottom: 60px; }
         .section-header {
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -61,10 +62,10 @@
         
         .prompts-grid {
             display: grid; gap: 20px;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr); /* 电脑 4列 */
         }
-        @media (max-width: 1024px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 640px) { .prompts-grid { grid-template-columns: 1fr; gap: 16px; } }
+        @media (max-width: 1024px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } } /* 平板 3列 */
+        @media (max-width: 640px) { .prompts-grid { grid-template-columns: 1fr; gap: 16px; } } /* 📱 手机 1列 (保留此核心需求) */
 
         .prompt-card {
             background: var(--bg-card); border: 1px solid var(--border-subtle);
@@ -83,6 +84,7 @@
             font-size: 1rem; font-weight: 700; margin-bottom: 12px;
             color: var(--text-primary); padding-right: 40px;
         }
+        /* 代码块风格文本 */
         .prompt-text {
             flex: 1; font-family: 'JetBrains Mono', Consolas, monospace;
             font-size: 0.75rem; color: #cbd5e1; background: rgba(15, 23, 42, 0.5);
@@ -100,18 +102,19 @@
         .main-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 48px; }
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; gap: 40px; } }
         
-        /* 🔍 新增：搜索框与过滤栏容器 */
+        /* 容器：搜索 + 热词 + Tab */
         .filter-container {
             display: flex; flex-direction: column; gap: 15px; margin-top: 15px;
         }
         @media (min-width: 768px) {
-            .filter-container { flex-direction: row; justify-content: space-between; align-items: center; }
+            .filter-container { flex-direction: row; justify-content: space-between; align-items: flex-start; }
         }
 
-        /* 搜索框样式 */
-        .search-box { position: relative; flex: 1; max-width: 100%; }
-        @media (min-width: 768px) { .search-box { max-width: 280px; } }
-        
+        /* 搜索区域 (含热词) */
+        .search-wrapper { flex: 1; max-width: 100%; }
+        @media (min-width: 768px) { .search-wrapper { max-width: 350px; } }
+
+        .search-box { position: relative; width: 100%; }
         .search-input {
             width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
             padding: 10px 12px 10px 38px; border-radius: 10px; color: var(--text-primary);
@@ -123,10 +126,25 @@
             font-size: 0.9rem; opacity: 0.6; color: var(--text-secondary);
         }
 
+        /* 🔥 热词风向标样式 */
+        .trending-bar {
+            display: flex; gap: 8px; align-items: center; margin-top: 10px;
+            font-size: 0.75rem; flex-wrap: wrap; padding-left: 2px;
+        }
+        .trending-label { color: var(--text-secondary); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .trend-tag {
+            color: var(--text-accent); background: rgba(56, 189, 248, 0.1); 
+            padding: 2px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+            border: 1px solid transparent; font-family: 'JetBrains Mono', monospace;
+        }
+        .trend-tag:hover {
+            background: var(--text-accent); color: #0f172a; transform: translateY(-1px);
+        }
+
         /* Tab 按钮 */
         .filter-bar {
             display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; margin-top: 2px;
         }
         .filter-btn {
             background: transparent; border: 1px solid var(--border-subtle);
@@ -232,7 +250,7 @@
         }
         .modal-btn:hover { opacity: 0.9; }
 
-        /* Toast */
+        /* Toast 通知 */
         .toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: rgba(255, 255, 255, 0.95); color: #0f172a;
@@ -264,10 +282,14 @@
                 </div>
                 
                 <div class="filter-container">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="globalSearch()">
+                    <div class="search-wrapper">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="globalSearch()">
+                        </div>
+                        <div id="trending-bar" class="trending-bar"></div>
                     </div>
+
                     <div class="filter-bar">
                         <button class="filter-btn active" onclick="filterNews('ALL')">全部 All</button>
                         <button class="filter-btn" onclick="filterNews('APP')">🚀 Product</button>
@@ -307,15 +329,37 @@
         let allNews = [];
         let currentFilter = 'ALL';
 
-        // === 1. 搜索与过滤逻辑 ===
+        // === 1. 🔥 智能热词算法 ===
+        function renderTrendingTags() {
+            if (!allNews || allNews.length === 0) return;
+            const keywords = ["GPT", "Claude", "Llama", "OpenAI", "Video", "Image", "开源", "免费", "Agent", "Sora", "DeepSeek", "Code"];
+            let tagCounts = {};
+            allNews.forEach(item => {
+                let text = (item.title + " " + item.desc).toLowerCase();
+                keywords.forEach(key => {
+                    if (text.includes(key.toLowerCase())) tagCounts[key] = (tagCounts[key] || 0) + 1;
+                });
+            });
+            const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]).slice(0, 5); // 取前5个
+            
+            const container = document.getElementById('trending-bar');
+            if (sortedTags.length > 0) {
+                let html = `<span class="trending-label">🔥 HOT:</span>`;
+                html += sortedTags.map(tag => 
+                    `<span class="trend-tag" onclick="applyTag('${tag}')">#${tag}</span>`
+                ).join('');
+                container.innerHTML = html;
+            }
+        }
+        function applyTag(tag) {
+            document.getElementById('search-input').value = tag;
+            globalSearch();
+        }
+
+        // === 2. 搜索与过滤逻辑 ===
         function globalSearch() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
-            if (!query) {
-                // 如果搜索为空，恢复当前的 Tab 过滤
-                filterNews(currentFilter);
-                return;
-            }
-            // 执行搜索（不分分类）
+            if (!query) { filterNews(currentFilter); return; }
             const filtered = allNews.filter(item => 
                 item.title.toLowerCase().includes(query) || 
                 item.desc.toLowerCase().includes(query) ||
@@ -326,12 +370,9 @@
 
         function filterNews(type) {
             currentFilter = type;
-            // 清空搜索框，避免逻辑冲突
             document.getElementById('search-input').value = '';
-            
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active'); // Use currentTarget to be safe
-            
+            event.currentTarget.classList.add('active'); 
             let filtered = [];
             if (type === 'ALL') filtered = allNews;
             else if (type === 'MEDIA') filtered = allNews.filter(i => i.type === 'VIDEO' || i.type === 'IMAGE');
@@ -339,30 +380,26 @@
             renderNews(filtered);
         }
 
-        // === 2. 模态框逻辑 ===
+        // === 3. 模态框逻辑 (点击卡片触发) ===
         function openNewsModal(id) {
             const item = allNews.find(n => n.id === String(id));
             if (!item) return;
-
             document.getElementById('modal-title').innerText = item.title;
             document.getElementById('modal-meta').innerText = `${item.time} • ${item.src}`;
             document.getElementById('modal-desc').innerText = item.desc;
             document.getElementById('modal-link').href = item.url;
-            
             const tagClass = getSourceClass(item.src);
             document.getElementById('modal-tag-container').innerHTML = `<span class="source-tag ${tagClass}">${item.src}</span>`;
-
             document.getElementById('modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeModal(e) {
             if (e) e.preventDefault();
             document.getElementById('modal').classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        // === 3. 提示词逻辑 ===
+        // === 4. 提示词逻辑 (点击复制) ===
         function renderPrompts() {
             const container = document.getElementById('prompt-container');
             const sliced = allPrompts.slice(0, 12);
@@ -380,7 +417,7 @@
             navigator.clipboard.writeText(text).then(() => { showToast('✨ 公式已复制！请替换 [ ] 内容'); });
         }
 
-        // === 4. 基础渲染 ===
+        // === 5. 基础渲染 ===
         function getIcon(type) { const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' }; return icons[type] || '📄'; }
         function getSourceClass(src) { if (src.includes('Product Hunt')) return 'src-ph'; if (src.includes('Hacker News')) return 'src-hn'; return 'src-default'; }
         
@@ -429,6 +466,8 @@
                 renderRanks(window.AI_DATA.ranks);
                 allPrompts = window.AI_DATA.prompts || [];
                 renderPrompts();
+                
+                renderTrendingTags(); // 🔥 启动热词分析
             } else { document.getElementById('news-container').innerHTML = '<div class="loading-text">Data Load Failed.</div>'; }
         };
     </script>
