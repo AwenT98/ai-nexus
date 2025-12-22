@@ -3,416 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI NEXUS | 未来情报局</title>
+    <title>AI NEXUS | 智能前沿情报</title>
     <link rel="icon" href="favicon.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* === 1. 核心变量与重置 (Deep Space Theme) === */
+        /* === 1. 核心设计系统 (Modern Clean Theme) === */
         :root {
-            --bg-deep: #050505; /* 极深黑 */
-            --bg-card: rgba(30, 30, 35, 0.6); /* 毛玻璃卡片 */
-            --bg-card-hover: rgba(50, 50, 60, 0.8);
-            --accent-primary: #00f2ea; /* 赛博青 */
-            --accent-secondary: #ff0050; /* 故障红 */
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(0, 242, 234, 0.15);
+            /* 背景色系：高级灰蓝 */
+            --bg-body: #0f172a;       /* 深沉背景 */
+            --bg-card: #1e293b;       /* 卡片背景 */
+            --bg-card-hover: #334155; /* 悬停高亮 */
+            
+            /* 文字色系：高对比度阅读 */
+            --text-primary: #f1f5f9;  /* 主标题白 */
+            --text-secondary: #94a3b8;/* 次要信息灰 */
+            --text-accent: #38bdf8;   /* 提亮色（天蓝） */
+
+            /* 边框与装饰 */
+            --border-subtle: rgba(148, 163, 184, 0.15);
+            --border-highlight: rgba(56, 189, 248, 0.5);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            
+            /* 布局参数 */
+            --radius-card: 16px;
+            --container-width: 1280px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-deep);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 242, 234, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 0, 80, 0.05) 0%, transparent 20%);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
             line-height: 1.6;
-            min-height: 100vh;
+            -webkit-font-smoothing: antialiased; /* 文字抗锯齿，更清晰 */
+            padding-bottom: 60px;
         }
 
-        /* 滚动条美化 */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+        /* 顶部装饰光晕 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; height: 400px;
+            background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
 
         .container {
-            max-width: 1280px;
+            max-width: var(--container-width);
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
-        /* === 2. 头部设计 (Hero Section) === */
+        a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
+
+        /* === 2. 极简头部 (Header) === */
         header {
             padding: 60px 0 40px;
             text-align: center;
-            position: relative;
         }
-        
+
         .site-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #fff, #cbd5e1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            text-transform: uppercase;
         }
 
-        .site-desc {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-
-        .status-badge {
+        .site-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             padding: 6px 16px;
-            background: rgba(0, 242, 234, 0.1);
-            border: 1px solid rgba(0, 242, 234, 0.2);
-            color: var(--accent-primary);
-            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--text-accent);
+            border-radius: 99px;
             font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.2);
             font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 0 15px rgba(0, 242, 234, 0.1);
         }
-        .status-dot {
-            width: 8px; height: 8px; background: var(--accent-primary);
-            border-radius: 50%; box-shadow: 0 0 10px var(--accent-primary);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
 
-        /* === 3. 通用板块标题 === */
+        /* === 3. 通用板块样式 === */
         .section-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
+            align-items: flex-end; /* 底部对齐 */
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
         }
+
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            letter-spacing: -0.5px;
         }
-        .section-title::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 24px;
-            background: var(--accent-primary);
-            box-shadow: 0 0 10px var(--accent-primary);
-        }
+        .section-title span { color: var(--text-secondary); font-weight: 400; font-size: 0.9em; margin-left: 8px; }
 
-        /* 刷新按钮 */
-        .refresh-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
+        .btn-refresh {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
         }
-        .refresh-btn:hover {
-            background: var(--accent-primary);
-            color: #000;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px rgba(0, 242, 234, 0.4);
+        .btn-refresh:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+            background: rgba(56, 189, 248, 0.05);
         }
 
-        /* === 4. 提示词网格 (完美的对齐逻辑) === */
+        /* === 4. 提示词网格 (12宫格完美对齐) === */
         .prompts-section { margin-bottom: 60px; }
         
         .prompts-grid {
             display: grid;
             gap: 20px;
-            /* 关键逻辑：强制列数，配合 JS 切片，保证永远填满 */
-            grid-template-columns: repeat(4, 1fr); 
+            /* 桌面端：固定4列 */
+            grid-template-columns: repeat(4, 1fr);
         }
 
-        /* 响应式断点 - 保证数学整除 */
-        @media (max-width: 1100px) {
-            .prompts-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 800px) {
-            .prompts-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 500px) {
-            .prompts-grid { grid-template-columns: 1fr; }
-        }
+        /* 响应式：平板3列，手机2列 => 12都能整除，不留尾巴 */
+        @media (max-width: 1024px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 640px) { .prompts-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .prompt-card {
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
             padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            height: 160px; /* 固定高度，整齐划一 */
             display: flex;
             flex-direction: column;
-            height: 180px; /* 固定高度，保证整齐 */
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
-
         .prompt-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            border-color: var(--border-highlight);
+            box-shadow: var(--shadow-card);
             background: var(--bg-card-hover);
-            border-color: var(--accent-primary);
-            box-shadow: var(--glow);
         }
-
         .prompt-tag {
-            position: absolute;
-            top: 15px; right: 15px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-muted);
+            position: absolute; top: 16px; right: 16px;
+            font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);
+            background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;
         }
-
         .prompt-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            padding-right: 60px; /* 给标签留位置 */
-            color: var(--text-main);
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;
+            color: var(--text-primary); padding-right: 40px;
         }
-
-        .prompt-content {
+        .prompt-text {
             flex: 1;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 6px;
+            font-size: 0.8rem; color: var(--text-secondary);
+            background: rgba(0,0,0,0.2);
+            padding: 10px; border-radius: 8px;
             overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            border-left: 2px solid var(--text-muted);
-            transition: border-color 0.3s;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+            border-left: 3px solid transparent;
         }
-        
-        .prompt-card:hover .prompt-content {
-            border-left-color: var(--accent-primary);
-            color: #ddd;
+        .prompt-card:hover .prompt-text {
+            border-left-color: var(--text-accent);
+            color: #cbd5e1;
         }
+        .copy-hint {
+            position: absolute; bottom: 10px; right: 10px;
+            font-size: 0.75rem; color: var(--text-accent);
+            opacity: 0; transition: opacity 0.2s; font-weight: 600;
+        }
+        .prompt-card:hover .copy-hint { opacity: 1; }
 
-        .prompt-hint {
-            margin-top: 10px;
-            font-size: 0.75rem;
-            text-align: right;
-            color: var(--accent-primary);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s;
-        }
-        .prompt-card:hover .prompt-hint { opacity: 1; transform: translateY(0); }
 
-        /* === 5. 两栏布局 (News & Rank) === */
+        /* === 5. 双栏布局 (News & Rank) === */
         .main-layout {
             display: grid;
-            grid-template-columns: 2.5fr 1fr; /* 左宽右窄 */
-            gap: 40px;
+            grid-template-columns: 2.5fr 1fr; /* 黄金比例分割 */
+            gap: 48px;
         }
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
 
-        /* === 新闻列表 (时间轴风格) === */
-        .news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: relative;
-        }
-        
-        /* 左侧时间轴线 */
-        .news-list::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0; left: 24px;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--accent-primary), transparent);
-            opacity: 0.3;
-        }
+        /* === 情报流 (News - 杂志风格) === */
+        .news-list { display: flex; flex-direction: column; gap: 24px; }
 
         .news-item {
-            display: flex;
-            gap: 20px;
-            position: relative;
+            display: flex; gap: 20px;
+            padding: 24px;
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            z-index: 1;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            align-items: flex-start;
         }
         .news-item:hover {
-            border-color: var(--text-muted);
-            transform: translateX(5px);
-            background: rgba(40, 40, 45, 0.9);
+            border-color: var(--text-secondary);
+            background: var(--bg-card-hover);
         }
 
-        .news-icon-box {
-            min-width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .news-icon {
+            width: 48px; height: 48px; flex-shrink: 0;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem;
-            border: 1px solid var(--border-color);
         }
 
-        .news-body { flex: 1; }
-        
+        .news-content { flex: 1; }
+
         .news-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 8px; font-size: 0.8rem;
         }
-        
-        .news-source {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 700;
-            text-transform: uppercase;
+        .source-tag {
+            font-weight: 700; padding: 4px 8px; border-radius: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .src-ph { color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
-        .src-hn { color: #feca57; background: rgba(254, 202, 87, 0.1); }
-        .src-other { color: #54a0ff; background: rgba(84, 160, 255, 0.1); }
+        .src-ph { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+        .src-hn { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+        .src-default { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
 
-        .news-time { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-        
+        .news-time {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         .news-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #fff;
+            font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;
+            color: var(--text-primary); line-height: 1.4;
         }
         .news-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        /* === 榜单样式 (Rank) === */
-        .rank-category { margin-bottom: 30px; }
-        .rank-head-title {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+        /* === 权威榜单 (Rank - 清单风格) === */
+        .rank-group { margin-bottom: 40px; }
+        .rank-group-title {
+            font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 16px; border-left: 3px solid var(--text-accent);
+            padding-left: 10px;
         }
 
-        .rank-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
+        .rank-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 10px;
             border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.2s;
         }
-        .rank-card:hover {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
+        .rank-item:hover { background: var(--bg-card-hover); border-bottom-color: transparent; }
+        .rank-item:last-child { border-bottom: none; }
 
         .rank-num {
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-            color: var(--text-muted);
+            font-weight: 700; font-size: 1.1rem;
+            width: 24px; text-align: center;
+            color: var(--text-secondary);
         }
-        /* 前三名金银铜色 */
-        .rank-card:nth-child(2) .rank-num { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); font-size: 1.4rem; } /* No.1 */
-        .rank-card:nth-child(3) .rank-num { color: #c0c0c0; } /* No.2 */
-        .rank-card:nth-child(4) .rank-num { color: #cd7f32; } /* No.3 */
+        /* 前三名奖牌色 */
+        .rank-item:nth-child(2) .rank-num { color: #fbbf24; } /* 1 */
+        .rank-item:nth-child(3) .rank-num { color: #94a3b8; } /* 2 */
+        .rank-item:nth-child(4) .rank-num { color: #b45309; } /* 3 */
 
-        .rank-info { flex: 1; min-width: 0; }
-        
-        .rank-row-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .rank-info { flex: 1; overflow: hidden; }
+        .rank-row {
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 4px;
         }
-        .rank-name { font-weight: 600; font-size: 0.95rem; color: #fff; }
+        .rank-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); }
         
-        /* 🔥 热度分数 UI */
+        /* 🔥 热度分数胶囊 */
         .rank-score {
+            font-size: 0.75rem; font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #fff;
-            background: linear-gradient(90deg, #ff4757, #ff6b81);
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 2px 6px rgba(255, 71, 87, 0.3);
+            background: rgba(244, 63, 94, 0.15);
+            color: #fb7185;
+            padding: 2px 8px; border-radius: 12px;
+            display: flex; align-items: center; gap: 4px;
         }
 
         .rank-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.8rem; color: var(--text-secondary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         /* === 页脚 === */
         footer {
-            margin-top: 80px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            padding-bottom: 40px;
+            margin-top: 80px; text-align: center;
+            color: var(--text-secondary); font-size: 0.9rem;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 40px;
         }
 
-        /* 加载状态 */
-        .loading-state {
-            text-align: center; padding: 40px; color: var(--text-muted);
-            animation: breathe 2s infinite ease-in-out;
-        }
-        @keyframes breathe { 0%,100% {opacity: 0.5;} 50% {opacity: 1;} }
-
+        .loading-text { text-align: center; padding: 40px; color: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -420,9 +319,7 @@
     <header>
         <div class="container">
             <h1 class="site-title">AI NEXUS</h1>
-            <p class="site-desc">Global Intelligence & Toolset Radar</p>
-            <div class="status-badge">
-                <div class="status-dot"></div>
+            <div class="site-badge">
                 <span id="update-time">SYSTEM SYNCING...</span>
             </div>
         </div>
@@ -432,52 +329,49 @@
         
         <div class="prompts-section">
             <div class="section-header">
-                <div class="section-title">🎨 灵感指令 / PROMPTS</div>
-                <button class="refresh-btn" onclick="shufflePrompts()">
-                    <span>🔄 随机切换</span>
+                <div class="section-title">灵感指令库 <span>/ PROMPTS GALLERY</span></div>
+                <button class="btn-refresh" onclick="shufflePrompts()">
+                    🔄 换一批
                 </button>
             </div>
-            
-            <div id="prompt-container" class="prompts-grid">
-                </div>
+            <div id="prompt-container" class="prompts-grid"></div>
         </div>
 
         <div class="main-layout">
             
             <div class="left-col">
                 <div class="section-header">
-                    <div class="section-title">⚡ 实时情报 / NEWS STREAM</div>
+                    <div class="section-title">全球情报流 <span>/ NEWS STREAM</span></div>
                 </div>
                 <div id="news-container" class="news-list">
-                    <div class="loading-state">Connecting to Neural Network...</div>
+                    <div class="loading-text">正在链接全球节点...</div>
                 </div>
             </div>
 
             <div class="right-col">
                 <div class="section-header">
-                    <div class="section-title">🏆 权威榜单 / TOP TIER</div>
+                    <div class="section-title">权威热榜 <span>/ TOP TIER</span></div>
                 </div>
                 <div id="rank-container">
                     </div>
             </div>
 
         </div>
+
     </div>
 
     <footer>
-        <p>AI Nexus Engine v3.0 • Powered by GitHub Actions</p>
-        <p style="margin-top: 8px; opacity: 0.5;">Data sourced from Product Hunt, Hacker News & Global Labs</p>
+        <p>© 2025 AI NEXUS • Automated Intelligence Radar</p>
     </footer>
 
     <script src="data.js"></script>
 
     <script>
-        // === 1. 提示词逻辑：完美对齐 ===
+        // === 1. 提示词逻辑：12宫格完美对齐 ===
         let allPrompts = [];
-        
         function renderPrompts() {
             const container = document.getElementById('prompt-container');
-            // 每次必须取 12 个，保证 4列、3列、2列 都能整除，不留尾巴
+            // 锁定 12 个，配合 CSS 的 4/3/2 列，永远整除
             const count = 12; 
             const shuffled = [...allPrompts].sort(() => 0.5 - Math.random()).slice(0, count);
             
@@ -485,16 +379,15 @@
                 <div class="prompt-card" onclick="copyPrompt('${p.content.replace(/'/g, "\\'")}')">
                     <div class="prompt-tag">${p.tag}</div>
                     <div class="prompt-title">${p.title}</div>
-                    <div class="prompt-content">${p.content}</div>
-                    <div class="prompt-hint">点击复制指令 📋</div>
+                    <div class="prompt-text">${p.content}</div>
+                    <div class="copy-hint">点击复制 📋</div>
                 </div>
             `).join('');
         }
 
         function shufflePrompts() {
-            // 添加一个简单的淡入淡出动画感
             const container = document.getElementById('prompt-container');
-            container.style.opacity = '0';
+            container.style.opacity = '0.5';
             setTimeout(() => {
                 renderPrompts();
                 container.style.opacity = '1';
@@ -503,12 +396,11 @@
 
         function copyPrompt(text) {
             navigator.clipboard.writeText(text).then(() => {
-                // 简单的 Alert 也可以换成更好看的 Toast，这里保持简单有效
-                alert('✨ 指令已复制到剪贴板！\nCommand Copied!');
+                alert('指令已复制！');
             });
         }
 
-        // === 2. 新闻逻辑：图标与样式 ===
+        // === 2. 新闻逻辑：高可读性 ===
         function getIcon(type) {
             const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' };
             return icons[type] || '📄';
@@ -517,22 +409,22 @@
         function getSourceClass(src) {
             if (src.includes('Product Hunt')) return 'src-ph';
             if (src.includes('Hacker News')) return 'src-hn';
-            return 'src-other';
+            return 'src-default';
         }
 
         function renderNews(data) {
             const container = document.getElementById('news-container');
             if (!data || data.length === 0) {
-                container.innerHTML = '<div class="loading-state">暂无数据 / No Data</div>';
+                container.innerHTML = '<div class="loading-text">暂无数据更新</div>';
                 return;
             }
 
             container.innerHTML = data.map(item => `
                 <a href="${item.url}" target="_blank" class="news-item">
-                    <div class="news-icon-box">${getIcon(item.type)}</div>
-                    <div class="news-body">
+                    <div class="news-icon">${getIcon(item.type)}</div>
+                    <div class="news-content">
                         <div class="news-meta">
-                            <span class="news-source ${getSourceClass(item.src)}">${item.src}</span>
+                            <span class="source-tag ${getSourceClass(item.src)}">${item.src}</span>
                             <span class="news-time">${item.time}</span>
                         </div>
                         <div class="news-title">${item.title}</div>
@@ -542,27 +434,25 @@
             `).join('');
         }
 
-        // === 3. 榜单逻辑：分数显示 ===
+        // === 3. 榜单逻辑：分数高亮 ===
         function renderRanks(data) {
             const container = document.getElementById('rank-container');
             container.innerHTML = '';
 
             Object.entries(data).forEach(([category, items]) => {
-                // 每个分类只取前 5 个，保持版面整洁
-                const topItems = items.slice(0, 5);
+                const topItems = items.slice(0, 5); // 仅展示前5
                 
-                let html = `<div class="rank-category">
-                                <div class="rank-head-title">// ${category} 榜单</div>`;
+                let html = `<div class="rank-group">
+                                <div class="rank-group-title">${category} Top 5</div>`;
                 
                 topItems.forEach(item => {
-                    // 确保有分数，没有则随机兜底
                     const score = item.score || (90 + Math.random() * 9).toFixed(1);
                     
                     html += `
-                    <a href="${item.url}" target="_blank" class="rank-card">
+                    <a href="${item.url}" target="_blank" class="rank-item">
                         <div class="rank-num">${item.rank}</div>
                         <div class="rank-info">
-                            <div class="rank-row-top">
+                            <div class="rank-row">
                                 <span class="rank-name">${item.name}</span>
                                 <span class="rank-score">🔥 ${score}</span>
                             </div>
@@ -576,21 +466,20 @@
             });
         }
 
-        // === 4. 初始化 ===
+        // === 初始化 ===
         window.onload = function() {
             if (window.AI_DATA) {
-                // 更新时间：优先取第一条新闻的时间
+                // 时间显示
                 const lastUpdate = window.AI_DATA.news[0]?.time || 'LIVE';
                 document.getElementById('update-time').innerText = `UPDATED: ${lastUpdate}`;
 
-                // 渲染所有板块
                 renderNews(window.AI_DATA.news);
                 renderRanks(window.AI_DATA.ranks);
                 
                 allPrompts = window.AI_DATA.prompts || [];
-                renderPrompts(); // 初始化渲染12个
+                renderPrompts();
             } else {
-                document.getElementById('news-container').innerHTML = '<div class="loading-state">数据加载失败，请检查 data.js</div>';
+                document.getElementById('news-container').innerHTML = '<div class="loading-text">Data Load Failed.</div>';
             }
         };
     </script>
