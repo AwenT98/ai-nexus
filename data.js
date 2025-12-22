@@ -7,7 +7,7 @@ window.AI_DATA = {
       "title": "OpenAI o1 预览版上线",
       "desc": "具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。",
       "url": "https://openai.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "1",
@@ -16,7 +16,7 @@ window.AI_DATA = {
       "title": "Llama 3.2 开源发布",
       "desc": "可以在移动设备上运行的轻量级多模态模型。",
       "url": "https://llama.meta.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "2",
@@ -25,7 +25,7 @@ window.AI_DATA = {
       "title": "Claude 3.5 Sonnet 更新",
       "desc": "代码能力进一步增强，引入 Artifacts 实时预览功能。",
       "url": "https://claude.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "3",
@@ -34,7 +34,7 @@ window.AI_DATA = {
       "title": "Gen-3 Alpha 视频生成开放",
       "desc": "好莱坞级别的视频生成模型，支持精准的运镜控制。",
       "url": "https://runwayml.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "4",
@@ -43,7 +43,7 @@ window.AI_DATA = {
       "title": "Cursor 编辑器 Composer",
       "desc": "允许在一个窗口同时编辑多个文件，编程效率革命。",
       "url": "https://cursor.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "5",
@@ -52,7 +52,7 @@ window.AI_DATA = {
       "title": "Flux.1 Pro 图像模型发布",
       "desc": "目前开源界最强的生图模型，文字渲染能力极佳。",
       "url": "https://blackforestlabs.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "6",
@@ -61,7 +61,7 @@ window.AI_DATA = {
       "title": "NotebookLM 音频概览",
       "desc": "将你的文档一键转化为两个 AI 主持人的播客对话。",
       "url": "https://notebooklm.google.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "7",
@@ -70,7 +70,7 @@ window.AI_DATA = {
       "title": "可灵 AI (Kling) 网页版上线",
       "desc": "生成时长可达 10 秒，物理规律模拟极其真实。",
       "url": "https://klingai.kuaishou.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "8",
@@ -79,7 +79,7 @@ window.AI_DATA = {
       "title": "Midjourney 网页编辑器公测",
       "desc": "新增局部重绘和画布扩展的 Web 端交互界面，无需 Discord。",
       "url": "https://midjourney.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "9",
@@ -88,7 +88,7 @@ window.AI_DATA = {
       "title": "Perplexity Pro 搜索升级",
       "desc": "引入推理模型进行深度搜索，提供更精准的学术引用。",
       "url": "https://perplexity.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "10",
@@ -97,7 +97,7 @@ window.AI_DATA = {
       "title": "Dream Machine 1.5 发布",
       "desc": "视频生成速度提升 2 倍，且质量更加稳定。",
       "url": "https://lumalabs.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "11",
@@ -106,7 +106,7 @@ window.AI_DATA = {
       "title": "Suno v3.5 音乐生成更新",
       "desc": "支持生成 4 分钟完整歌曲，结构更像真实音乐。",
       "url": "https://suno.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "12",
@@ -115,7 +115,7 @@ window.AI_DATA = {
       "title": "Mistral Large 2 发布",
       "desc": "在编码和推理任务上超越了 Llama 3 405B。",
       "url": "https://mistral.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "13",
@@ -124,7 +124,7 @@ window.AI_DATA = {
       "title": "Notion AI 连接其它应用",
       "desc": "现在可以搜索 Slack 和 Google Drive 中的内容。",
       "url": "https://notion.so",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "14",
@@ -133,7 +133,7 @@ window.AI_DATA = {
       "title": "Ideogram 2.0 字体生成",
       "desc": "目前在图片中生成海报级文字效果最好的模型。",
       "url": "https://ideogram.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "15",
@@ -142,7 +142,7 @@ window.AI_DATA = {
       "title": "ChatGPT 高级语音模式",
       "desc": "实时打断、情感丰富，就像和真人打电话一样。",
       "url": "https://openai.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "16",
@@ -151,7 +151,7 @@ window.AI_DATA = {
       "title": "HeyGen 互动数字人 API",
       "desc": "可以在 Zoom 会议中实时互动的 AI 数字分身。",
       "url": "https://heygen.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "17",
@@ -160,7 +160,7 @@ window.AI_DATA = {
       "title": "Zapier Central 发布",
       "desc": "教 AI 机器人跨越 6000+ 应用自动执行任务。",
       "url": "https://zapier.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "18",
@@ -169,7 +169,7 @@ window.AI_DATA = {
       "title": "LangGraph 稳定版发布",
       "desc": "构建复杂、有状态的多智能体应用的全新框架。",
       "url": "https://langchain.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "19",
@@ -178,7 +178,7 @@ window.AI_DATA = {
       "title": "Krea AI 实时画布更新",
       "desc": "画笔画哪里，AI 就实时生成哪里，延迟极低。",
       "url": "https://krea.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "20",
@@ -187,7 +187,7 @@ window.AI_DATA = {
       "title": "Reader App 阅读器",
       "desc": "用极其逼真的 AI 语音朗读任何文章和 PDF。",
       "url": "https://elevenlabs.io",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "21",
@@ -196,7 +196,7 @@ window.AI_DATA = {
       "title": "v0.dev 企业版发布",
       "desc": "支持生成多页面应用，并导出高质量 React 代码。",
       "url": "https://v0.dev",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "22",
@@ -205,7 +205,7 @@ window.AI_DATA = {
       "title": "Figma AI 设计助手",
       "desc": "通过文本描述自动生成 UI 界面和图层结构。",
       "url": "https://figma.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "23",
@@ -214,7 +214,7 @@ window.AI_DATA = {
       "title": "Pika Art 1.5 特效更新",
       "desc": "新增 Pikalert 等趣味特效，让视频物体甚至融化。",
       "url": "https://pika.art",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "24",
@@ -223,7 +223,7 @@ window.AI_DATA = {
       "title": "Copilot Workspace 预览",
       "desc": "从 issue 到 pull request 的全自动开发环境。",
       "url": "https://githubnext.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "25",
@@ -232,7 +232,7 @@ window.AI_DATA = {
       "title": "LeRobot 开源机器人库",
       "desc": "将 AI 大模型引入实体机器人控制的开源项目。",
       "url": "https://github.com/huggingface/lerobot",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "26",
@@ -241,7 +241,7 @@ window.AI_DATA = {
       "title": "Gamma 演示文稿生成",
       "desc": "现在支持导入 Word 文档并一键转换为精美 PPT。",
       "url": "https://gamma.app",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "27",
@@ -250,7 +250,7 @@ window.AI_DATA = {
       "title": "Arc 浏览器 Browse for Me",
       "desc": "为你浏览网页并生成摘要的 AI 搜索体验。",
       "url": "https://arc.net",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "28",
@@ -259,7 +259,7 @@ window.AI_DATA = {
       "title": "Nemotron-4 340B 开源",
       "desc": "英伟达发布的最强开源合成数据生成模型。",
       "url": "https://developer.nvidia.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "29",
@@ -268,7 +268,7 @@ window.AI_DATA = {
       "title": "Character.ai 通话功能",
       "desc": "现在可以与你创建的 AI 角色进行实时语音通话。",
       "url": "https://character.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "30",
@@ -277,7 +277,7 @@ window.AI_DATA = {
       "title": "Sora 更多演示视频流出",
       "desc": "展示了惊人的物理一致性和长视频生成能力。",
       "url": "https://openai.com/sora",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "31",
@@ -286,7 +286,7 @@ window.AI_DATA = {
       "title": "Stable Audio Open",
       "desc": "用于生成简短音频样本和音效的开源模型。",
       "url": "https://stability.ai",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "32",
@@ -295,7 +295,7 @@ window.AI_DATA = {
       "title": "Windows Recall 功能预览",
       "desc": "Windows AI 能够“回忆”你在电脑上做过的任何事情。",
       "url": "https://microsoft.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "33",
@@ -304,7 +304,7 @@ window.AI_DATA = {
       "title": "Apple Intelligence 发布",
       "desc": "集成于 iOS 18 的个人智能系统，深度整合 Siri。",
       "url": "https://apple.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "34",
@@ -313,7 +313,7 @@ window.AI_DATA = {
       "title": "Aya 23 多语言模型",
       "desc": "支持 23 种语言的高性能开源大语言模型。",
       "url": "https://cohere.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "35",
@@ -322,7 +322,7 @@ window.AI_DATA = {
       "title": "Lightroom 生成式移除",
       "desc": "一键移除照片中不需要的物体，效果自然。",
       "url": "https://adobe.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "36",
@@ -331,7 +331,7 @@ window.AI_DATA = {
       "title": "Canva Magic Studio",
       "desc": "全套 AI 设计工具更新，支持更多自动化排版。",
       "url": "https://canva.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "37",
@@ -340,7 +340,7 @@ window.AI_DATA = {
       "title": "Groq API 速度测试",
       "desc": "展示了每秒 500 token 的极速推理能力。",
       "url": "https://groq.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "38",
@@ -349,7 +349,7 @@ window.AI_DATA = {
       "title": "Slack AI 总结功能",
       "desc": "自动总结频道内的长对话和未读消息。",
       "url": "https://slack.com",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     },
     {
       "id": "39",
@@ -358,7 +358,7 @@ window.AI_DATA = {
       "title": "Vidu 视频生成模型",
       "desc": "清华团队打造，中国版的 Sora，一键生成连贯视频。",
       "url": "https://www.vidu.studio",
-      "time": "12-23 01:20"
+      "time": "12-23 02:08"
     }
   ],
   "ranks": {
@@ -368,14 +368,14 @@ window.AI_DATA = {
         "name": "ChatGPT (GPT-4o)",
         "desc": "OpenAI 旗舰，综合能力全球第一，支持实时语音。",
         "url": "https://chat.openai.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Claude 3.5 Sonnet",
         "desc": "代码编写与逻辑推理能力最强，UI 优雅。",
         "url": "https://claude.ai",
-        "score": "99.4"
+        "score": "99.3"
       },
       {
         "rank": 3,
@@ -389,28 +389,28 @@ window.AI_DATA = {
         "name": "Gemini 1.5 Pro",
         "desc": "Google 生态核心，超长上下文窗口。",
         "url": "https://gemini.google.com",
-        "score": "98.4"
+        "score": "98.5"
       },
       {
         "rank": 5,
         "name": "Kimi 智能助手",
         "desc": "月之暗面出品，长文档分析首选，中文极佳。",
         "url": "https://kimi.moonshot.cn",
-        "score": "97.8"
+        "score": "97.9"
       },
       {
         "rank": 6,
         "name": "Perplexity",
         "desc": "AI 搜索引擎，直接给出精准答案与引用。",
         "url": "https://perplexity.ai",
-        "score": "97.5"
+        "score": "97.4"
       },
       {
         "rank": 7,
         "name": "Llama 3.1",
         "desc": "Meta 开源巨无霸，当前开源界的最强基石。",
         "url": "https://llama.meta.com",
-        "score": "97.0"
+        "score": "96.9"
       },
       {
         "rank": 8,
@@ -424,7 +424,7 @@ window.AI_DATA = {
         "name": "Mistral Large",
         "desc": "欧洲最强模型，逻辑严密，适合企业部署。",
         "url": "https://mistral.ai",
-        "score": "96.0"
+        "score": "95.9"
       },
       {
         "rank": 10,
@@ -466,28 +466,28 @@ window.AI_DATA = {
         "name": "Command R+",
         "desc": "专为 RAG (检索增强) 设计的企业模型。",
         "url": "https://cohere.com",
-        "score": "92.9"
+        "score": "93.0"
       },
       {
         "rank": 16,
         "name": "Copilot",
         "desc": "集成于 Office 的办公助手。",
         "url": "https://copilot.microsoft.com",
-        "score": "92.3"
+        "score": "92.4"
       },
       {
         "rank": 17,
         "name": "HuggingChat",
         "desc": "免费使用多种开源模型。",
         "url": "https://huggingface.co/chat",
-        "score": "91.8"
+        "score": "92.0"
       },
       {
         "rank": 18,
         "name": "Poe",
         "desc": "聚合所有主流大模型。",
         "url": "https://poe.com",
-        "score": "91.5"
+        "score": "91.3"
       },
       {
         "rank": 19,
@@ -501,7 +501,7 @@ window.AI_DATA = {
         "name": "Pi",
         "desc": "主打高情商陪伴聊天。",
         "url": "https://pi.ai",
-        "score": "90.4"
+        "score": "90.5"
       }
     ],
     "Image": [
@@ -510,14 +510,14 @@ window.AI_DATA = {
         "name": "Midjourney v6",
         "desc": "艺术绘图王者，审美无可匹敌。",
         "url": "https://midjourney.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Flux.1 Pro",
         "desc": "最强开源生图，手指/文字渲染极佳。",
         "url": "https://blackforestlabs.ai",
-        "score": "99.4"
+        "score": "99.5"
       },
       {
         "rank": 3,
@@ -545,7 +545,7 @@ window.AI_DATA = {
         "name": "LiblibAI",
         "desc": "国内最大 AI 绘画社区。",
         "url": "https://www.liblib.art",
-        "score": "97.4"
+        "score": "97.5"
       },
       {
         "rank": 7,
@@ -559,77 +559,77 @@ window.AI_DATA = {
         "name": "InstantID",
         "desc": "保持人脸一致性最好的项目。",
         "url": "https://github.com/InstantID/InstantID",
-        "score": "96.3"
+        "score": "96.4"
       },
       {
         "rank": 9,
         "name": "Freepik AI",
         "desc": "实时绘图，设计师灵感库。",
         "url": "https://www.freepik.com/ai",
-        "score": "96.0"
+        "score": "95.8"
       },
       {
         "rank": 10,
         "name": "Ideogram 2.0",
         "desc": "图片生成文字效果最好。",
         "url": "https://ideogram.ai",
-        "score": "95.3"
+        "score": "95.4"
       },
       {
         "rank": 11,
         "name": "Krea AI",
         "desc": "实时画布，画哪里生成哪里。",
         "url": "https://krea.ai",
-        "score": "94.9"
+        "score": "95.0"
       },
       {
         "rank": 12,
         "name": "Firefly",
         "desc": "版权合规，适合商业设计。",
         "url": "https://firefly.adobe.com",
-        "score": "94.5"
+        "score": "94.3"
       },
       {
         "rank": 13,
         "name": "Magnific",
         "desc": "图片无损放大与细节增强。",
         "url": "https://magnific.ai",
-        "score": "93.8"
+        "score": "93.9"
       },
       {
         "rank": 14,
         "name": "Tripo SR",
         "desc": "图片转 3D 模型。",
         "url": "https://www.tripo3d.ai",
-        "score": "93.5"
+        "score": "93.4"
       },
       {
         "rank": 15,
         "name": "ControlNet",
         "desc": "SD 核心插件，精准控制构图。",
         "url": "https://github.com/lllyasviel/ControlNet",
-        "score": "92.8"
+        "score": "92.9"
       },
       {
         "rank": 16,
         "name": "SeaArt",
         "desc": "体验接近原生 SD 的在线工具。",
         "url": "https://www.seaart.ai",
-        "score": "92.4"
+        "score": "92.5"
       },
       {
         "rank": 17,
         "name": "Tensor.art",
         "desc": "在线运行模型，免费额度大。",
         "url": "https://tensor.art",
-        "score": "91.8"
+        "score": "92.0"
       },
       {
         "rank": 18,
         "name": "Clipdrop",
         "desc": "移除背景/打光工具箱。",
         "url": "https://clipdrop.co",
-        "score": "91.5"
+        "score": "91.4"
       },
       {
         "rank": 19,
@@ -643,7 +643,7 @@ window.AI_DATA = {
         "name": "ComfyUI",
         "desc": "节点式工作流，探索上限。",
         "url": "https://github.com/comfyanonymous/ComfyUI",
-        "score": "90.4"
+        "score": "90.5"
       }
     ],
     "Video": [
@@ -652,14 +652,14 @@ window.AI_DATA = {
         "name": "Runway Gen-3",
         "desc": "视频生成行业标准，运镜控制。",
         "url": "https://runwayml.com",
-        "score": "99.8"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Kling AI",
         "desc": "生成时长最长，物理模拟真实。",
         "url": "https://klingai.kuaishou.com",
-        "score": "99.5"
+        "score": "99.4"
       },
       {
         "rank": 3,
@@ -680,7 +680,7 @@ window.AI_DATA = {
         "name": "Vidu",
         "desc": "一键生成，人物一致性好。",
         "url": "https://www.vidu.studio",
-        "score": "97.9"
+        "score": "98.0"
       },
       {
         "rank": 6,
@@ -694,28 +694,28 @@ window.AI_DATA = {
         "name": "HeyGen",
         "desc": "数字人播报王者，口型同步。",
         "url": "https://www.heygen.com",
-        "score": "97.0"
+        "score": "96.8"
       },
       {
         "rank": 8,
         "name": "Pika Art",
         "desc": "动画风格，局部重绘功能。",
         "url": "https://pika.art",
-        "score": "96.4"
+        "score": "96.3"
       },
       {
         "rank": 9,
         "name": "Hedra",
         "desc": "专注人物对话，表情细腻。",
         "url": "https://www.hedra.com",
-        "score": "95.9"
+        "score": "95.8"
       },
       {
         "rank": 10,
         "name": "Viggle",
         "desc": "让静态角色跳舞。",
         "url": "https://viggle.ai",
-        "score": "95.3"
+        "score": "95.4"
       },
       {
         "rank": 11,
@@ -736,7 +736,7 @@ window.AI_DATA = {
         "name": "Udio",
         "desc": "音质更 Hi-Fi 的音乐 AI。",
         "url": "https://www.udio.com",
-        "score": "93.8"
+        "score": "93.9"
       },
       {
         "rank": 14,
@@ -750,14 +750,14 @@ window.AI_DATA = {
         "name": "Sync Labs",
         "desc": "专业口型同步。",
         "url": "https://synclabs.so",
-        "score": "92.9"
+        "score": "93.0"
       },
       {
         "rank": 16,
         "name": "D-ID",
         "desc": "老牌照片说话工具。",
         "url": "https://www.d-id.com",
-        "score": "92.3"
+        "score": "92.4"
       },
       {
         "rank": 17,
@@ -771,7 +771,7 @@ window.AI_DATA = {
         "name": "Descript",
         "desc": "像编辑文档一样编辑视频。",
         "url": "https://www.descript.com",
-        "score": "91.3"
+        "score": "91.5"
       },
       {
         "rank": 19,
@@ -785,7 +785,7 @@ window.AI_DATA = {
         "name": "Kaiber",
         "desc": "风格化视频转绘。",
         "url": "https://kaiber.ai",
-        "score": "90.4"
+        "score": "90.5"
       }
     ],
     "Dev": [
@@ -794,21 +794,21 @@ window.AI_DATA = {
         "name": "Cursor",
         "desc": "AI 原生编辑器，全库理解。",
         "url": "https://cursor.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "GitHub Copilot",
         "desc": "开发者必备代码补全。",
         "url": "https://github.com/features/copilot",
-        "score": "99.4"
+        "score": "99.5"
       },
       {
         "rank": 3,
         "name": "v0.dev",
         "desc": "文字生成 React 界面。",
         "url": "https://v0.dev",
-        "score": "98.9"
+        "score": "98.8"
       },
       {
         "rank": 4,
@@ -822,14 +822,14 @@ window.AI_DATA = {
         "name": "Hugging Face",
         "desc": "全球开源模型托管中心。",
         "url": "https://huggingface.co",
-        "score": "97.9"
+        "score": "98.0"
       },
       {
         "rank": 6,
         "name": "LangChain",
         "desc": "LLM 应用开发框架。",
         "url": "https://www.langchain.com",
-        "score": "97.3"
+        "score": "97.4"
       },
       {
         "rank": 7,
@@ -843,35 +843,35 @@ window.AI_DATA = {
         "name": "Supermaven",
         "desc": "超长记忆代码补全，速度快。",
         "url": "https://supermaven.com",
-        "score": "96.4"
+        "score": "96.5"
       },
       {
         "rank": 9,
         "name": "Codeium",
         "desc": "免费强大的代码补全。",
         "url": "https://codeium.com",
-        "score": "95.9"
+        "score": "96.0"
       },
       {
         "rank": 10,
         "name": "Devin",
         "desc": "全自动 AI 软件工程师。",
         "url": "https://www.cognition-labs.com/devin",
-        "score": "95.4"
+        "score": "95.3"
       },
       {
         "rank": 11,
         "name": "Gradio",
         "desc": "Python 构建 AI 演示界面。",
         "url": "https://www.gradio.app",
-        "score": "94.8"
+        "score": "94.9"
       },
       {
         "rank": 12,
         "name": "Streamlit",
         "desc": "数据仪表盘开发框架。",
         "url": "https://streamlit.io",
-        "score": "94.3"
+        "score": "94.5"
       },
       {
         "rank": 13,
@@ -892,14 +892,14 @@ window.AI_DATA = {
         "name": "Pinecone",
         "desc": "AI 向量数据库。",
         "url": "https://www.pinecone.io",
-        "score": "92.8"
+        "score": "92.9"
       },
       {
         "rank": 16,
         "name": "Vercel",
         "desc": "前端托管，支持 AI 应用。",
         "url": "https://vercel.com",
-        "score": "92.4"
+        "score": "92.3"
       },
       {
         "rank": 17,
@@ -913,7 +913,7 @@ window.AI_DATA = {
         "name": "Amazon Q",
         "desc": "AWS 开发者助手。",
         "url": "https://aws.amazon.com/q/developer/",
-        "score": "91.3"
+        "score": "91.4"
       },
       {
         "rank": 19,
@@ -933,304 +933,76 @@ window.AI_DATA = {
   },
   "prompts": [
     {
-      "tag": "Midjourney",
-      "title": "赛博朋克电影感人像",
-      "content": "Cinematic shot, cyberpunk street samurai girl, neon lights, rain-soaked streets of Tokyo, highly detailed, photorealistic, 8k, bokeh, depth of field --ar 16:9 --v 6.0",
-      "desc": "高质感赛博朋克风格，适合壁纸。"
+      "tag": "万能通用",
+      "title": "RTF 标准提问法",
+      "content": "[角色 Role]: 你是资深产品经理\n[任务 Task]: 请分析这份竞品报告\n[格式 Format]: 输出为带图表的 Markdown 格式",
+      "desc": "最基础也最有效的结构：指定角色、明确任务、规定格式。"
+    },
+    {
+      "tag": "复杂任务",
+      "title": "BROKE 深度思考法",
+      "content": "[背景 Background]: 我们正在开发一款AI应用...\n[角色 Role]: 你是首席架构师\n[目标 Objectives]: 设计后端架构\n[关键结果 Key Results]: 高并发、低延迟\n[演变 Evolve]: 如果用户量翻倍，架构如何调整？",
+      "desc": "适用于需要深度推理和多步规划的复杂任务。"
+    },
+    {
+      "tag": "精准控制",
+      "title": "C.R.E.A.T.E 框架",
+      "content": "[Context]: 上下文背景\n[Role]: 设定AI身份\n[Explicit]: 明确具体的限制条件\n[Action]: 需要执行的动作\n[Tone]: 语调（专业/幽默/严肃）\n[Example]: 给出一个参考范例",
+      "desc": "目前公认生成质量最高的精细化控制框架。"
+    },
+    {
+      "tag": "Video Gen",
+      "title": "Runway/Sora 电影级公式",
+      "content": "[主体描述] + [环境背景] + [摄影机运动 Camera Movement] + [光线/氛围] + [风格 Style]\n例如: A wide shot of a cyberpunk city street at night, neon reflection on wet ground, drone camera slowly flying forward, cinematic lighting, film grain.",
+      "desc": "生成高质量视频的核心要素：运镜、光影与风格。"
+    },
+    {
+      "tag": "Video Gen",
+      "title": "数字人口播公式 (HeyGen)",
+      "content": "[角色形象]: 穿着西装的专业新闻主播\n[背景]: 现代化的演播室大屏幕\n[表情/动作]: 面带微笑，手势自然，眼神注视镜头\n[脚本内容]: (粘贴你的台词)",
+      "desc": "用于生成高质量 AI 数字人视频的脚本结构。"
     },
     {
       "tag": "Midjourney",
-      "title": "极简主义 Logo 设计",
-      "content": "Minimalist logo design for a coffee shop named 'Zen Brew', simple lines, vector style, flat design, white background, black ink --no shading --v 6.0",
-      "desc": "商业 Logo 灵感生成。"
+      "title": "MJ 摄影写实公式",
+      "content": "/imagine prompt: [主体描述] + [环境背景] + [摄影角度/镜头] + [光线条件] + [相机型号/胶片类型] --ar 16:9 --v 6.0 --style raw",
+      "desc": "生成照片级逼真图像的黄金公式。"
     },
     {
-      "tag": "Midjourney",
-      "title": "吉卜力动画风格",
-      "content": "Studio Ghibli style, lush green meadow, fluffy clouds, blue sky, summer breeze, anime style, hand-drawn texture, vibrant colors --ar 16:9 --niji 6",
-      "desc": "治愈系宫崎骏风格风景。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "3D 等距房间模型",
-      "content": "Isometric 3D render of a cozy gamer room, neon lighting, computer setup, bean bag, night time, cute style, blender render, high fidelity --ar 1:1 --v 6.0",
-      "desc": "可爱的 3D 室内设计模型。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "未来主义建筑设计",
-      "content": "Futuristic eco-friendly skyscraper, vertical gardens, glass and steel, solar panels, utopia city background, architectural photography, morning light --ar 9:16 --v 6.0",
-      "desc": "概念建筑设计灵感。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "水墨画风格山水",
-      "content": "Chinese ink painting style, misty mountains, pine trees, waterfalls, traditional boat on river, black and white with subtle red accents, minimalist composition --ar 16:9",
-      "desc": "中国传统水墨艺术风格。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "皮克斯风格角色",
-      "content": "Pixar style 3D character, a cute robot holding a flower, soft lighting, expressive eyes, vibrant colors, clean background --ar 3:4 --v 6.0",
-      "desc": "动画电影角色设计。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "复古胶片摄影",
-      "content": "1990s polaroid photo, friends laughing at a diner, flash photography, vintage grain, candid shot, nostalgic vibe --ar 4:3 --v 6.0",
-      "desc": "怀旧复古的生活瞬间。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "微距摄影",
-      "content": "Macro photography of a water droplet on a rose petal, extreme detail, refraction of light, soft green bokeh background, 8k resolution --ar 1:1",
-      "desc": "极致细节的微距摄影。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "扁平化矢量插画",
-      "content": "Flat vector illustration of a startup team working in a modern office, vibrant colors, simple shapes, corporate memphis style, white background --ar 16:9",
-      "desc": "适合网页和 PPT 的插画。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "抽象油画",
-      "content": "Abstract oil painting, chaotic brushstrokes, vivid colors, emotional expression, thick impasto texture, heavy palette knife usage --ar 3:4",
-      "desc": "充满情感的艺术油画。"
-    },
-    {
-      "tag": "Midjourney",
-      "title": "蒸汽朋克机械",
-      "content": "Steampunk mechanical owl, brass gears, copper pipes, glowing steam vents, intricate details, vintage engineering blueprint style --ar 1:1",
-      "desc": "复古机械美学设计。"
+      "tag": "Stable Diff",
+      "title": "SD 正负向起手式",
+      "content": "Positive: (masterpiece, best quality:1.2), [Subject], [Style Tags], 4k, 8k\nNegative: (worst quality, low quality:1.4), bad anatomy, watermark, text",
+      "desc": "Stable Diffusion 必备的起手质量控制词。"
     },
     {
       "tag": "Coding",
-      "title": "代码 Bug 修复专家",
-      "content": "Analyze the following code snippet. Identify any logical errors, syntax bugs, or security vulnerabilities. Explain why they are issues and provide the corrected code with comments explaining the changes: [Paste Code Here]",
-      "desc": "快速定位并修复代码错误。"
+      "title": "代码专家 Debug",
+      "content": "你是一个 [语言] 专家。请分析以下代码：\n1. 解释这段代码的功能\n2. 指出潜在的 Bug 或性能瓶颈\n3. 给出优化后的代码并添加注释\n[粘贴代码]",
+      "desc": "让 AI 成为你的结对编程导师。"
     },
     {
-      "tag": "Coding",
-      "title": "Python 编程导师",
-      "content": "Act as a senior Python developer. Explain the concept of [Decorators] to a junior developer. Use simple analogies, provide a basic code example, and then a practical real-world use case.",
-      "desc": "深入浅出讲解编程概念。"
+      "tag": "Academic",
+      "title": "论文润色 (降重)",
+      "content": "请作为[学科]领域的审稿人，对以下段落进行润色。\n要求：保持原意，提升学术性，使用更专业的词汇，调整句式结构以降低查重率。",
+      "desc": "学术论文投稿前的最后优化。"
     },
     {
-      "tag": "Coding",
-      "title": "生成正则表达式",
-      "content": "I need a Regular Expression (Regex) that matches [Email addresses from specific domains]. Please explain how the regex works step-by-step.",
-      "desc": "搞定复杂的正则匹配。"
+      "tag": "Marketing",
+      "title": "小红书爆款公式",
+      "content": "[标题]: 包含emoji，制造悬念/焦虑/惊喜\n[正文]: 痛点场景 + 解决方案 + 情绪价值\n[结尾]: 引导互动 (点赞/收藏)\n[标签]: #热门话题",
+      "desc": "符合算法推荐逻辑的社交媒体文案结构。"
     },
     {
-      "tag": "Coding",
-      "title": "SQL 查询优化",
-      "content": "Optimize the following SQL query for better performance. Assume a large dataset. Explain what indexing strategies might help: [Paste SQL Here]",
-      "desc": "提升数据库查询效率。"
+      "tag": "Business",
+      "title": "SWOT 战略分析",
+      "content": "请对 [公司/产品] 进行 SWOT 分析：\nStrengths (优势)\nWeaknesses (劣势)\nOpportunities (机会)\nThreats (威胁)\n并基于分析给出3条战略建议。",
+      "desc": "商业计划书必备的分析框架。"
     },
     {
-      "tag": "Coding",
-      "title": "编写单元测试",
-      "content": "Write comprehensive unit tests (using Pytest/Jest) for the following function. Cover edge cases and potential failure points: [Paste Function Here]",
-      "desc": "自动化生成测试用例。"
-    },
-    {
-      "tag": "Coding",
-      "title": "代码转译 (Java -> Python)",
-      "content": "Rewrite the following Java code into idiomatic Python. Ensure the functionality remains the same but use Pythonic best practices: [Paste Code Here]",
-      "desc": "跨语言代码转换。"
-    },
-    {
-      "tag": "Coding",
-      "title": "API 文档生成",
-      "content": "Generate a Swagger/OpenAPI documentation YAML for the following API endpoint description. Include request/response examples.",
-      "desc": "自动生成 API 接口文档。"
-    },
-    {
-      "tag": "Coding",
-      "title": "Git Commit 规范写手",
-      "content": "Write a semantic Git commit message for the following changes. Use the format 'type(scope): description'. Changes: [List Changes]",
-      "desc": "生成规范的代码提交记录。"
-    },
-    {
-      "tag": "Coding",
-      "title": "解释复杂代码",
-      "content": "Explain the following code snippet line-by-line in plain English as if you are explaining it to a 10-year-old: [Paste Code]",
-      "desc": "看懂别人的屎山代码。"
-    },
-    {
-      "tag": "Coding",
-      "title": "Linux 命令行助手",
-      "content": "I need a Linux terminal command to [find all files larger than 100MB and delete them]. Please explain the flags used.",
-      "desc": "查询复杂的 Shell 命令。"
-    },
-    {
-      "tag": "Writing",
-      "title": "小红书爆款文案",
-      "content": "你是一位拥有百万粉丝的小红书博主。请为[某款护肤品]写一篇种草笔记。要求：标题要用震惊体加Emoji，正文要有痛点场景描述，语气要像闺蜜聊天，最后加上5个相关热门标签。",
-      "desc": "针对小红书平台的流量文案。"
-    },
-    {
-      "tag": "Writing",
-      "title": "SEO 博客文章大纲",
-      "content": "Generate a detailed blog post outline for the topic '[AI in Healthcare]'. Include a catchy title, H2 headings for key sections, bullet points for sub-topics, and a conclusion. Optimize for SEO keywords.",
-      "desc": "快速构建文章结构。"
-    },
-    {
-      "tag": "Writing",
-      "title": "冷邮件 (Cold Email) 推销",
-      "content": "Write a persuasive cold email to a potential client offering [Web Design Services]. Keep it under 150 words. Hook them in the first sentence, state the value proposition clearly, and end with a call to action.",
-      "desc": "商务拓展邮件模板。"
-    },
-    {
-      "tag": "Writing",
-      "title": "Youtube 视频脚本",
-      "content": "Write a script for a 5-minute YouTube video about '[How to start investing]'. Include an engaging hook intro, 3 main tips with examples, and an outro asking for subscribers.",
-      "desc": "视频博主脚本生成。"
-    },
-    {
-      "tag": "Writing",
-      "title": "推特/微博 连载贴",
-      "content": "Turn the following article summary into a Twitter thread (10 tweets max). Make the first tweet a hook, and the last tweet a summary. Use emojis sparingly. Content: [Paste Text Here]",
-      "desc": "长文转社交媒体短贴。"
-    },
-    {
-      "tag": "Writing",
-      "title": "产品发布新闻稿",
-      "content": "Write a professional press release for the launch of a new product: [Product Name]. Highlight key features, availability, and quotes from the CEO.",
-      "desc": "正式的媒体新闻稿。"
-    },
-    {
-      "tag": "Writing",
-      "title": "朋友圈营销文案",
-      "content": "Write a short, engaging WeChat Moments post to promote [New Coffee Shop]. Use emojis, keep it casual, and include a call to action to visit.",
-      "desc": "私域流量营销文案。"
-    },
-    {
-      "tag": "Writing",
-      "title": "复杂的概念简化",
-      "content": "Rewrite the following technical text to make it easy to understand for a general audience. Avoid jargon and use simple analogies: [Paste Text]",
-      "desc": "让你的文章通俗易懂。"
-    },
-    {
-      "tag": "Writing",
-      "title": "起标题大师",
-      "content": "Generate 10 catchy, click-worthy headlines for an article about [Remote Work]. Use different styles: question, listicle, controversial, and how-to.",
-      "desc": "拯救取名废。"
-    },
-    {
-      "tag": "Writing",
-      "title": "英文润色 (学术)",
-      "content": "Please proofread and edit the following academic abstract for clarity, flow, and academic tone. Improve vocabulary where appropriate: [Paste Abstract]",
-      "desc": "论文投稿前的最后检查。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "会议纪要生成",
-      "content": "Summarize the following meeting transcript into a structured report. Include: 1. Date & Attendees, 2. Key Discussion Points, 3. Action Items (with assignees), 4. Next Steps. Transcript: [Paste Here]",
-      "desc": "整理杂乱的会议记录。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "Excel 公式生成器",
-      "content": "I have data in Column A (Dates) and Column B (Sales). I need an Excel formula to calculate the [Sum of Sales for the month of January]. Please explain the formula.",
-      "desc": "解决复杂的 Excel 表格问题。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "周报生成器",
-      "content": "Based on these bullet points of my work this week, write a professional weekly report for my manager. Highlight achievements and blockings: [List Tasks Here]",
-      "desc": "快速生成职场周报。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "邮件回复 (委婉拒绝)",
-      "content": "Write a polite and professional email declining a job offer because the salary doesn't meet my expectations, but keep the door open for future opportunities.",
-      "desc": "高情商职场邮件回复。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "英语口语陪练",
-      "content": "Act as a spoken English teacher. I will speak to you in English, and you will reply to me to practice. Strictly correct my grammar mistakes in bold, and ask me a question to keep the conversation going.",
-      "desc": "英语学习与纠错。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "SWOT 分析",
-      "content": "Perform a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats) for [Small E-commerce Business]. Present the result in a bulleted list.",
-      "desc": "商业决策辅助工具。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "OKRs 设定助手",
-      "content": "Help me draft OKRs (Objectives and Key Results) for a [Marketing Manager] for the next quarter. The main goal is to increase brand awareness.",
-      "desc": "制定工作目标。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "面试模拟官",
-      "content": "I am interviewing for a [Product Manager] position. Ask me a common interview question, wait for my answer, and then give me feedback on how to improve it.",
-      "desc": "准备求职面试。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "PPT 大纲生成",
-      "content": "Create a 10-slide presentation outline for a pitch deck about [AI Education App]. Include slide titles and key bullet points for each slide.",
-      "desc": "快速搞定 PPT 结构。"
-    },
-    {
-      "tag": "Productivity",
-      "title": "合同条款审查",
-      "content": "Review the following contract clause for any potential risks or unfair terms for the freelancer: [Paste Clause]",
-      "desc": "简单的法律文本分析。"
-    },
-    {
-      "tag": "Fun",
-      "title": "苏格拉底式提问",
-      "content": "I want you to act as a Socratic philosopher. You will explore my beliefs by asking probing questions. Do not give me answers, but guide me to discover them myself. My topic is: [Justice]",
-      "desc": "深度哲学思考引导。"
-    },
-    {
-      "tag": "Fun",
-      "title": "文字冒险游戏",
-      "content": "Act as a text-based adventure game. I start in a dark forest. Describe the surroundings and give me 3 options. Wait for my input before continuing.",
-      "desc": "在对话框里玩 RPG 游戏。"
-    },
-    {
-      "tag": "Fun",
-      "title": "塔罗牌占卜",
-      "content": "Act as a mystical Tarot reader. I will ask a question, and you will draw 3 cards (Past, Present, Future), describe them visually, and interpret their meaning for my situation. My question is: [Insert Question]",
-      "desc": "趣味 AI 占卜。"
-    },
-    {
-      "tag": "Fun",
-      "title": "米其林大厨菜谱",
-      "content": "I have these ingredients in my fridge: [Eggs, Tomatoes, Cheese]. Suggest a gourmet recipe I can make, describe the plating, and suggest a wine pairing.",
-      "desc": "创意烹饪指南。"
-    },
-    {
-      "tag": "Fun",
-      "title": "说唱歌手 AI",
-      "content": "Write a rap song about [Coding in Python] in the style of Eminem. Use multi-syllable rhymes and a fast flow.",
-      "desc": "生成押韵的歌词。"
-    },
-    {
-      "tag": "Fun",
-      "title": "旅行规划师",
-      "content": "Plan a 3-day itinerary for a trip to [Kyoto, Japan]. I love food and history but hate crowded tourist traps. Include restaurant recommendations.",
-      "desc": "个性化旅行路线。"
-    },
-    {
-      "tag": "Fun",
-      "title": "电影推荐",
-      "content": "I like movies like [Inception] and [Interstellar]. Recommend 5 similar sci-fi movies that are mind-bending, with a brief reason for each.",
-      "desc": "解决剧荒。"
-    },
-    {
-      "tag": "Fun",
-      "title": "梦境解析",
-      "content": "I dreamt about [flying over a city but my wings were heavy]. Interpret this dream from a Jungian psychological perspective.",
-      "desc": "探索潜意识。"
+      "tag": "Learning",
+      "title": "费曼学习法",
+      "content": "请用“费曼技巧”给我讲解 [复杂概念]。\n要求：用像给12岁孩子讲故事一样的简单语言，使用类比，不要使用行话。",
+      "desc": "快速搞懂一个陌生领域的最佳捷径。"
     }
   ]
 };
