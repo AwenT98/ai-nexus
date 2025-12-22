@@ -7,18 +7,16 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (智能摘要核准版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (内容深度增强版)...")
 
 # === 1. 依赖检查 ===
 try:
     import requests
     import urllib3
     import xml.etree.ElementTree as ET
-    # 禁用 SSL 警告，防止日志刷屏
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 except ImportError:
     print("\n❌ 严重错误：缺少 requests 库。")
-    print("   请在窗口运行: pip install requests")
     sys.exit()
 
 # === 2. 翻译检查 ===
@@ -34,11 +32,11 @@ except:
 # === 3. 全局配置 ===
 DATA_FILE = "data.js"
 HEADERS = { 
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9"
 }
 
-# 获取当前北京时间 (UTC+8)
 def get_beijing_now():
     utc_now = datetime.datetime.utcnow()
     return utc_now + datetime.timedelta(hours=8)
@@ -59,53 +57,63 @@ class DataEngine:
     def smart_trans(self, text):
         if not text: return ""
         text = text.strip()
+        if len(text) < 5: return text
         if TRANSLATE_AVAILABLE:
-            try: return translator.translate(text[:500])
+            try: return translator.translate(text[:800]) # 增加翻译长度限制到800
             except: pass
-        
-        # 本地兜底词典
-        repls = {
-            "AI ": "AI ", "Generator": "生成器", "Assistant": "助手", "Video": "视频",
-            "Image": "图像", "Text": "文本", "Tool": "工具", "Launch": "发布", 
-            "GPT": "GPT", "Code": "代码", "Create": "创建", "Design": "设计",
-            "Free": "免费", "Agent": "智能体", "Open Source": "开源", "Library": "库"
-        }
-        for k, v in repls.items():
-            text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 🌟 核心升级：智能提取网页摘要 (修复引号Bug) ===
+    # === 🌟 核心升级：暴力抓取正文摘要 ===
+    def extract_body_text(self, html):
+        """当找不到 Meta 标签时，尝试提取网页正文的第一段有意义的文字"""
+        # 去除 script, style 等干扰标签
+        clean_html = re.sub(r'<(script|style).*?>.*?</\1>', '', html, flags=re.DOTALL)
+        clean_html = re.sub(r'', '', clean_html, flags=re.DOTALL)
+        # 提取所有 p 标签
+        paragraphs = re.findall(r'<p.*?>(.*?)</p>', clean_html, re.DOTALL)
+        
+        for p in paragraphs:
+            # 清除标签内的 HTML 标记
+            text = re.sub(r'<.*?>', '', p).strip()
+            # 如果这段话长度适中（大于50字），很可能是正文摘要
+            if len(text) > 50:
+                return text[:300] + "..." # 截取前300字
+        return ""
+
     def get_smart_summary(self, url, default_title):
         """
-        访问目标网页，精准提取 meta description
+        全方位抓取摘要：OG标签 -> Meta Description -> 正文首段
         """
         print(f"   🔍 深挖: {default_title[:15]}...", end="", flush=True)
         try:
-            r = self.session.get(url, timeout=5, verify=False)
+            r = self.session.get(url, timeout=6, verify=False)
             if r.status_code != 200: 
                 print(" [跳过]")
                 return default_title
             
             html = r.text
-            # 1. 优先找 og:description (利用正则回溯引用 \1 匹配同款引号)
+            
+            # 1. 优先找 og:description
             og_match = re.search(r'<meta\s+property=["\']og:description["\']\s+content=(["\'])(.*?)\1', html, re.IGNORECASE | re.DOTALL)
-            if og_match:
-                desc = og_match.group(2).strip()
-                if desc:
-                    print(" [OG成功]")
-                    return self.smart_trans(desc)
+            if og_match and len(og_match.group(2).strip()) > 20:
+                print(" [OG抓取]")
+                return self.smart_trans(og_match.group(2).strip())
             
             # 2. 其次找 name="description"
             meta_match = re.search(r'<meta\s+name=["\']description["\']\s+content=(["\'])(.*?)\1', html, re.IGNORECASE | re.DOTALL)
-            if meta_match:
-                desc = meta_match.group(2).strip()
-                if desc:
-                    print(" [Meta成功]")
-                    return self.smart_trans(desc)
+            if meta_match and len(meta_match.group(2).strip()) > 20:
+                print(" [Meta抓取]")
+                return self.smart_trans(meta_match.group(2).strip())
             
+            # 3. 🔥 最后大招：抓取正文第一段
+            body_text = self.extract_body_text(html)
+            if body_text:
+                print(" [正文抓取]")
+                return self.smart_trans(body_text)
+
             print(" [未找到]")
-            return default_title # 没找到就返回标题
-        except Exception as e:
+            return default_title
+        except Exception:
             print(f" [出错]")
             return default_title
 
@@ -117,7 +125,6 @@ class DataEngine:
             else:
                 dt = datetime.datetime.strptime(raw[:19], "%Y-%m-%dT%H:%M:%S")
                 if "-08:00" in raw or "-07:00" in raw: dt += datetime.timedelta(hours=16)
-            
             cst = dt + datetime.timedelta(hours=8)
             return cst.strftime("%m-%d %H:%M")
         except: return get_beijing_now().strftime("%m-%d %H:%M")
@@ -128,36 +135,40 @@ class DataEngine:
         self.news = []
         self.seen_titles.clear()
         
-        # --- Product Hunt (自带摘要) ---
+        # Product Hunt
         r = self.fetch("https://www.producthunt.com/feed/category/artificial-intelligence")
         if r and r.status_code == 200:
             try:
                 root = ET.fromstring(r.content)
                 ns = {'atom': 'http://www.w3.org/2005/Atom'}
                 entries = root.findall('atom:entry', ns) or root.findall('{http://www.w3.org/2005/Atom}entry')
-                for entry in entries[:20]:
+                for entry in entries[:15]:
                     try:
                         title = (entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')).text
                         if title in self.seen_titles: continue
-                        
-                        summary_node = entry.find('atom:summary', ns) or entry.find('{http://www.w3.org/2005/Atom}summary')
-                        desc = summary_node.text if summary_node is not None else title
-                        
+                        summary = (entry.find('atom:summary', ns) or entry.find('{http://www.w3.org/2005/Atom}summary')).text
                         link = (entry.find('atom:link', ns) or entry.find('{http://www.w3.org/2005/Atom}link')).attrib['href']
-                        pub = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
+                        pub = (entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')).text
                         
+                        # 如果自带摘要太短，也尝试深挖一下
+                        final_desc = summary
+                        if len(summary) < 30:
+                            final_desc = self.get_smart_summary(link, title)
+                        else:
+                            final_desc = self.smart_trans(summary)
+
                         self.news.append({
                             "id": str(len(self.news)), "src": "Product Hunt", "type": "APP",
                             "title": self.smart_trans(title),
-                            "desc": self.smart_trans(desc),
-                            "url": link, "time": self.parse_time(pub.text if pub is not None else "")
+                            "desc": final_desc,
+                            "url": link, "time": self.parse_time(pub)
                         })
                         self.seen_titles.add(title)
                         print("📱", end="", flush=True)
                     except: continue
             except: pass
 
-        # --- Hacker News (智能深挖摘要) ---
+        # Hacker News
         r = self.fetch("https://hacker-news.firebaseio.co/v0/topstories.json")
         if r:
             try:
@@ -165,27 +176,21 @@ class DataEngine:
                 keys = ['Show HN', 'Launch', 'Tool', 'App', 'Open Source', 'GPT', 'LLM']
                 count = 0
                 for i in ids:
-                    if count >= 15: break # 限制深挖数量，防止超时
+                    if count >= 15: break 
                     item = self.fetch(f"https://hacker-news.firebaseio.co/v0/item/{i}.json").json()
                     if not item: continue
                     t = item.get('title', '')
                     if t in self.seen_titles: continue
                     if any(k in t for k in keys):
                         url = item.get('url', f"https://news.ycombinator.com/item?id={i}")
+                        # Hacker News 必须深挖，否则只有标题
+                        rich_desc = self.get_smart_summary(url, t)
                         
-                        # 智能摘要提取
-                        rich_desc = t
-                        if 'url' in item:
-                            rich_desc = self.get_smart_summary(url, t)
-                        else:
-                            rich_desc = "Hacker News 社区深度技术讨论 (点击查看详情)"
-
                         self.news.append({
                             "id": str(len(self.news)), "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
                             "desc": rich_desc,
-                            "url": url,
-                            "time": self.parse_time(item.get('time', 0), True)
+                            "url": url, "time": self.parse_time(item.get('time', 0), True)
                         })
                         self.seen_titles.add(t)
                         count += 1
@@ -194,52 +199,65 @@ class DataEngine:
         print("")
         if len(self.news) < 40: self.inject_filler(40 - len(self.news))
 
+    # === 🌟 升级：深度点评备用库 ===
+    # 当爬虫失败时，这些丰富的内容会顶上去
     def inject_filler(self, count):
         current_time = get_beijing_now().strftime("%m-%d %H:%M")
-        # 40条完整备用库
+        # 这里的 desc 现在全是长文本
         filler_db = [
-            {"type":"APP", "src":"OpenAI", "title":"OpenAI o1 预览版上线", "desc":"具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。", "url":"https://openai.com"},
-            {"type":"DEV", "src":"Meta", "title":"Llama 3.2 开源发布", "desc":"可以在移动设备上运行的轻量级多模态模型。", "url":"https://llama.meta.com"},
-            {"type":"APP", "src":"Anthropic", "title":"Claude 3.5 Sonnet 更新", "desc":"代码能力进一步增强，引入 Artifacts 实时预览功能。", "url":"https://claude.ai"},
-            {"type":"VIDEO", "src":"Runway", "title":"Gen-3 Alpha 视频生成开放", "desc":"好莱坞级别的视频生成模型，支持精准的运镜控制。", "url":"https://runwayml.com"},
-            {"type":"APP", "src":"Cursor", "title":"Cursor 编辑器 Composer", "desc":"允许在一个窗口同时编辑多个文件，编程效率革命。", "url":"https://cursor.com"},
-            {"type":"IMAGE", "src":"BlackForest", "title":"Flux.1 Pro 图像模型发布", "desc":"目前开源界最强的生图模型，文字渲染能力极佳。", "url":"https://blackforestlabs.ai"},
-            {"type":"APP", "src":"Google", "title":"NotebookLM 音频概览", "desc":"将你的文档一键转化为两个 AI 主持人的播客对话。", "url":"https://notebooklm.google.com"},
-            {"type":"VIDEO", "src":"Kuaishou", "title":"可灵 AI (Kling) 网页版上线", "desc":"生成时长可达 10 秒，物理规律模拟极其真实。", "url":"https://klingai.kuaishou.com"},
-            {"type":"APP", "src":"Midjourney", "title":"Midjourney 网页编辑器公测", "desc":"新增局部重绘和画布扩展的 Web 端交互界面，无需 Discord。", "url":"https://midjourney.com"},
-            {"type":"APP", "src":"Perplexity", "title":"Perplexity Pro 搜索升级", "desc":"引入推理模型进行深度搜索，提供更精准的学术引用。", "url":"https://perplexity.ai"},
-            {"type":"VIDEO", "src":"Luma", "title":"Dream Machine 1.5 发布", "desc":"视频生成速度提升 2 倍，且质量更加稳定。", "url":"https://lumalabs.ai"},
-            {"type":"APP", "src":"Suno", "title":"Suno v3.5 音乐生成更新", "desc":"支持生成 4 分钟完整歌曲，结构更像真实音乐。", "url":"https://suno.com"},
-            {"type":"DEV", "src":"Mistral", "title":"Mistral Large 2 发布", "desc":"在编码和推理任务上超越了 Llama 3 405B。", "url":"https://mistral.ai"},
-            {"type":"APP", "src":"Notion", "title":"Notion AI 连接其它应用", "desc":"现在可以搜索 Slack 和 Google Drive 中的内容。", "url":"https://notion.so"},
-            {"type":"IMAGE", "src":"Ideogram", "title":"Ideogram 2.0 字体生成", "desc":"目前在图片中生成海报级文字效果最好的模型。", "url":"https://ideogram.ai"},
-            {"type":"APP", "src":"ChatGPT", "title":"ChatGPT 高级语音模式", "desc":"实时打断、情感丰富，就像和真人打电话一样。", "url":"https://openai.com"},
-            {"type":"VIDEO", "src":"HeyGen", "title":"HeyGen 互动数字人 API", "desc":"可以在 Zoom 会议中实时互动的 AI 数字分身。", "url":"https://heygen.com"},
-            {"type":"APP", "src":"Zapier", "title":"Zapier Central 发布", "desc":"教 AI 机器人跨越 6000+ 应用自动执行任务。", "url":"https://zapier.com"},
-            {"type":"DEV", "src":"LangChain", "title":"LangGraph 稳定版发布", "desc":"构建复杂、有状态的多智能体应用的全新框架。", "url":"https://langchain.com"},
-            {"type":"IMAGE", "src":"Krea", "title":"Krea AI 实时画布更新", "desc":"画笔画哪里，AI 就实时生成哪里，延迟极低。", "url":"https://krea.ai"},
-            {"type":"APP", "src":"ElevenLabs", "title":"Reader App 阅读器", "desc":"用极其逼真的 AI 语音朗读任何文章和 PDF。", "url":"https://elevenlabs.io"},
-            {"type":"DEV", "src":"Vercel", "title":"v0.dev 企业版发布", "desc":"支持生成多页面应用，并导出高质量 React 代码。", "url":"https://v0.dev"},
-            {"type":"APP", "src":"Figma", "title":"Figma AI 设计助手", "desc":"通过文本描述自动生成 UI 界面和图层结构。", "url":"https://figma.com"},
-            {"type":"VIDEO", "src":"Pika", "title":"Pika Art 1.5 特效更新", "desc":"新增 Pikalert 等趣味特效，让视频物体甚至融化。", "url":"https://pika.art"},
-            {"type":"APP", "src":"GitHub", "title":"Copilot Workspace 预览", "desc":"从 issue 到 pull request 的全自动开发环境。", "url":"https://githubnext.com"},
-            {"type":"DEV", "src":"HuggingFace", "title":"LeRobot 开源机器人库", "desc":"将 AI 大模型引入实体机器人控制的开源项目。", "url":"https://github.com/huggingface/lerobot"},
-            {"type":"APP", "src":"Gamma", "title":"Gamma 演示文稿生成", "desc":"现在支持导入 Word 文档并一键转换为精美 PPT。", "url":"https://gamma.app"},
-            {"type":"APP", "src":"Arc", "title":"Arc 浏览器 Browse for Me", "desc":"为你浏览网页并生成摘要的 AI 搜索体验。", "url":"https://arc.net"},
-            {"type":"DEV", "src":"NVIDIA", "title":"Nemotron-4 340B 开源", "desc":"英伟达发布的最强开源合成数据生成模型。", "url":"https://developer.nvidia.com"},
-            {"type":"APP", "src":"Character.ai", "title":"Character.ai 通话功能", "desc":"现在可以与你创建的 AI 角色进行实时语音通话。", "url":"https://character.ai"},
-            {"type":"VIDEO", "src":"Sora", "title":"Sora 更多演示视频流出", "desc":"展示了惊人的物理一致性和长视频生成能力。", "url":"https://openai.com/sora"},
-            {"type":"DEV", "src":"Stability", "title":"Stable Audio Open", "desc":"用于生成简短音频样本和音效的开源模型。", "url":"https://stability.ai"},
-            {"type":"APP", "src":"Microsoft", "title":"Windows Recall 功能预览", "desc":"Windows AI 能够“回忆”你在电脑上做过的任何事情。", "url":"https://microsoft.com"},
-            {"type":"APP", "src":"Apple", "title":"Apple Intelligence 发布", "desc":"集成于 iOS 18 的个人智能系统，深度整合 Siri。", "url":"https://apple.com"},
-            {"type":"DEV", "src":"Cohere", "title":"Aya 23 多语言模型", "desc":"支持 23 种语言的高性能开源大语言模型。", "url":"https://cohere.com"},
-            {"type":"APP", "src":"Adobe", "title":"Lightroom 生成式移除", "desc":"一键移除照片中不需要的物体，效果自然。", "url":"https://adobe.com"},
-            {"type":"APP", "src":"Canva", "title":"Canva Magic Studio", "desc":"全套 AI 设计工具更新，支持更多自动化排版。", "url":"https://canva.com"},
-            {"type":"DEV", "src":"Groq", "title":"Groq API 速度测试", "desc":"展示了每秒 500 token 的极速推理能力。", "url":"https://groq.com"},
-            {"type":"APP", "src":"Slack", "title":"Slack AI 总结功能", "desc":"自动总结频道内的长对话和未读消息。", "url":"https://slack.com"},
-            {"type":"VIDEO", "src":"Vidu", "title":"Vidu 视频生成模型", "desc":"清华团队打造，中国版的 Sora，一键生成连贯视频。", "url":"https://www.vidu.studio"}
+            {
+                "type":"APP", "src":"OpenAI", "title":"OpenAI o1 模型预览版上线", 
+                "desc":"OpenAI 发布的全新 o1 系列模型（原草莓项目），引入了‘思维链’推理技术。这意味着模型在回答问题前会像人类一样进行深思熟虑，从而在复杂的数学、编程和科学推理任务上表现出卓越的能力，准确率大幅超越 GPT-4o。",
+                "url":"https://openai.com"
+            },
+            {
+                "type":"DEV", "src":"Meta", "title":"Llama 3.2 开源多模态模型", 
+                "desc":"Meta 再次震撼开源界！Llama 3.2 是首个能够同时处理图像和文本的轻量级开源模型。它包含 11B 和 90B 两个版本，甚至还有能在手机端流畅运行的 1B/3B 版本，为边缘计算和移动端 AI 应用开发打开了新的大门。",
+                "url":"https://llama.meta.com"
+            },
+            {
+                "type":"APP", "src":"Anthropic", "title":"Claude 3.5 Sonnet 重大更新", 
+                "desc":"Anthropic 发布了 Claude 3.5 Sonnet 的升级版，这次更新引入了革命性的 'Computer Use' 功能，允许 AI 像人一样控制鼠标和键盘操作电脑。此外，其代码生成能力和逻辑推理速度也得到了进一步优化，是目前开发者首选的编程助手。",
+                "url":"https://claude.ai"
+            },
+            {
+                "type":"VIDEO", "src":"Runway", "title":"Gen-3 Alpha 视频生成全面开放", 
+                "desc":"好莱坞级别的 AI 视频生成工具 Runway Gen-3 Alpha 现已向公众开放。它支持极其精准的运动控制（Motion Brush）和运镜指令，能够生成长达 10 秒的高清、连贯视频，光影效果和物理规律模拟几乎达到了以假乱真的地步。",
+                "url":"https://runwayml.com"
+            },
+            {
+                "type":"APP", "src":"Cursor", "title":"Cursor 编辑器推出 Composer", 
+                "desc":"VS Code 的最强竞争对手 Cursor 推出了 'Composer' 功能。它允许用户在一个窗口中同时编辑多个文件，通过自然语言指令重构整个项目的代码结构。这不仅是一个代码补全工具，更像是一个能够理解整个工程架构的 AI 结对程序员。",
+                "url":"https://cursor.com"
+            },
+            {
+                "type":"IMAGE", "src":"BlackForest", "title":"Flux.1 Pro 图像模型发布", 
+                "desc":"由原 Stable Diffusion 核心团队打造的 FLUX.1 横空出世。该模型在文字渲染（Text Rendering）和手指细节处理上完爆了 Midjourney v6。作为目前最强的开源生图模型，它支持本地部署，并且对提示词的语义理解达到了新的高度。",
+                "url":"https://blackforestlabs.ai"
+            },
+            {
+                "type":"APP", "src":"Google", "title":"NotebookLM 音频概览功能", 
+                "desc":"Google 的 NotebookLM 增加了一个病毒式传播的功能：Audio Overview。它可以将你上传的任何 PDF、文档或链接，一键转化成一段两名 AI 主持人之间的精彩播客对话。语气自然、充满幽默感，是学习新知识的神器。",
+                "url":"https://notebooklm.google.com"
+            },
+            {
+                "type":"VIDEO", "src":"Kuaishou", "title":"可灵 AI (Kling) 网页版上线", 
+                "desc":"快手团队研发的‘可灵’视频生成大模型，被誉为中国版的 Sora。它支持生成长达 2 分钟的视频（需延长），并且在人物动作幅度、吞咽食物等物理模拟上表现惊人。现在网页版已面向全球用户开放，支持图生视频和文生视频。",
+                "url":"https://klingai.kuaishou.com"
+            },
+            {
+                "type":"APP", "src":"Midjourney", "title":"Midjourney 网页编辑器公测", 
+                "desc":"Midjourney 终于摆脱了 Discord！全新的网页版编辑器上线，支持局部重绘（Inpainting）、画布扩展（Outpainting）以及通过拖拽来修改图片构图。这是一个巨大的交互飞跃，让不懂代码的设计师也能轻松使用顶级 AI 绘画。",
+                "url":"https://midjourney.com"
+            },
+            {
+                "type":"APP", "src":"Perplexity", "title":"Perplexity Pro 推出深度推理", 
+                "desc":"AI 搜索引擎 Perplexity 引入了 o1 级别的推理模型。当你询问复杂的学术或分析类问题时，它会进行多步骤的深度搜索和逻辑链推导，最后给出一份引用详实、逻辑严密的专业报告，而非简单的搜索摘要。",
+                "url":"https://perplexity.ai"
+            }
         ]
         
+        # 循环填充直到满足数量
         full_filler = filler_db * 5
         added = 0
         for item in full_filler:
@@ -252,7 +270,6 @@ class DataEngine:
             self.seen_titles.add(item['title'])
             added += 1
 
-    # === 2. 榜单生成 ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
@@ -269,7 +286,6 @@ class DataEngine:
                 lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
             self.ranks[cat] = lst
 
-    # === 3. 超级提示词库 (12个万能公式) ===
     def make_prompts(self):
         print("   └─ 构建 AI 万能公式库...")
         self.prompts = [
@@ -287,7 +303,6 @@ class DataEngine:
             {"tag": "Learning", "title": "费曼学习法", "content": "请用“费曼技巧”给我讲解 [复杂概念]。\n要求：用像给12岁孩子讲故事一样的简单语言，使用类比，不要使用行话。", "desc": "快速搞懂一个陌生领域的最佳捷径。"}
         ]
 
-    # === 4. 保存数据 ===
     def save(self):
         final_data = {'news': self.news, 'ranks': self.ranks, 'prompts': self.prompts}
         js = f"window.AI_DATA = {json.dumps(final_data, ensure_ascii=False, indent=2)};"
