@@ -7,13 +7,14 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (智能摘要增强版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (智能摘要核准版)...")
 
 # === 1. 依赖检查 ===
 try:
     import requests
     import urllib3
     import xml.etree.ElementTree as ET
+    # 禁用 SSL 警告，防止日志刷屏
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 except ImportError:
     print("\n❌ 严重错误：缺少 requests 库。")
@@ -37,6 +38,7 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 }
 
+# 获取当前北京时间 (UTC+8)
 def get_beijing_now():
     utc_now = datetime.datetime.utcnow()
     return utc_now + datetime.timedelta(hours=8)
@@ -51,7 +53,7 @@ class DataEngine:
         self.seen_titles = set()
 
     def fetch(self, url):
-        try: return self.session.get(url, timeout=10, verify=False) # 缩短超时防止卡死
+        try: return self.session.get(url, timeout=10, verify=False)
         except: return None
 
     def smart_trans(self, text):
@@ -61,6 +63,7 @@ class DataEngine:
             try: return translator.translate(text[:500])
             except: pass
         
+        # 本地兜底词典
         repls = {
             "AI ": "AI ", "Generator": "生成器", "Assistant": "助手", "Video": "视频",
             "Image": "图像", "Text": "文本", "Tool": "工具", "Launch": "发布", 
@@ -71,12 +74,12 @@ class DataEngine:
             text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 🌟 核心升级：智能提取网页摘要 ===
+    # === 🌟 核心升级：智能提取网页摘要 (修复引号Bug) ===
     def get_smart_summary(self, url, default_title):
         """
-        访问目标网页，尝试提取 <meta name="description"> 或 og:description
+        访问目标网页，精准提取 meta description
         """
-        print(f"   🔍 正在深入抓取摘要: {default_title[:10]}...", end="", flush=True)
+        print(f"   🔍 深挖: {default_title[:15]}...", end="", flush=True)
         try:
             r = self.session.get(url, timeout=5, verify=False)
             if r.status_code != 200: 
@@ -84,19 +87,21 @@ class DataEngine:
                 return default_title
             
             html = r.text
-            # 1. 尝试找 og:description (通常质量最高)
-            og_match = re.search(r'<meta\s+property=["\']og:description["\']\s+content=["\'](.*?)["\']', html, re.IGNORECASE)
+            # 1. 优先找 og:description (利用正则回溯引用 \1 匹配同款引号)
+            og_match = re.search(r'<meta\s+property=["\']og:description["\']\s+content=(["\'])(.*?)\1', html, re.IGNORECASE | re.DOTALL)
             if og_match:
-                desc = og_match.group(1)
-                print(" [OG成功]")
-                return self.smart_trans(desc)
+                desc = og_match.group(2).strip()
+                if desc:
+                    print(" [OG成功]")
+                    return self.smart_trans(desc)
             
-            # 2. 尝试找 name="description"
-            meta_match = re.search(r'<meta\s+name=["\']description["\']\s+content=["\'](.*?)["\']', html, re.IGNORECASE)
+            # 2. 其次找 name="description"
+            meta_match = re.search(r'<meta\s+name=["\']description["\']\s+content=(["\'])(.*?)\1', html, re.IGNORECASE | re.DOTALL)
             if meta_match:
-                desc = meta_match.group(1)
-                print(" [Meta成功]")
-                return self.smart_trans(desc)
+                desc = meta_match.group(2).strip()
+                if desc:
+                    print(" [Meta成功]")
+                    return self.smart_trans(desc)
             
             print(" [未找到]")
             return default_title # 没找到就返回标题
@@ -111,27 +116,26 @@ class DataEngine:
                 dt = datetime.datetime.utcfromtimestamp(int(raw))
             else:
                 dt = datetime.datetime.strptime(raw[:19], "%Y-%m-%dT%H:%M:%S")
-                # 简单修正时区
                 if "-08:00" in raw or "-07:00" in raw: dt += datetime.timedelta(hours=16)
             
             cst = dt + datetime.timedelta(hours=8)
             return cst.strftime("%m-%d %H:%M")
         except: return get_beijing_now().strftime("%m-%d %H:%M")
 
-    # === 情报抓取 ===
+    # === 1. 情报抓取 ===
     def run_spider(self):
         print("   └─ 正在挖掘软件情报...")
         self.news = []
         self.seen_titles.clear()
         
-        # 1. Product Hunt (自带摘要，无需深挖)
+        # --- Product Hunt (自带摘要) ---
         r = self.fetch("https://www.producthunt.com/feed/category/artificial-intelligence")
         if r and r.status_code == 200:
             try:
                 root = ET.fromstring(r.content)
                 ns = {'atom': 'http://www.w3.org/2005/Atom'}
                 entries = root.findall('atom:entry', ns) or root.findall('{http://www.w3.org/2005/Atom}entry')
-                for entry in entries[:20]: # 限制数量防止超时
+                for entry in entries[:20]:
                     try:
                         title = (entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')).text
                         if title in self.seen_titles: continue
@@ -140,31 +144,28 @@ class DataEngine:
                         desc = summary_node.text if summary_node is not None else title
                         
                         link = (entry.find('atom:link', ns) or entry.find('{http://www.w3.org/2005/Atom}link')).attrib['href']
-                        
-                        # 解析时间
                         pub = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
-                        time_str = self.parse_time(pub.text if pub is not None else "")
-
+                        
                         self.news.append({
                             "id": str(len(self.news)), "src": "Product Hunt", "type": "APP",
                             "title": self.smart_trans(title),
-                            "desc": self.smart_trans(desc), # PH自带摘要，通常够用
-                            "url": link, "time": time_str
+                            "desc": self.smart_trans(desc),
+                            "url": link, "time": self.parse_time(pub.text if pub is not None else "")
                         })
                         self.seen_titles.add(title)
                         print("📱", end="", flush=True)
                     except: continue
             except: pass
 
-        # 2. Hacker News (只有标题，需要深挖！)
+        # --- Hacker News (智能深挖摘要) ---
         r = self.fetch("https://hacker-news.firebaseio.co/v0/topstories.json")
         if r:
             try:
-                ids = r.json()[:60] # 检查前60条
+                ids = r.json()[:60]
                 keys = ['Show HN', 'Launch', 'Tool', 'App', 'Open Source', 'GPT', 'LLM']
                 count = 0
                 for i in ids:
-                    if count >= 15: break # HN 限制抓 15 条，因为每条都要深挖，太慢会超时
+                    if count >= 15: break # 限制深挖数量，防止超时
                     item = self.fetch(f"https://hacker-news.firebaseio.co/v0/item/{i}.json").json()
                     if not item: continue
                     t = item.get('title', '')
@@ -172,8 +173,8 @@ class DataEngine:
                     if any(k in t for k in keys):
                         url = item.get('url', f"https://news.ycombinator.com/item?id={i}")
                         
-                        # === 这里调用深挖函数 ===
-                        # 如果没有URL（只是讨论），就用标题
+                        # 智能摘要提取
+                        rich_desc = t
                         if 'url' in item:
                             rich_desc = self.get_smart_summary(url, t)
                         else:
@@ -182,7 +183,7 @@ class DataEngine:
                         self.news.append({
                             "id": str(len(self.news)), "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
-                            "desc": rich_desc, # 这里现在是抓取到的详细摘要了！
+                            "desc": rich_desc,
                             "url": url,
                             "time": self.parse_time(item.get('time', 0), True)
                         })
@@ -195,6 +196,7 @@ class DataEngine:
 
     def inject_filler(self, count):
         current_time = get_beijing_now().strftime("%m-%d %H:%M")
+        # 40条完整备用库
         filler_db = [
             {"type":"APP", "src":"OpenAI", "title":"OpenAI o1 预览版上线", "desc":"具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。", "url":"https://openai.com"},
             {"type":"DEV", "src":"Meta", "title":"Llama 3.2 开源发布", "desc":"可以在移动设备上运行的轻量级多模态模型。", "url":"https://llama.meta.com"},
@@ -237,6 +239,7 @@ class DataEngine:
             {"type":"APP", "src":"Slack", "title":"Slack AI 总结功能", "desc":"自动总结频道内的长对话和未读消息。", "url":"https://slack.com"},
             {"type":"VIDEO", "src":"Vidu", "title":"Vidu 视频生成模型", "desc":"清华团队打造，中国版的 Sora，一键生成连贯视频。", "url":"https://www.vidu.studio"}
         ]
+        
         full_filler = filler_db * 5
         added = 0
         for item in full_filler:
@@ -249,6 +252,7 @@ class DataEngine:
             self.seen_titles.add(item['title'])
             added += 1
 
+    # === 2. 榜单生成 ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
@@ -265,6 +269,7 @@ class DataEngine:
                 lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
             self.ranks[cat] = lst
 
+    # === 3. 超级提示词库 (12个万能公式) ===
     def make_prompts(self):
         print("   └─ 构建 AI 万能公式库...")
         self.prompts = [
@@ -282,6 +287,7 @@ class DataEngine:
             {"tag": "Learning", "title": "费曼学习法", "content": "请用“费曼技巧”给我讲解 [复杂概念]。\n要求：用像给12岁孩子讲故事一样的简单语言，使用类比，不要使用行话。", "desc": "快速搞懂一个陌生领域的最佳捷径。"}
         ]
 
+    # === 4. 保存数据 ===
     def save(self):
         final_data = {'news': self.news, 'ranks': self.ranks, 'prompts': self.prompts}
         js = f"window.AI_DATA = {json.dumps(final_data, ensure_ascii=False, indent=2)};"
