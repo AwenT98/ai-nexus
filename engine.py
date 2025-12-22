@@ -36,7 +36,11 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" 
 }
 
-def get_time(): return datetime.datetime.now().strftime("%m-%d %H:%M")
+def get_time():
+    # 获取 UTC 时间并强制 +8 小时 (北京时间)
+    utc_now = datetime.datetime.utcnow()
+    cst_time = utc_now + datetime.timedelta(hours=8)
+    return cst_time.strftime("%m-%d %H:%M")
 
 class DataEngine:
     def __init__(self):
@@ -283,4 +287,5 @@ if __name__ == "__main__":
         print(f"出错: {e}")
         traceback.print_exc()
     print("✨ 脚本运行结束，3秒后退出...")
+
     time.sleep(3)
