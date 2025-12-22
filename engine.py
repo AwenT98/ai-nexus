@@ -7,7 +7,7 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (验收通过版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (智能摘要增强版)...")
 
 # === 1. 依赖检查 ===
 try:
@@ -37,7 +37,6 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 }
 
-# 获取当前北京时间 (UTC+8)
 def get_beijing_now():
     utc_now = datetime.datetime.utcnow()
     return utc_now + datetime.timedelta(hours=8)
@@ -52,7 +51,7 @@ class DataEngine:
         self.seen_titles = set()
 
     def fetch(self, url):
-        try: return self.session.get(url, timeout=20, verify=False)
+        try: return self.session.get(url, timeout=10, verify=False) # 缩短超时防止卡死
         except: return None
 
     def smart_trans(self, text):
@@ -72,98 +71,128 @@ class DataEngine:
             text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 时间解析工具 ===
-    def parse_ph_time(self, iso_str):
+    # === 🌟 核心升级：智能提取网页摘要 ===
+    def get_smart_summary(self, url, default_title):
+        """
+        访问目标网页，尝试提取 <meta name="description"> 或 og:description
+        """
+        print(f"   🔍 正在深入抓取摘要: {default_title[:10]}...", end="", flush=True)
         try:
-            if not iso_str: return get_beijing_now().strftime("%m-%d %H:%M")
-            dt = datetime.datetime.strptime(iso_str[:19], "%Y-%m-%dT%H:%M:%S")
-            # 简单时区处理
-            if "-08:00" in iso_str or "-07:00" in iso_str:
-                 cst_time = dt + datetime.timedelta(hours=16)
+            r = self.session.get(url, timeout=5, verify=False)
+            if r.status_code != 200: 
+                print(" [跳过]")
+                return default_title
+            
+            html = r.text
+            # 1. 尝试找 og:description (通常质量最高)
+            og_match = re.search(r'<meta\s+property=["\']og:description["\']\s+content=["\'](.*?)["\']', html, re.IGNORECASE)
+            if og_match:
+                desc = og_match.group(1)
+                print(" [OG成功]")
+                return self.smart_trans(desc)
+            
+            # 2. 尝试找 name="description"
+            meta_match = re.search(r'<meta\s+name=["\']description["\']\s+content=["\'](.*?)["\']', html, re.IGNORECASE)
+            if meta_match:
+                desc = meta_match.group(1)
+                print(" [Meta成功]")
+                return self.smart_trans(desc)
+            
+            print(" [未找到]")
+            return default_title # 没找到就返回标题
+        except Exception as e:
+            print(f" [出错]")
+            return default_title
+
+    def parse_time(self, raw, is_unix=False):
+        try:
+            if not raw: return get_beijing_now().strftime("%m-%d %H:%M")
+            if is_unix:
+                dt = datetime.datetime.utcfromtimestamp(int(raw))
             else:
-                cst_time = dt + datetime.timedelta(hours=8)
-            return cst_time.strftime("%m-%d %H:%M")
-        except:
-            return get_beijing_now().strftime("%m-%d %H:%M")
+                dt = datetime.datetime.strptime(raw[:19], "%Y-%m-%dT%H:%M:%S")
+                # 简单修正时区
+                if "-08:00" in raw or "-07:00" in raw: dt += datetime.timedelta(hours=16)
+            
+            cst = dt + datetime.timedelta(hours=8)
+            return cst.strftime("%m-%d %H:%M")
+        except: return get_beijing_now().strftime("%m-%d %H:%M")
 
-    def parse_hn_time(self, unix_ts):
-        try:
-            if not unix_ts: return get_beijing_now().strftime("%m-%d %H:%M")
-            dt = datetime.datetime.utcfromtimestamp(int(unix_ts))
-            cst_time = dt + datetime.timedelta(hours=8)
-            return cst_time.strftime("%m-%d %H:%M")
-        except:
-            return get_beijing_now().strftime("%m-%d %H:%M")
-
-    # === 核心 1：情报抓取 ===
+    # === 情报抓取 ===
     def run_spider(self):
         print("   └─ 正在挖掘软件情报...")
         self.news = []
         self.seen_titles.clear()
         
-        # 1. Product Hunt
+        # 1. Product Hunt (自带摘要，无需深挖)
         r = self.fetch("https://www.producthunt.com/feed/category/artificial-intelligence")
         if r and r.status_code == 200:
             try:
                 root = ET.fromstring(r.content)
                 ns = {'atom': 'http://www.w3.org/2005/Atom'}
-                # 兼容不同格式的 XML
                 entries = root.findall('atom:entry', ns) or root.findall('{http://www.w3.org/2005/Atom}entry')
-                for entry in entries[:30]:
+                for entry in entries[:20]: # 限制数量防止超时
                     try:
-                        title_node = entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')
-                        raw_title = title_node.text
-                        if raw_title in self.seen_titles: continue
+                        title = (entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')).text
+                        if title in self.seen_titles: continue
                         
-                        # 抓取真实时间
-                        pub_node = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
-                        updated_node = entry.find('atom:updated', ns) or entry.find('{http://www.w3.org/2005/Atom}updated')
-                        raw_time = pub_node.text if pub_node is not None else (updated_node.text if updated_node is not None else "")
-                        real_time = self.parse_ph_time(raw_time)
-                        
-                        link_node = entry.find('atom:link', ns) or entry.find('{http://www.w3.org/2005/Atom}link')
                         summary_node = entry.find('atom:summary', ns) or entry.find('{http://www.w3.org/2005/Atom}summary')
+                        desc = summary_node.text if summary_node is not None else title
+                        
+                        link = (entry.find('atom:link', ns) or entry.find('{http://www.w3.org/2005/Atom}link')).attrib['href']
+                        
+                        # 解析时间
+                        pub = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
+                        time_str = self.parse_time(pub.text if pub is not None else "")
 
                         self.news.append({
                             "id": str(len(self.news)), "src": "Product Hunt", "type": "APP",
-                            "title": self.smart_trans(raw_title),
-                            "desc": self.smart_trans(summary_node.text if summary_node is not None else ""),
-                            "url": link_node.attrib['href'], "time": real_time
+                            "title": self.smart_trans(title),
+                            "desc": self.smart_trans(desc), # PH自带摘要，通常够用
+                            "url": link, "time": time_str
                         })
-                        self.seen_titles.add(raw_title)
+                        self.seen_titles.add(title)
                         print("📱", end="", flush=True)
                     except: continue
             except: pass
 
-        # 2. Hacker News
+        # 2. Hacker News (只有标题，需要深挖！)
         r = self.fetch("https://hacker-news.firebaseio.co/v0/topstories.json")
         if r:
             try:
-                ids = r.json()[:80]
+                ids = r.json()[:60] # 检查前60条
                 keys = ['Show HN', 'Launch', 'Tool', 'App', 'Open Source', 'GPT', 'LLM']
+                count = 0
                 for i in ids:
-                    if len(self.news) >= 50: break
+                    if count >= 15: break # HN 限制抓 15 条，因为每条都要深挖，太慢会超时
                     item = self.fetch(f"https://hacker-news.firebaseio.co/v0/item/{i}.json").json()
                     if not item: continue
                     t = item.get('title', '')
                     if t in self.seen_titles: continue
                     if any(k in t for k in keys):
-                        raw_time = item.get('time', 0)
-                        real_time = self.parse_hn_time(raw_time)
+                        url = item.get('url', f"https://news.ycombinator.com/item?id={i}")
+                        
+                        # === 这里调用深挖函数 ===
+                        # 如果没有URL（只是讨论），就用标题
+                        if 'url' in item:
+                            rich_desc = self.get_smart_summary(url, t)
+                        else:
+                            rich_desc = "Hacker News 社区深度技术讨论 (点击查看详情)"
+
                         self.news.append({
                             "id": str(len(self.news)), "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
-                            "desc": self.smart_trans(f"开发者热门项目: {t}"),
-                            "url": item.get('url', f"https://news.ycombinator.com/item?id={i}"),
-                            "time": real_time
+                            "desc": rich_desc, # 这里现在是抓取到的详细摘要了！
+                            "url": url,
+                            "time": self.parse_time(item.get('time', 0), True)
                         })
                         self.seen_titles.add(t)
+                        count += 1
                         print("💻", end="", flush=True)
             except: pass
         print("")
-        if len(self.news) < 60: self.inject_filler(60 - len(self.news))
+        if len(self.news) < 40: self.inject_filler(40 - len(self.news))
 
-    # 备用库：包含 40 条完整数据，防止重复
     def inject_filler(self, count):
         current_time = get_beijing_now().strftime("%m-%d %H:%M")
         filler_db = [
@@ -220,7 +249,6 @@ class DataEngine:
             self.seen_titles.add(item['title'])
             added += 1
 
-    # === 2. 榜单生成 ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
@@ -237,30 +265,23 @@ class DataEngine:
                 lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
             self.ranks[cat] = lst
 
-    # === 3. 超级提示词库 (12个万能公式) ===
     def make_prompts(self):
-        print("   └─ 构建 AI 万能公式库 (结构化框架)...")
+        print("   └─ 构建 AI 万能公式库...")
         self.prompts = [
-            # --- 核心通用框架 ---
             {"tag": "万能通用", "title": "RTF 标准提问法", "content": "[角色 Role]: 你是资深产品经理\n[任务 Task]: 请分析这份竞品报告\n[格式 Format]: 输出为带图表的 Markdown 格式", "desc": "最基础也最有效的结构：指定角色、明确任务、规定格式。"},
             {"tag": "复杂任务", "title": "BROKE 深度思考法", "content": "[背景 Background]: 我们正在开发一款AI应用...\n[角色 Role]: 你是首席架构师\n[目标 Objectives]: 设计后端架构\n[关键结果 Key Results]: 高并发、低延迟\n[演变 Evolve]: 如果用户量翻倍，架构如何调整？", "desc": "适用于需要深度推理和多步规划的复杂任务。"},
             {"tag": "精准控制", "title": "C.R.E.A.T.E 框架", "content": "[Context]: 上下文背景\n[Role]: 设定AI身份\n[Explicit]: 明确具体的限制条件\n[Action]: 需要执行的动作\n[Tone]: 语调（专业/幽默/严肃）\n[Example]: 给出一个参考范例", "desc": "目前公认生成质量最高的精细化控制框架。"},
-            # --- 视频生成 (✅ 已添加) ---
             {"tag": "Video Gen", "title": "Runway/Sora 电影级公式", "content": "[主体描述] + [环境背景] + [摄影机运动 Camera Movement] + [光线/氛围] + [风格 Style]\n例如: A wide shot of a cyberpunk city street at night, neon reflection on wet ground, drone camera slowly flying forward, cinematic lighting, film grain.", "desc": "生成高质量视频的核心要素：运镜、光影与风格。"},
             {"tag": "Video Gen", "title": "数字人口播公式 (HeyGen)", "content": "[角色形象]: 穿着西装的专业新闻主播\n[背景]: 现代化的演播室大屏幕\n[表情/动作]: 面带微笑，手势自然，眼神注视镜头\n[脚本内容]: (粘贴你的台词)", "desc": "用于生成高质量 AI 数字人视频的脚本结构。"},
-            # --- 绘画与视觉 ---
             {"tag": "Midjourney", "title": "MJ 摄影写实公式", "content": "/imagine prompt: [主体描述] + [环境背景] + [摄影角度/镜头] + [光线条件] + [相机型号/胶片类型] --ar 16:9 --v 6.0 --style raw", "desc": "生成照片级逼真图像的黄金公式。"},
             {"tag": "Stable Diff", "title": "SD 正负向起手式", "content": "Positive: (masterpiece, best quality:1.2), [Subject], [Style Tags], 4k, 8k\nNegative: (worst quality, low quality:1.4), bad anatomy, watermark, text", "desc": "Stable Diffusion 必备的起手质量控制词。"},
-            # --- 编程与学术 ---
             {"tag": "Coding", "title": "代码专家 Debug", "content": "你是一个 [语言] 专家。请分析以下代码：\n1. 解释这段代码的功能\n2. 指出潜在的 Bug 或性能瓶颈\n3. 给出优化后的代码并添加注释\n[粘贴代码]", "desc": "让 AI 成为你的结对编程导师。"},
             {"tag": "Academic", "title": "论文润色 (降重)", "content": "请作为[学科]领域的审稿人，对以下段落进行润色。\n要求：保持原意，提升学术性，使用更专业的词汇，调整句式结构以降低查重率。", "desc": "学术论文投稿前的最后优化。"},
-            # --- 职场与营销 ---
             {"tag": "Marketing", "title": "小红书爆款公式", "content": "[标题]: 包含emoji，制造悬念/焦虑/惊喜\n[正文]: 痛点场景 + 解决方案 + 情绪价值\n[结尾]: 引导互动 (点赞/收藏)\n[标签]: #热门话题", "desc": "符合算法推荐逻辑的社交媒体文案结构。"},
             {"tag": "Business", "title": "SWOT 战略分析", "content": "请对 [公司/产品] 进行 SWOT 分析：\nStrengths (优势)\nWeaknesses (劣势)\nOpportunities (机会)\nThreats (威胁)\n并基于分析给出3条战略建议。", "desc": "商业计划书必备的分析框架。"},
             {"tag": "Learning", "title": "费曼学习法", "content": "请用“费曼技巧”给我讲解 [复杂概念]。\n要求：用像给12岁孩子讲故事一样的简单语言，使用类比，不要使用行话。", "desc": "快速搞懂一个陌生领域的最佳捷径。"}
         ]
 
-    # === 4. 保存数据 ===
     def save(self):
         final_data = {'news': self.news, 'ranks': self.ranks, 'prompts': self.prompts}
         js = f"window.AI_DATA = {json.dumps(final_data, ensure_ascii=False, indent=2)};"
