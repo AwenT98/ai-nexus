@@ -7,7 +7,7 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (美学完整版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (真实时间版)...")
 
 # === 1. 依赖检查 ===
 try:
@@ -36,8 +36,8 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" 
 }
 
-def get_time():
-    # 获取 UTC 时间并强制 +8 小时 (北京时间)
+# 获取当前北京时间（用于备用数据和全局更新时间）
+def get_current_time_str():
     utc_now = datetime.datetime.utcnow()
     cst_time = utc_now + datetime.timedelta(hours=8)
     return cst_time.strftime("%m-%d %H:%M")
@@ -76,33 +76,67 @@ class DataEngine:
             text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 1. 情报抓取 (保持 60 条填充) ===
+    # === 新增：时间解析工具 ===
+    def parse_ph_time(self, iso_str):
+        """解析 Product Hunt 的 ISO 时间并转为北京时间"""
+        try:
+            # 格式通常为: 2023-12-22T08:00:00-08:00 或 Z 结尾
+            # 简单处理：截取前19位转时间对象，视为 UTC (PH feed 时区较乱，视为 UTC+8 修正)
+            dt = datetime.datetime.strptime(iso_str[:19], "%Y-%m-%dT%H:%M:%S")
+            # 假设源是 UTC，+8小时
+            cst_time = dt + datetime.timedelta(hours=8)
+            return cst_time.strftime("%m-%d %H:%M")
+        except:
+            return get_current_time_str() # 解析失败回退到当前时间
+
+    def parse_hn_time(self, unix_ts):
+        """解析 Hacker News 的 Unix 时间戳并转为北京时间"""
+        try:
+            dt = datetime.datetime.utcfromtimestamp(int(unix_ts))
+            cst_time = dt + datetime.timedelta(hours=8)
+            return cst_time.strftime("%m-%d %H:%M")
+        except:
+            return get_current_time_str()
+
+    # === 核心 1：情报抓取 (真实时间版) ===
     def run_spider(self):
         print("   └─ 正在挖掘软件情报 (目标: 60+ 条)...")
         self.news = []
         self.seen_titles.clear()
         
-        # Product Hunt
+        # 1. Product Hunt (解析 published 时间)
         r = self.fetch("https://www.producthunt.com/feed/category/artificial-intelligence")
         if r:
             try:
                 root = ET.fromstring(r.content)
-                for entry in root.findall('{http://www.w3.org/2005/Atom}entry')[:30]:
-                    raw_title = entry.find('{http://www.w3.org/2005/Atom}title').text
+                # 命名空间处理
+                ns = {'atom': 'http://www.w3.org/2005/Atom'}
+                for entry in root.findall('atom:entry', ns)[:30]:
+                    raw_title = entry.find('atom:title', ns).text
                     if raw_title in self.seen_titles: continue
+                    
+                    # 获取发布时间
+                    pub_node = entry.find('atom:published', ns)
+                    if pub_node is not None:
+                        real_time = self.parse_ph_time(pub_node.text)
+                    else:
+                        real_time = self.parse_ph_time(entry.find('atom:updated', ns).text)
+
                     self.news.append({
                         "id": str(len(self.news)), 
                         "src": "Product Hunt", "type": "APP",
                         "title": self.smart_trans(raw_title),
-                        "desc": self.smart_trans(entry.find('{http://www.w3.org/2005/Atom}summary').text),
-                        "url": entry.find('{http://www.w3.org/2005/Atom}link').attrib['href'],
-                        "time": get_time()
+                        "desc": self.smart_trans(entry.find('atom:summary', ns).text),
+                        "url": entry.find('atom:link', ns).attrib['href'],
+                        "time": real_time  # 使用真实时间
                     })
                     self.seen_titles.add(raw_title)
                     print("📱", end="", flush=True)
-            except: pass
+            except Exception as e: 
+                # print(f"PH Error: {e}") 
+                pass
 
-        # Hacker News
+        # 2. Hacker News (解析 time 时间戳)
         r = self.fetch("https://hacker-news.firebaseio.co/v0/topstories.json")
         if r:
             try:
@@ -114,13 +148,16 @@ class DataEngine:
                     t = item.get('title', '')
                     if t in self.seen_titles: continue
                     if any(k in t for k in keys):
+                        # 获取真实时间
+                        real_time = self.parse_hn_time(item.get('time', time.time()))
+                        
                         self.news.append({
                             "id": str(len(self.news)),
                             "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
                             "desc": self.smart_trans(f"开发者热门项目: {t}"),
                             "url": item.get('url', f"https://news.ycombinator.com/item?id={i}"),
-                            "time": get_time()
+                            "time": real_time # 使用真实时间
                         })
                         self.seen_titles.add(t)
                         print("💻", end="", flush=True)
@@ -129,6 +166,8 @@ class DataEngine:
         if len(self.news) < 60: self.inject_filler(60 - len(self.news))
 
     def inject_filler(self, count):
+        # 备用库使用“当前脚本运行时间”，因为它们是静态填充
+        current_fill_time = get_current_time_str()
         filler_db = [
             {"type":"APP", "src":"OpenAI", "title":"OpenAI o1 预览版上线", "desc":"具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。", "url":"https://openai.com"},
             {"type":"DEV", "src":"Meta", "title":"Llama 3.2 开源发布", "desc":"可以在移动设备上运行的轻量级多模态模型。", "url":"https://llama.meta.com"},
@@ -178,12 +217,13 @@ class DataEngine:
             if item['title'] in self.seen_titles: continue
             self.news.append({
                 "id": str(len(self.news)), "src": item['src'], "type": item['type'],
-                "title": item['title'], "desc": item['desc'], "url": item['url'], "time": get_time()
+                "title": item['title'], "desc": item['desc'], "url": item['url'], 
+                "time": current_fill_time # 备用数据使用当前时间
             })
             self.seen_titles.add(item['title'])
             added += 1
 
-    # === 2. 榜单生成 ===
+    # === 2. 榜单生成 (80条独家描述) ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
@@ -201,7 +241,7 @@ class DataEngine:
                 lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
             self.ranks[cat] = lst
 
-    # === 3. 超级提示词库 (扩容至60+，支持12个轮换) ===
+    # === 3. 超级提示词库 (扩容至60+, 支持12个轮换) ===
     def make_prompts(self):
         print("   └─ 构建海量 AI 提示词库 (含轮换池)...")
         self.prompts = [
@@ -272,7 +312,7 @@ class DataEngine:
         js = f"window.AI_DATA = {json.dumps(final_data, ensure_ascii=False, indent=2)};"
         try:
             with open(DATA_FILE, "w", encoding="utf-8") as f: f.write(js)
-            print(f"✅ [{get_time()}] 数据更新完成！(新闻:{len(self.news)}, 提示词:{len(self.prompts)})")
+            print(f"✅ [{get_current_time_str()}] 数据更新完成！(新闻:{len(self.news)}, 提示词:{len(self.prompts)})")
         except PermissionError:
             print("❌ 写入失败：文件被占用，请关闭正在打开 data.js 的程序。")
 
@@ -287,5 +327,4 @@ if __name__ == "__main__":
         print(f"出错: {e}")
         traceback.print_exc()
     print("✨ 脚本运行结束，3秒后退出...")
-
-    time.sleep(3)
+    # time.sleep(3) # 在GitHub Actions中不需要sleep
