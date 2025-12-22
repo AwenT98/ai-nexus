@@ -7,7 +7,7 @@ import random
 import re
 import traceback
 
-print("🔄 正在初始化 AI Nexus 引擎 (真实时间版)...")
+print("🔄 正在初始化 AI Nexus 引擎 (全功能完整整合版)...")
 
 # === 1. 依赖检查 ===
 try:
@@ -30,17 +30,18 @@ except:
     TRANSLATE_AVAILABLE = False
     print("⚠️ 翻译服务: 使用本地词典模式")
 
-# === 3. 配置 ===
+# === 3. 全局配置 ===
 DATA_FILE = "data.js"
+# 模拟浏览器，防止被拦截
 HEADERS = { 
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" 
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 }
 
-# 获取当前北京时间（用于备用数据和全局更新时间）
-def get_current_time_str():
+# 获取当前北京时间 (UTC+8)
+def get_beijing_now():
     utc_now = datetime.datetime.utcnow()
-    cst_time = utc_now + datetime.timedelta(hours=8)
-    return cst_time.strftime("%m-%d %H:%M")
+    return utc_now + datetime.timedelta(hours=8)
 
 class DataEngine:
     def __init__(self):
@@ -52,7 +53,7 @@ class DataEngine:
         self.seen_titles = set()
 
     def fetch(self, url):
-        try: return self.session.get(url, timeout=15, verify=False)
+        try: return self.session.get(url, timeout=20, verify=False)
         except: return None
 
     def smart_trans(self, text):
@@ -62,81 +63,88 @@ class DataEngine:
             try: return translator.translate(text[:500])
             except: pass
         
+        # 兜底词典
         repls = {
             "AI ": "AI ", "Generator": "生成器", "Assistant": "助手", "Video": "视频",
             "Image": "图像", "Text": "文本", "Tool": "工具", "Launch": "发布", 
             "GPT": "GPT", "Code": "代码", "Create": "创建", "Design": "设计",
-            "Free": "免费", "Agent": "智能体", "Open Source": "开源", "Library": "库",
-            "Framework": "框架", "Model": "模型", "Chat": "聊天", "Voice": "语音",
-            "Synthesis": "合成", "Detection": "检测", "Studio": "工作室", "Web": "网页",
-            "Browser": "浏览器", "Plugin": "插件", "Extension": "扩展", "Platform": "平台",
-            "Announcing": "宣布", "Introducing": "介绍", "New": "新", "Search": "搜索"
+            "Free": "免费", "Agent": "智能体", "Open Source": "开源", "Library": "库"
         }
         for k, v in repls.items():
             text = re.sub(k, v, text, flags=re.IGNORECASE)
         return text
 
-    # === 新增：时间解析工具 ===
+    # === 时间解析工具 (获取真实发布时间) ===
     def parse_ph_time(self, iso_str):
-        """解析 Product Hunt 的 ISO 时间并转为北京时间"""
+        """解析 Product Hunt 的 ISO 时间"""
         try:
-            # 格式通常为: 2023-12-22T08:00:00-08:00 或 Z 结尾
-            # 简单处理：截取前19位转时间对象，视为 UTC (PH feed 时区较乱，视为 UTC+8 修正)
+            if not iso_str: return get_beijing_now().strftime("%m-%d %H:%M")
+            # 截取前19位 YYYY-MM-DDTHH:MM:SS
             dt = datetime.datetime.strptime(iso_str[:19], "%Y-%m-%dT%H:%M:%S")
-            # 假设源是 UTC，+8小时
-            cst_time = dt + datetime.timedelta(hours=8)
+            # 简单处理：视为 UTC，加8小时转北京时间
+            # 如果原数据带时区，这里可能有偏差，但在可接受范围内
+            if "-08:00" in iso_str or "-07:00" in iso_str: # 如果是美西时间
+                 cst_time = dt + datetime.timedelta(hours=16)
+            else:
+                cst_time = dt + datetime.timedelta(hours=8)
             return cst_time.strftime("%m-%d %H:%M")
         except:
-            return get_current_time_str() # 解析失败回退到当前时间
+            return get_beijing_now().strftime("%m-%d %H:%M")
 
     def parse_hn_time(self, unix_ts):
-        """解析 Hacker News 的 Unix 时间戳并转为北京时间"""
+        """解析 Hacker News 的 Unix 时间戳"""
         try:
+            if not unix_ts: return get_beijing_now().strftime("%m-%d %H:%M")
             dt = datetime.datetime.utcfromtimestamp(int(unix_ts))
             cst_time = dt + datetime.timedelta(hours=8)
             return cst_time.strftime("%m-%d %H:%M")
         except:
-            return get_current_time_str()
+            return get_beijing_now().strftime("%m-%d %H:%M")
 
-    # === 核心 1：情报抓取 (真实时间版) ===
+    # === 核心 1：情报抓取 ===
     def run_spider(self):
-        print("   └─ 正在挖掘软件情报 (目标: 60+ 条)...")
+        print("   └─ 正在挖掘软件情报 (解析真实时间)...")
         self.news = []
         self.seen_titles.clear()
         
-        # 1. Product Hunt (解析 published 时间)
+        # 1. Product Hunt
         r = self.fetch("https://www.producthunt.com/feed/category/artificial-intelligence")
-        if r:
+        if r and r.status_code == 200:
             try:
                 root = ET.fromstring(r.content)
-                # 命名空间处理
                 ns = {'atom': 'http://www.w3.org/2005/Atom'}
-                for entry in root.findall('atom:entry', ns)[:30]:
-                    raw_title = entry.find('atom:title', ns).text
-                    if raw_title in self.seen_titles: continue
-                    
-                    # 获取发布时间
-                    pub_node = entry.find('atom:published', ns)
-                    if pub_node is not None:
-                        real_time = self.parse_ph_time(pub_node.text)
-                    else:
-                        real_time = self.parse_ph_time(entry.find('atom:updated', ns).text)
+                # 兼容查找
+                entries = root.findall('atom:entry', ns) or root.findall('{http://www.w3.org/2005/Atom}entry')
+                
+                for entry in entries[:30]:
+                    try:
+                        title_node = entry.find('atom:title', ns) or entry.find('{http://www.w3.org/2005/Atom}title')
+                        raw_title = title_node.text
+                        if raw_title in self.seen_titles: continue
+                        
+                        # 获取真实时间
+                        pub_node = entry.find('atom:published', ns) or entry.find('{http://www.w3.org/2005/Atom}published')
+                        updated_node = entry.find('atom:updated', ns) or entry.find('{http://www.w3.org/2005/Atom}updated')
+                        raw_time = pub_node.text if pub_node is not None else (updated_node.text if updated_node is not None else "")
+                        real_time = self.parse_ph_time(raw_time)
+                        
+                        link_node = entry.find('atom:link', ns) or entry.find('{http://www.w3.org/2005/Atom}link')
+                        summary_node = entry.find('atom:summary', ns) or entry.find('{http://www.w3.org/2005/Atom}summary')
 
-                    self.news.append({
-                        "id": str(len(self.news)), 
-                        "src": "Product Hunt", "type": "APP",
-                        "title": self.smart_trans(raw_title),
-                        "desc": self.smart_trans(entry.find('atom:summary', ns).text),
-                        "url": entry.find('atom:link', ns).attrib['href'],
-                        "time": real_time  # 使用真实时间
-                    })
-                    self.seen_titles.add(raw_title)
-                    print("📱", end="", flush=True)
-            except Exception as e: 
-                # print(f"PH Error: {e}") 
-                pass
+                        self.news.append({
+                            "id": str(len(self.news)), 
+                            "src": "Product Hunt", "type": "APP",
+                            "title": self.smart_trans(raw_title),
+                            "desc": self.smart_trans(summary_node.text if summary_node is not None else ""),
+                            "url": link_node.attrib['href'],
+                            "time": real_time # 真实时间
+                        })
+                        self.seen_titles.add(raw_title)
+                        print("📱", end="", flush=True)
+                    except: continue
+            except: pass
 
-        # 2. Hacker News (解析 time 时间戳)
+        # 2. Hacker News
         r = self.fetch("https://hacker-news.firebaseio.co/v0/topstories.json")
         if r:
             try:
@@ -145,29 +153,34 @@ class DataEngine:
                 for i in ids:
                     if len(self.news) >= 50: break
                     item = self.fetch(f"https://hacker-news.firebaseio.co/v0/item/{i}.json").json()
+                    if not item: continue
                     t = item.get('title', '')
                     if t in self.seen_titles: continue
                     if any(k in t for k in keys):
                         # 获取真实时间
-                        real_time = self.parse_hn_time(item.get('time', time.time()))
-                        
+                        raw_time = item.get('time', 0)
+                        real_time = self.parse_hn_time(raw_time)
+
                         self.news.append({
                             "id": str(len(self.news)),
                             "src": "Hacker News", "type": "DEV",
                             "title": self.smart_trans(t),
                             "desc": self.smart_trans(f"开发者热门项目: {t}"),
                             "url": item.get('url', f"https://news.ycombinator.com/item?id={i}"),
-                            "time": real_time # 使用真实时间
+                            "time": real_time # 真实时间
                         })
                         self.seen_titles.add(t)
                         print("💻", end="", flush=True)
             except: pass
+        
         print("")
+        # 3. 填充检查
         if len(self.news) < 60: self.inject_filler(60 - len(self.news))
 
     def inject_filler(self, count):
-        # 备用库使用“当前脚本运行时间”，因为它们是静态填充
-        current_fill_time = get_current_time_str()
+        # 备用库：诚实显示当前时间，不伪造
+        current_time = get_beijing_now().strftime("%m-%d %H:%M")
+        
         filler_db = [
             {"type":"APP", "src":"OpenAI", "title":"OpenAI o1 预览版上线", "desc":"具有极强推理能力的全新模型，擅长解决复杂数学和编程问题。", "url":"https://openai.com"},
             {"type":"DEV", "src":"Meta", "title":"Llama 3.2 开源发布", "desc":"可以在移动设备上运行的轻量级多模态模型。", "url":"https://llama.meta.com"},
@@ -211,26 +224,114 @@ class DataEngine:
             {"type":"VIDEO", "src":"Vidu", "title":"Vidu 视频生成模型", "desc":"清华团队打造，中国版的 Sora，一键生成连贯视频。", "url":"https://www.vidu.studio"}
         ]
         
+        full_filler = filler_db * 5
         added = 0
-        for item in filler_db:
+        for item in full_filler:
             if added >= count: break
             if item['title'] in self.seen_titles: continue
+            
             self.news.append({
-                "id": str(len(self.news)), "src": item['src'], "type": item['type'],
-                "title": item['title'], "desc": item['desc'], "url": item['url'], 
-                "time": current_fill_time # 备用数据使用当前时间
+                "id": str(len(self.news)), 
+                "src": item['src'], "type": item['type'],
+                "title": item['title'], "desc": item['desc'], 
+                "url": item['url'], 
+                "time": current_time # 诚实显示当前时间
             })
             self.seen_titles.add(item['title'])
             added += 1
 
-    # === 2. 榜单生成 (80条独家描述) ===
+    # === 2. 榜单生成 (80条完整数据) ===
     def make_ranks(self):
         print("   └─ 生成 Top 20 深度榜单...")
         data = {
-            "LLM": [("ChatGPT (GPT-4o)", "OpenAI 旗舰，综合能力全球第一，支持实时语音。", "https://chat.openai.com"), ("Claude 3.5 Sonnet", "代码编写与逻辑推理能力最强，UI 优雅。", "https://claude.ai"), ("DeepSeek-V3", "国产开源天花板，数学代码比肩 GPT-4。", "https://chat.deepseek.com"), ("Gemini 1.5 Pro", "Google 生态核心，超长上下文窗口。", "https://gemini.google.com"), ("Kimi 智能助手", "月之暗面出品，长文档分析首选，中文极佳。", "https://kimi.moonshot.cn"), ("Perplexity", "AI 搜索引擎，直接给出精准答案与引用。", "https://perplexity.ai"), ("Llama 3.1", "Meta 开源巨无霸，当前开源界的最强基石。", "https://llama.meta.com"), ("Qwen 2.5", "阿里出品，全能型开源模型，多语言能力卓越。", "https://tongyi.aliyun.com"), ("Mistral Large", "欧洲最强模型，逻辑严密，适合企业部署。", "https://mistral.ai"), ("Grok-2", "X (推特) 旗下，接入实时社交数据。", "https://x.ai"), ("Doubao", "字节跳动出品，响应极快，语音流畅。", "https://www.doubao.com"), ("GLM-4", "智谱 AI 旗舰，工具调用能力强。", "https://chatglm.cn"), ("Yi-Large", "零一万物出品，全球竞技场前列。", "https://lingyiwanwu.com"), ("MiniMax", "拟人交互最强，语气最像真人。", "https://minimaxi.com"), ("Command R+", "专为 RAG (检索增强) 设计的企业模型。", "https://cohere.com"), ("Copilot", "集成于 Office 的办公助手。", "https://copilot.microsoft.com"), ("HuggingChat", "免费使用多种开源模型。", "https://huggingface.co/chat"), ("Poe", "聚合所有主流大模型。", "https://poe.com"), ("Ernie", "国内知识库覆盖最全。", "https://yiyan.baidu.com"), ("Pi", "主打高情商陪伴聊天。", "https://pi.ai")],
-            "Image": [("Midjourney v6", "艺术绘图王者，审美无可匹敌。", "https://midjourney.com"), ("Flux.1 Pro", "最强开源生图，手指/文字渲染极佳。", "https://blackforestlabs.ai"), ("Stable Diffusion", "本地部署必备，插件生态丰富。", "https://stability.ai"), ("DALL·E 3", "语义理解最强，集成于 GPT。", "https://openai.com/dall-e-3"), ("Civitai", "全球最大模型与 LoRA 下载站。", "https://civitai.com"), ("LiblibAI", "国内最大 AI 绘画社区。", "https://www.liblib.art"), ("Leonardo.ai", "专注游戏资产生成。", "https://leonardo.ai"), ("InstantID", "保持人脸一致性最好的项目。", "https://github.com/InstantID/InstantID"), ("Freepik AI", "实时绘图，设计师灵感库。", "https://www.freepik.com/ai"), ("Ideogram 2.0", "图片生成文字效果最好。", "https://ideogram.ai"), ("Krea AI", "实时画布，画哪里生成哪里。", "https://krea.ai"), ("Firefly", "版权合规，适合商业设计。", "https://firefly.adobe.com"), ("Magnific", "图片无损放大与细节增强。", "https://magnific.ai"), ("Tripo SR", "图片转 3D 模型。", "https://www.tripo3d.ai"), ("ControlNet", "SD 核心插件，精准控制构图。", "https://github.com/lllyasviel/ControlNet"), ("SeaArt", "体验接近原生 SD 的在线工具。", "https://www.seaart.ai"), ("Tensor.art", "在线运行模型，免费额度大。", "https://tensor.art"), ("Clipdrop", "移除背景/打光工具箱。", "https://clipdrop.co"), ("Stylar", "图层控制精准的设计工具。", "https://www.dzine.ai"), ("ComfyUI", "节点式工作流，探索上限。", "https://github.com/comfyanonymous/ComfyUI")],
-            "Video": [("Runway Gen-3", "视频生成行业标准，运镜控制。", "https://runwayml.com"), ("Kling AI", "生成时长最长，物理模拟真实。", "https://klingai.kuaishou.com"), ("Luma Dream", "生成极快，免费额度大方。", "https://lumalabs.ai"), ("Hailuo", "视频动态幅度大，视觉冲击强。", "https://hailuoai.com/video"), ("Vidu", "一键生成，人物一致性好。", "https://www.vidu.studio"), ("Sora", "OpenAI 期货，定义行业上限。", "https://openai.com/sora"), ("HeyGen", "数字人播报王者，口型同步。", "https://www.heygen.com"), ("Pika Art", "动画风格，局部重绘功能。", "https://pika.art"), ("Hedra", "专注人物对话，表情细腻。", "https://www.hedra.com"), ("Viggle", "让静态角色跳舞。", "https://viggle.ai"), ("AnimateDiff", "让静态图动起来的 SD 插件。", "https://github.com/guoyww/AnimateDiff"), ("Suno", "音乐生成，顺带生成 MV。", "https://suno.com"), ("Udio", "音质更 Hi-Fi 的音乐 AI。", "https://www.udio.com"), ("ElevenLabs", "全球最强 AI 配音。", "https://elevenlabs.io"), ("Sync Labs", "专业口型同步。", "https://synclabs.so"), ("D-ID", "老牌照片说话工具。", "https://www.d-id.com"), ("Synthesia", "企业级数字人演示。", "https://www.synthesia.io"), ("Descript", "像编辑文档一样编辑视频。", "https://www.descript.com"), ("OpusClip", "长视频自动剪辑成短视频。", "https://www.opus.pro"), ("Kaiber", "风格化视频转绘。", "https://kaiber.ai")],
-            "Dev": [("Cursor", "AI 原生编辑器，全库理解。", "https://cursor.com"), ("GitHub Copilot", "开发者必备代码补全。", "https://github.com/features/copilot"), ("v0.dev", "文字生成 React 界面。", "https://v0.dev"), ("Replit", "全自动构建 Web 应用。", "https://replit.com"), ("Hugging Face", "全球开源模型托管中心。", "https://huggingface.co"), ("LangChain", "LLM 应用开发框架。", "https://www.langchain.com"), ("Ollama", "本地运行大模型工具。", "https://ollama.com"), ("Supermaven", "超长记忆代码补全，速度快。", "https://supermaven.com"), ("Codeium", "免费强大的代码补全。", "https://codeium.com"), ("Devin", "全自动 AI 软件工程师。", "https://www.cognition-labs.com/devin"), ("Gradio", "Python 构建 AI 演示界面。", "https://www.gradio.app"), ("Streamlit", "数据仪表盘开发框架。", "https://streamlit.io"), ("Dify", "可视化 LLM 应用编排。", "https://dify.ai"), ("Coze", "零代码 AI Bot 搭建。", "https://www.coze.com"), ("Pinecone", "AI 向量数据库。", "https://www.pinecone.io"), ("Vercel", "前端托管，支持 AI 应用。", "https://vercel.com"), ("Tabnine", "私有化代码补全。", "https://www.tabnine.com"), ("Amazon Q", "AWS 开发者助手。", "https://aws.amazon.com/q/developer/"), ("W&B", "模型训练监控平台。", "https://wandb.ai"), ("LlamaIndex", "LLM 数据连接框架。", "https://www.llamaindex.ai")]
+            "LLM": [
+                ("ChatGPT (GPT-4o)", "OpenAI 旗舰，综合能力全球第一，支持实时语音。", "https://chat.openai.com"), 
+                ("Claude 3.5 Sonnet", "代码编写与逻辑推理能力最强，UI 优雅。", "https://claude.ai"), 
+                ("DeepSeek-V3", "国产开源天花板，数学代码比肩 GPT-4。", "https://chat.deepseek.com"), 
+                ("Gemini 1.5 Pro", "Google 生态核心，超长上下文窗口。", "https://gemini.google.com"), 
+                ("Kimi 智能助手", "月之暗面出品，长文档分析首选，中文极佳。", "https://kimi.moonshot.cn"), 
+                ("Perplexity", "AI 搜索引擎，直接给出精准答案与引用。", "https://perplexity.ai"), 
+                ("Llama 3.1", "Meta 开源巨无霸，当前开源界的最强基石。", "https://llama.meta.com"), 
+                ("Qwen 2.5", "阿里出品，全能型开源模型，多语言能力卓越。", "https://tongyi.aliyun.com"), 
+                ("Mistral Large", "欧洲最强模型，逻辑严密，适合企业部署。", "https://mistral.ai"), 
+                ("Grok-2", "X (推特) 旗下，接入实时社交数据。", "https://x.ai"), 
+                ("Doubao", "字节跳动出品，响应极快，语音流畅。", "https://www.doubao.com"), 
+                ("GLM-4", "智谱 AI 旗舰，工具调用能力强。", "https://chatglm.cn"), 
+                ("Yi-Large", "零一万物出品，全球竞技场前列。", "https://lingyiwanwu.com"), 
+                ("MiniMax", "拟人交互最强，语气最像真人。", "https://minimaxi.com"), 
+                ("Command R+", "专为 RAG (检索增强) 设计的企业模型。", "https://cohere.com"), 
+                ("Copilot", "集成于 Office 的办公助手。", "https://copilot.microsoft.com"), 
+                ("HuggingChat", "免费使用多种开源模型。", "https://huggingface.co/chat"), 
+                ("Poe", "聚合所有主流大模型。", "https://poe.com"), 
+                ("Ernie", "国内知识库覆盖最全。", "https://yiyan.baidu.com"), 
+                ("Pi", "主打高情商陪伴聊天。", "https://pi.ai")
+            ],
+            "Image": [
+                ("Midjourney v6", "艺术绘图王者，审美无可匹敌。", "https://midjourney.com"), 
+                ("Flux.1 Pro", "最强开源生图，手指/文字渲染极佳。", "https://blackforestlabs.ai"), 
+                ("Stable Diffusion", "本地部署必备，插件生态丰富。", "https://stability.ai"), 
+                ("DALL·E 3", "语义理解最强，集成于 GPT。", "https://openai.com/dall-e-3"), 
+                ("Civitai", "全球最大模型与 LoRA 下载站。", "https://civitai.com"), 
+                ("LiblibAI", "国内最大 AI 绘画社区。", "https://www.liblib.art"), 
+                ("Leonardo.ai", "专注游戏资产生成。", "https://leonardo.ai"), 
+                ("InstantID", "保持人脸一致性最好的项目。", "https://github.com/InstantID/InstantID"), 
+                ("Freepik AI", "实时绘图，设计师灵感库。", "https://www.freepik.com/ai"), 
+                ("Ideogram 2.0", "图片生成文字效果最好。", "https://ideogram.ai"), 
+                ("Krea AI", "实时画布，画哪里生成哪里。", "https://krea.ai"), 
+                ("Firefly", "版权合规，适合商业设计。", "https://firefly.adobe.com"), 
+                ("Magnific", "图片无损放大与细节增强。", "https://magnific.ai"), 
+                ("Tripo SR", "图片转 3D 模型。", "https://www.tripo3d.ai"), 
+                ("ControlNet", "SD 核心插件，精准控制构图。", "https://github.com/lllyasviel/ControlNet"), 
+                ("SeaArt", "体验接近原生 SD 的在线工具。", "https://www.seaart.ai"), 
+                ("Tensor.art", "在线运行模型，免费额度大。", "https://tensor.art"), 
+                ("Clipdrop", "移除背景/打光工具箱。", "https://clipdrop.co"), 
+                ("Stylar", "图层控制精准的设计工具。", "https://www.dzine.ai"), 
+                ("ComfyUI", "节点式工作流，探索上限。", "https://github.com/comfyanonymous/ComfyUI")
+            ],
+            "Video": [
+                ("Runway Gen-3", "视频生成行业标准，运镜控制。", "https://runwayml.com"), 
+                ("Kling AI", "生成时长最长，物理模拟真实。", "https://klingai.kuaishou.com"), 
+                ("Luma Dream", "生成极快，免费额度大方。", "https://lumalabs.ai"), 
+                ("Hailuo", "视频动态幅度大，视觉冲击强。", "https://hailuoai.com/video"), 
+                ("Vidu", "一键生成，人物一致性好。", "https://www.vidu.studio"), 
+                ("Sora", "OpenAI 期货，定义行业上限。", "https://openai.com/sora"), 
+                ("HeyGen", "数字人播报王者，口型同步。", "https://www.heygen.com"), 
+                ("Pika Art", "动画风格，局部重绘功能。", "https://pika.art"), 
+                ("Hedra", "专注人物对话，表情细腻。", "https://www.hedra.com"), 
+                ("Viggle", "让静态角色跳舞。", "https://viggle.ai"), 
+                ("AnimateDiff", "让静态图动起来的 SD 插件。", "https://github.com/guoyww/AnimateDiff"), 
+                ("Suno", "音乐生成，顺带生成 MV。", "https://suno.com"), 
+                ("Udio", "音质更 Hi-Fi 的音乐 AI。", "https://www.udio.com"), 
+                ("ElevenLabs", "全球最强 AI 配音。", "https://elevenlabs.io"), 
+                ("Sync Labs", "专业口型同步。", "https://synclabs.so"), 
+                ("D-ID", "老牌照片说话工具。", "https://www.d-id.com"), 
+                ("Synthesia", "企业级数字人演示。", "https://www.synthesia.io"), 
+                ("Descript", "像编辑文档一样编辑视频。", "https://www.descript.com"), 
+                ("OpusClip", "长视频自动剪辑成短视频。", "https://www.opus.pro"), 
+                ("Kaiber", "风格化视频转绘。", "https://kaiber.ai")
+            ],
+            "Dev": [
+                ("Cursor", "AI 原生编辑器，全库理解。", "https://cursor.com"), 
+                ("GitHub Copilot", "开发者必备代码补全。", "https://github.com/features/copilot"), 
+                ("v0.dev", "文字生成 React 界面。", "https://v0.dev"), 
+                ("Replit", "全自动构建 Web 应用。", "https://replit.com"), 
+                ("Hugging Face", "全球开源模型托管中心。", "https://huggingface.co"), 
+                ("LangChain", "LLM 应用开发框架。", "https://www.langchain.com"), 
+                ("Ollama", "本地运行大模型工具。", "https://ollama.com"), 
+                ("Supermaven", "超长记忆代码补全，速度快。", "https://supermaven.com"), 
+                ("Codeium", "免费强大的代码补全。", "https://codeium.com"), 
+                ("Devin", "全自动 AI 软件工程师。", "https://www.cognition-labs.com/devin"), 
+                ("Gradio", "Python 构建 AI 演示界面。", "https://www.gradio.app"), 
+                ("Streamlit", "数据仪表盘开发框架。", "https://streamlit.io"), 
+                ("Dify", "可视化 LLM 应用编排。", "https://dify.ai"), 
+                ("Coze", "零代码 AI Bot 搭建。", "https://www.coze.com"), 
+                ("Pinecone", "AI 向量数据库。", "https://www.pinecone.io"), 
+                ("Vercel", "前端托管，支持 AI 应用。", "https://vercel.com"), 
+                ("Tabnine", "私有化代码补全。", "https://www.tabnine.com"), 
+                ("Amazon Q", "AWS 开发者助手。", "https://aws.amazon.com/q/developer/"), 
+                ("W&B", "模型训练监控平台。", "https://wandb.ai"), 
+                ("LlamaIndex", "LLM 数据连接框架。", "https://www.llamaindex.ai")
+            ]
         }
         
         self.ranks = {}
@@ -238,7 +339,10 @@ class DataEngine:
             lst = []
             for i, (name, desc, url) in enumerate(items):
                 score = 99.9 - (i * 0.5) + random.uniform(-0.1, 0.1)
-                lst.append({"rank": i+1, "name": name, "desc": desc, "url": url, "score": f"{score:.1f}"})
+                lst.append({
+                    "rank": i+1, "name": name, "desc": desc, "url": url,
+                    "score": f"{score:.1f}"
+                })
             self.ranks[cat] = lst
 
     # === 3. 超级提示词库 (扩容至60+, 支持12个轮换) ===
@@ -312,7 +416,7 @@ class DataEngine:
         js = f"window.AI_DATA = {json.dumps(final_data, ensure_ascii=False, indent=2)};"
         try:
             with open(DATA_FILE, "w", encoding="utf-8") as f: f.write(js)
-            print(f"✅ [{get_current_time_str()}] 数据更新完成！(新闻:{len(self.news)}, 提示词:{len(self.prompts)})")
+            print(f"✅ [{get_beijing_now().strftime('%m-%d %H:%M')}] 数据更新完成 (新闻:{len(self.news)}, 提示词:{len(self.prompts)})")
         except PermissionError:
             print("❌ 写入失败：文件被占用，请关闭正在打开 data.js 的程序。")
 
@@ -327,4 +431,3 @@ if __name__ == "__main__":
         print(f"出错: {e}")
         traceback.print_exc()
     print("✨ 脚本运行结束，3秒后退出...")
-    # time.sleep(3) # 在GitHub Actions中不需要sleep
