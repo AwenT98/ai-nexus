@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI NEXUS | 智能前沿情报</title>
     <link rel="icon" href="favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -15,27 +15,40 @@
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --radius-card: 16px; --container-width: 1280px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Inter', sans-serif; background-color: var(--bg-body);
             color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased;
             padding-bottom: 60px;
+            overflow-x: hidden; /* 防止横向滚动 */
         }
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; height: 400px;
             background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%);
             z-index: -1; pointer-events: none;
         }
+        
+        /* 📱 容器适配：手机端内边距减小 */
         .container { max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
+        @media (max-width: 600px) { .container { padding: 0 16px; } }
+
         a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
 
-        /* === 2. 极简头部 === */
+        /* === 2. 头部适配 === */
         header { padding: 60px 0 40px; text-align: center; }
+        
         .site-title {
             font-size: 3rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px;
             background: linear-gradient(to right, #fff, #cbd5e1);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        /* 📱 手机端标题缩小 */
+        @media (max-width: 600px) { 
+            header { padding: 40px 0 30px; }
+            .site-title { font-size: 2.2rem; } 
+        }
+
         .site-badge {
             display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px;
             background: rgba(56, 189, 248, 0.1); color: var(--text-accent);
@@ -53,28 +66,47 @@
             display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px;
         }
         .section-title span { color: var(--text-secondary); font-weight: 400; font-size: 0.9em; margin-left: 8px; }
+        
+        .btn-refresh {
+            background: transparent; border: 1px solid var(--border-subtle);
+            color: var(--text-secondary); padding: 8px 16px; border-radius: 8px;
+            font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px; white-space: nowrap;
+        }
+        .btn-refresh:hover, .btn-refresh:active {
+            border-color: var(--text-accent); color: var(--text-accent);
+            background: rgba(56, 189, 248, 0.05);
+        }
 
-        /* === 4. 提示词网格 (12宫格) === */
+        /* 📱 手机端头部调整 */
+        @media (max-width: 600px) {
+            .section-title span { display: none; } /* 手机上隐藏英文标题，省空间 */
+            .section-title { font-size: 1.1rem; }
+        }
+
+        /* === 4. 提示词网格 (移动端终极适配) === */
         .prompts-section { margin-bottom: 60px; }
         .prompts-grid {
             display: grid; gap: 20px;
             grid-template-columns: repeat(4, 1fr); /* 桌面4列 */
         }
         @media (max-width: 1024px) { .prompts-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 640px) { .prompts-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* 📱 关键修改：手机端强制 1 列，保证代码块可读性 */
+        @media (max-width: 640px) { .prompts-grid { grid-template-columns: 1fr; gap: 16px; } }
 
         .prompt-card {
             background: var(--bg-card); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card); padding: 20px;
+            /* 手机上自动高度，电脑上固定高度 */
             height: 220px; 
             display: flex; flex-direction: column; cursor: pointer;
             position: relative; overflow: hidden;
             transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
-        .prompt-card:hover {
-            transform: translateY(-4px); border-color: var(--border-highlight);
-            box-shadow: var(--shadow-card); background: var(--bg-card-hover);
-        }
+        @media (max-width: 640px) { .prompt-card { height: auto; min-height: 180px; } }
+
+        .prompt-card:active { transform: scale(0.98); } /* 手机点击反馈 */
+
         .prompt-tag {
             position: absolute; top: 16px; right: 16px;
             font-size: 0.7rem; font-weight: 700; color: var(--text-accent);
@@ -96,43 +128,58 @@
             border: 1px solid var(--border-subtle);
             white-space: pre-wrap;
         }
-        .prompt-card:hover .prompt-text {
-            border-color: var(--text-accent); background: rgba(15, 23, 42, 0.8);
-        }
         .copy-hint {
             position: absolute; bottom: 10px; right: 10px;
             font-size: 0.75rem; color: var(--text-accent);
             opacity: 0; transition: opacity 0.2s; font-weight: 600;
         }
-        .prompt-card:hover .copy-hint { opacity: 1; }
+        /* 电脑hover显示，手机常驻显示或点击显示 */
+        @media (hover: hover) { .prompt-card:hover .copy-hint { opacity: 1; } }
 
-        /* === 5. 双栏布局 (News & Rank) === */
+        /* === 5. 双栏布局 === */
         .main-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 48px; }
-        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; gap: 40px; } }
+        
         .news-list { display: flex; flex-direction: column; gap: 24px; }
+        /* 📱 手机端新闻间距缩小 */
+        @media (max-width: 600px) { .news-list { gap: 16px; } }
+
         .news-item {
             display: flex; gap: 20px; padding: 24px; background: var(--bg-card);
             border: 1px solid var(--border-subtle); border-radius: var(--radius-card);
             align-items: flex-start;
         }
-        .news-item:hover { border-color: var(--text-secondary); background: var(--bg-card-hover); }
+        /* 📱 手机端新闻卡片布局调整 */
+        @media (max-width: 600px) { 
+            .news-item { padding: 16px; gap: 12px; } 
+            .news-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+        }
+
         .news-icon {
             width: 48px; height: 48px; flex-shrink: 0;
             background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-subtle);
             border-radius: 12px; display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem;
         }
-        .news-content { flex: 1; }
-        .news-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; }
-        .source-tag { font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .news-content { flex: 1; min-width: 0; /* 防止flex子元素溢出 */ }
+        
+        .news-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; flex-wrap: wrap; }
+        
+        .source-tag { font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.7rem; }
         .src-ph { color: #f87171; background: rgba(248, 113, 113, 0.1); }
         .src-hn { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
         .src-default { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
         .news-time { color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
-        .news-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); line-height: 1.4; }
-        .news-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        
+        .news-title { 
+            font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; color: var(--text-primary); line-height: 1.4; 
+        }
+        @media (max-width: 600px) { .news-title { font-size: 1rem; } }
 
-        /* === 权威榜单 (Rank) === */
+        .news-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        @media (max-width: 600px) { .news-desc { font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } }
+
+        /* === 权威榜单 === */
         .rank-group { margin-bottom: 40px; }
         .rank-group-title {
             font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
@@ -143,7 +190,7 @@
             display: flex; align-items: center; gap: 12px; padding: 12px 10px;
             border-radius: 8px; border-bottom: 1px solid var(--border-subtle); transition: background 0.2s;
         }
-        .rank-item:hover { background: var(--bg-card-hover); border-bottom-color: transparent; }
+        .rank-item:active { background: var(--bg-card-hover); }
         .rank-item:last-child { border-bottom: none; }
         .rank-num {
             font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem;
@@ -161,7 +208,8 @@
             padding: 2px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;
         }
         .rank-desc { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        footer { margin-top: 80px; text-align: center; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--border-subtle); padding-top: 40px; }
+        
+        footer { margin-top: 60px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border-subtle); padding-top: 30px; }
         .loading-text { text-align: center; padding: 40px; color: var(--text-secondary); }
     </style>
 </head>
@@ -175,52 +223,47 @@
     <div class="container">
         <div class="prompts-section">
             <div class="section-header">
-                <div class="section-title">万能公式库 <span>/ PROMPT FRAMEWORKS</span></div>
+                <div class="section-title">万能公式库 <span>/ FRAMEWORKS</span></div>
             </div>
             <div id="prompt-container" class="prompts-grid"></div>
         </div>
         <div class="main-layout">
             <div class="left-col">
-                <div class="section-header"><div class="section-title">全球情报流 <span>/ NEWS STREAM</span></div></div>
-                <div id="news-container" class="news-list"><div class="loading-text">正在链接全球节点...</div></div>
+                <div class="section-header"><div class="section-title">全球情报 <span>/ NEWS</span></div></div>
+                <div id="news-container" class="news-list"><div class="loading-text">Loading...</div></div>
             </div>
             <div class="right-col">
-                <div class="section-header"><div class="section-title">权威热榜 <span>/ TOP TIER</span></div></div>
+                <div class="section-header"><div class="section-title">权威榜单 <span>/ TOP TIER</span></div></div>
                 <div id="rank-container"></div>
             </div>
         </div>
     </div>
-    <footer><p>© 2025 AI NEXUS • Automated Intelligence Radar</p></footer>
+    <footer><p>© 2025 AI NEXUS</p></footer>
     <script src="data.js"></script>
     <script>
-        // === 1. 提示词逻辑 ===
         let allPrompts = [];
         function renderPrompts() {
             const container = document.getElementById('prompt-container');
-            const count = 12; // 锁定12个
+            const count = 12; 
             const sliced = allPrompts.slice(0, count);
-            
-            // 使用索引 index 调用复制，防止多行文本破坏 HTML 结构
             container.innerHTML = sliced.map((p, index) => `
                 <div class="prompt-card" onclick="copyPrompt(${index})">
                     <div class="prompt-tag">${p.tag}</div>
                     <div class="prompt-title">${p.title}</div>
                     <div class="prompt-text">${p.content}</div>
-                    <div class="copy-hint">点击复制 📋</div>
+                    <div class="copy-hint">Tap to Copy 📋</div>
                 </div>
             `).join('');
         }
         function copyPrompt(index) {
             const text = allPrompts[index].content;
-            navigator.clipboard.writeText(text).then(() => { alert('✅ 公式已复制！请替换 [ ] 内容使用。'); });
+            navigator.clipboard.writeText(text).then(() => { alert('✅ 复制成功 (Copied)!'); });
         }
-
-        // === 2 & 3. 基础渲染 ===
         function getIcon(type) { const icons = { 'APP': '🚀', 'DEV': '🛠️', 'VIDEO': '🎬', 'IMAGE': '🎨' }; return icons[type] || '📄'; }
         function getSourceClass(src) { if (src.includes('Product Hunt')) return 'src-ph'; if (src.includes('Hacker News')) return 'src-hn'; return 'src-default'; }
         function renderNews(data) {
             const container = document.getElementById('news-container');
-            if (!data || data.length === 0) { container.innerHTML = '<div class="loading-text">暂无数据更新</div>'; return; }
+            if (!data || data.length === 0) { container.innerHTML = '<div class="loading-text">暂无更新</div>'; return; }
             container.innerHTML = data.map(item => `
                 <a href="${item.url}" target="_blank" class="news-item">
                     <div class="news-icon">${getIcon(item.type)}</div>
@@ -244,7 +287,6 @@
                 container.innerHTML += html;
             });
         }
-        // === 初始化 ===
         window.onload = function() {
             if (window.AI_DATA) {
                 const lastUpdate = window.AI_DATA.news[0]?.time || 'LIVE';
