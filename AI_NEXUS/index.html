@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI NEXUS | 智能情报站</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0f1115; --bg-sidebar: #16181d; --bg-card: #1e2128;
+            --bg-card-hover: #252932; --border: #2d313a; --text-main: #ffffff;
+            --text-sub: #94a3b8; --accent: #3b82f6; 
+            --tag-app: #3b82f6; --tag-dev: #10b981; --tag-video: #f59e0b; --tag-prompt: #8b5cf6;
+            --gold: linear-gradient(135deg, #fbbf24, #d97706);
+            --silver: linear-gradient(135deg, #e2e8f0, #94a3b8);
+            --bronze: linear-gradient(135deg, #f97316, #b45309);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Outfit', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        .sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px; flex-shrink: 0; z-index: 10; }
+        .logo { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--accent); }
+        .nav-item { padding: 12px 16px; margin-bottom: 8px; border-radius: 8px; color: var(--text-sub); font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+
+        .main { flex: 1; overflow-y: auto; padding: 0 40px 40px; position: relative; }
+        .top-bar { position: sticky; top: 0; background: rgba(15,17,21,0.9); backdrop-filter: blur(12px); padding: 24px 0; z-index: 5; margin-bottom: 20px; border-bottom: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .page-title h1 { font-size: 24px; font-weight: 700; }
+        .page-title p { font-size: 14px; color: var(--text-sub); margin-top: 4px; }
+        
+        .search-box { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; color: #fff; font-size: 13px; width: 200px; transition: 0.2s; }
+        .search-box:focus { border-color: var(--accent); outline: none; width: 240px; }
+        
+        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .action-btn:hover { background: var(--accent); border-color: var(--accent); }
+        .action-btn:active { transform: scale(0.98); }
+
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .news-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; height: 100%; min-height: 160px; }
+        .news-card:hover { transform: translateY(-4px); border-color: #4b5563; background: var(--bg-card-hover); }
+        .news-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+        .news-card.APP::before { background: var(--tag-app); }
+        .news-card.DEV::before { background: var(--tag-dev); }
+        .news-card.VIDEO::before { background: var(--tag-video); }
+
+        /* 提示词卡片 */
+        .prompt-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: 0.2s; position: relative; }
+        .prompt-card:hover { border-color: var(--tag-prompt); transform: translateY(-2px); }
+        .prompt-header { display: flex; justify-content: space-between; align-items: start; }
+        .prompt-tag { font-size: 10px; font-weight: 700; color: var(--tag-prompt); background: rgba(139,92,246,0.1); padding: 4px 8px; border-radius: 4px; }
+        .prompt-title { font-size: 16px; font-weight: 600; color: #fff; margin-top: 8px; }
+        .prompt-desc { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+        .code-block { background: #111; padding: 12px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #cbd5e1; border: 1px solid #333; margin-top: auto; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; }
+        .copy-btn { margin-top: 10px; width: 100%; background: #27272a; color: #fff; border: 1px solid var(--border); padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+        .copy-btn:hover { background: var(--tag-prompt); border-color: var(--tag-prompt); }
+
+        .tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; width: fit-content; }
+        .tag.APP { color: var(--tag-app); background: rgba(59,130,246,0.1); }
+        .tag.DEV { color: var(--tag-dev); background: rgba(16,185,129,0.1); }
+        .tag.VIDEO { color: var(--tag-video); background: rgba(245,158,11,0.1); }
+
+        .news-title { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; color: #fff; }
+        .news-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .news-meta { margin-top: auto; padding-top: 16px; font-size: 12px; color: #52525b; display: flex; justify-content: space-between; }
+
+        .rank-tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 5px; }
+        .rank-tab { padding: 8px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--text-sub); cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .rank-tab:hover { color: #fff; border-color: #555; }
+        .rank-tab.active { background: #fff; color: #000; border-color: #fff; font-weight: 600; }
+
+        .rank-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 1024px) { .rank-list { grid-template-columns: 1fr 1fr; gap: 20px; } }
+        .rank-row { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: 0.2s; }
+        .rank-row:hover { border-color: #555; background: var(--bg-card-hover); }
+        .rank-idx { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; background: #27272a; border-radius: 8px; color: #71717a; }
+        .rank-row:nth-child(1) .rank-idx { background: var(--gold); color: #fff; }
+        .rank-row:nth-child(2) .rank-idx { background: var(--silver); color: #334155; }
+        .rank-row:nth-child(3) .rank-idx { background: var(--bronze); color: #fff; }
+        .rank-info { flex: 1; overflow: hidden; }
+        .rank-name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .rank-desc { font-size: 12px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .visit-btn { padding: 8px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 600; color: #fff; transition: 0.2s; white-space: nowrap; }
+        .visit-btn:hover { background: #fff; color: #000; }
+
+        .detail-view { max-width: 700px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid var(--border); }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--text-sub); cursor: pointer; margin-bottom: 20px; font-size: 14px; }
+        .back-btn:hover { color: #fff; }
+        .detail-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; line-height: 1.3; }
+        .detail-desc { font-size: 16px; line-height: 1.8; color: #cbd5e1; margin-bottom: 30px; padding-left: 20px; border-left: 4px solid var(--accent); }
+        .primary-btn { display: block; width: 100%; text-align: center; padding: 16px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 600; transition: 0.2s; text-decoration: none; }
+        .primary-btn:hover { filter: brightness(1.1); }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px 20px; position: fixed; bottom: 0; border-top: 1px solid var(--border); border-right: none; justify-content: space-around; background: rgba(22,24,29,0.95); }
+            .logo { display: none; }
+            .nav-item { flex-direction: column; gap: 4px; font-size: 10px; padding: 8px; margin: 0; background: none !important; }
+            .nav-item.active { color: var(--accent); box-shadow: none; }
+            .main { padding: 20px 20px 80px; }
+            .top-bar { position: relative; background: transparent; padding: 10px 0; margin-bottom: 10px; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">⚡ AI <span>NEXUS</span></div>
+        <div class="nav-item active" onclick="app.nav('news')" id="nav-news"><span>📰</span> 软件情报</div>
+        <div class="nav-item" onclick="app.nav('ranking')" id="nav-rank"><span>🏆</span> 权威榜单</div>
+        <div class="nav-item" onclick="app.nav('prompts')" id="nav-prompts"><span>💡</span> 提示词库</div>
+    </nav>
+    <main class="main">
+        <div id="view-news" class="view active">
+            <div class="top-bar">
+                <div class="page-title"><h1>软件情报局</h1><p>实时追踪 Product Hunt & Hacker News 最新发布</p></div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div style="font-size:12px; color:#52525b; font-family:'JetBrains Mono'" id="update-time">SYNCING...</div>
+                    <input type="text" class="search-box" placeholder="搜索应用..." onkeyup="app.search(this.value)">
+                </div>
+            </div>
+            <div class="news-grid" id="news-grid"></div>
+        </div>
+
+        <div id="view-ranking" class="view">
+            <div class="top-bar">
+                <div class="page-title"><h1>AI 工具风向标</h1><p>全球 Top 80 生产力工具精选</p></div>
+            </div>
+            <div class="rank-tabs">
+                <div class="rank-tab active" onclick="app.switchRank('LLM', this)">🤖 大模型</div>
+                <div class="rank-tab" onclick="app.switchRank('Image', this)">🎨 绘图</div>
+                <div class="rank-tab" onclick="app.switchRank('Video', this)">🎬 视频</div>
+                <div class="rank-tab" onclick="app.switchRank('Dev', this)">💻 开发</div>
+            </div>
+            <div class="rank-list" id="rank-list"></div>
+        </div>
+
+        <div id="view-prompts" class="view">
+            <div class="top-bar">
+                <div class="page-title"><h1>AI 提示词宝典</h1><p>精选 60+ 高效指令 (随机轮换)</p></div>
+                <button class="action-btn" onclick="app.shufflePrompts()"><span>🔄</span> 换一批</button>
+            </div>
+            <div class="news-grid" id="prompt-grid"></div>
+        </div>
+
+        <div id="view-detail" class="view">
+            <div style="padding-top: 40px;">
+                <div class="detail-view">
+                    <div class="back-btn" onclick="app.back()">← 返回列表</div>
+                    <div id="detail-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="data.js" onerror="alert('请先运行 engine.py 生成数据')"></script>
+    <script>
+        const app = {
+            data: {},
+            lastTab: 'news',
+            init() {
+                if(typeof window.AI_DATA === 'undefined') return;
+                this.data = window.AI_DATA;
+                if(this.data.news.length > 0) document.getElementById('update-time').innerText = "UPDATED: " + this.data.news[0].time;
+                
+                this.renderNews(this.data.news);
+                this.renderRank('LLM');
+                this.shufflePrompts(); // 初始化 12 个提示词
+                
+                window.addEventListener('hashchange', () => this.route());
+                this.route();
+            },
+            route() {
+                const h = location.hash.slice(1) || 'news';
+                if(h.startsWith('detail/')) {
+                    this.renderDetail(h.split('/')[1]);
+                    this.switch('view-detail');
+                } else if(h === 'ranking') {
+                    this.switch('view-ranking');
+                    this.activeNav('nav-rank');
+                    this.lastTab = 'ranking';
+                } else if(h === 'prompts') {
+                    this.switch('view-prompts');
+                    this.activeNav('nav-prompts');
+                    this.lastTab = 'prompts';
+                } else {
+                    this.switch('view-news');
+                    this.activeNav('nav-news');
+                    this.lastTab = 'news';
+                }
+            },
+            nav(t) { location.hash = t; },
+            back() { location.hash = this.lastTab; },
+            switch(id) {
+                document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                window.scrollTo(0,0);
+            },
+            activeNav(id) {
+                document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+            },
+            search(query) {
+                const filtered = this.data.news.filter(i => i.title.toLowerCase().includes(query.toLowerCase()) || i.desc.toLowerCase().includes(query.toLowerCase()));
+                this.renderNews(filtered);
+            },
+            renderNews(items) {
+                document.getElementById('news-grid').innerHTML = items.map(i => `
+                    <div class="news-card ${i.type}" onclick="app.goToDetail('${i.id}')">
+                        <div><span class="tag ${i.type}">${i.type}</span><div class="news-title">${i.title}</div><div class="news-desc">${i.desc}</div></div>
+                        <div class="news-meta"><span>VIA ${i.src}</span><span>${i.time.split(' ')[1]}</span></div>
+                    </div>
+                `).join('');
+            },
+            // === 核心逻辑：随机打乱并显示 12 个提示词 ===
+            shufflePrompts() {
+                const all = [...(this.data.prompts || [])];
+                for (let i = all.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [all[i], all[j]] = [all[j], all[i]];
+                }
+                const selected = all.slice(0, 12); // 取前12个
+                document.getElementById('prompt-grid').innerHTML = selected.map(i => `
+                    <div class="prompt-card">
+                        <div><div class="prompt-header"><span class="prompt-tag">${i.tag}</span></div><div class="prompt-title">${i.title}</div><div class="prompt-desc">${i.desc}</div></div>
+                        <div class="code-block">${i.content}</div>
+                        <button class="copy-btn" onclick="app.copy(this, '${i.content.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">复制代码</button>
+                    </div>
+                `).join('');
+            },
+            copy(btn, text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = btn.innerText;
+                    btn.innerText = "✅ 已复制";
+                    btn.style.borderColor = "#10b981";
+                    setTimeout(() => { btn.innerText = original; btn.style.borderColor = ""; }, 2000);
+                });
+            },
+            goToDetail(id) { location.hash = 'detail/' + id; },
+            switchRank(cat, el) {
+                document.querySelectorAll('.rank-tab').forEach(e => e.classList.remove('active'));
+                el.classList.add('active');
+                this.renderRank(cat);
+            },
+            renderRank(cat) {
+                document.getElementById('rank-list').innerHTML = (this.data.ranks[cat]||[]).map(i => `
+                    <div class="rank-row">
+                        <div class="rank-idx">${i.rank}</div>
+                        <div class="rank-info"><div class="rank-name">${i.name}</div><div class="rank-desc">${i.desc}</div></div>
+                        <a href="${i.url}" target="_blank" class="visit-btn">访问</a>
+                    </div>
+                `).join('');
+            },
+            renderDetail(id) {
+                const item = this.data.news.find(x => String(x.id) === String(id));
+                if(!item) return;
+                document.getElementById('detail-content').innerHTML = `
+                    <div style="font-size:12px; color:var(--text-sub); margin-bottom:15px; text-transform:uppercase;">${item.time} • ${item.src}</div>
+                    <div class="detail-title">${item.title}</div>
+                    <div class="detail-desc">${item.desc}</div>
+                    <a href="${item.url}" target="_blank" class="primary-btn">前往官网查看 ↗</a>
+                `;
+            }
+        };
+        app.init();
+    </script>
+</body>
+</html>
