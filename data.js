@@ -7,7 +7,7 @@ window.AI_DATA = {
       "title": "OpenAI o1 模型预览版上线",
       "desc": "OpenAI 发布的全新 o1 系列模型（原草莓项目），引入了‘思维链’推理技术。这意味着模型在回答问题前会像人类一样进行深思熟虑，从而在复杂的数学、编程和科学推理任务上表现出卓越的能力，准确率大幅超越 GPT-4o。",
       "url": "https://openai.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "1",
@@ -16,7 +16,7 @@ window.AI_DATA = {
       "title": "Llama 3.2 开源多模态模型",
       "desc": "Meta 再次震撼开源界！Llama 3.2 是首个能够同时处理图像和文本的轻量级开源模型。它包含 11B 和 90B 两个版本，甚至还有能在手机端流畅运行的 1B/3B 版本，为边缘计算和移动端 AI 应用开发打开了新的大门。",
       "url": "https://llama.meta.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "2",
@@ -25,7 +25,7 @@ window.AI_DATA = {
       "title": "Claude 3.5 Sonnet 重大更新",
       "desc": "Anthropic 发布了 Claude 3.5 Sonnet 的升级版，这次更新引入了革命性的 'Computer Use' 功能，允许 AI 像人一样控制鼠标和键盘操作电脑。此外，其代码生成能力和逻辑推理速度也得到了进一步优化，是目前开发者首选的编程助手。",
       "url": "https://claude.ai",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "3",
@@ -34,7 +34,7 @@ window.AI_DATA = {
       "title": "Gen-3 Alpha 视频生成全面开放",
       "desc": "好莱坞级别的 AI 视频生成工具 Runway Gen-3 Alpha 现已向公众开放。它支持极其精准的运动控制（Motion Brush）和运镜指令，能够生成长达 10 秒的高清、连贯视频，光影效果和物理规律模拟几乎达到了以假乱真的地步。",
       "url": "https://runwayml.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "4",
@@ -43,7 +43,7 @@ window.AI_DATA = {
       "title": "Cursor 编辑器推出 Composer",
       "desc": "VS Code 的最强竞争对手 Cursor 推出了 'Composer' 功能。它允许用户在一个窗口中同时编辑多个文件，通过自然语言指令重构整个项目的代码结构。这不仅是一个代码补全工具，更像是一个能够理解整个工程架构的 AI 结对程序员。",
       "url": "https://cursor.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "5",
@@ -52,7 +52,7 @@ window.AI_DATA = {
       "title": "Flux.1 Pro 图像模型发布",
       "desc": "由原 Stable Diffusion 核心团队打造的 FLUX.1 横空出世。该模型在文字渲染（Text Rendering）和手指细节处理上完爆了 Midjourney v6。作为目前最强的开源生图模型，它支持本地部署，并且对提示词的语义理解达到了新的高度。",
       "url": "https://blackforestlabs.ai",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "6",
@@ -61,7 +61,7 @@ window.AI_DATA = {
       "title": "NotebookLM 音频概览功能",
       "desc": "Google 的 NotebookLM 增加了一个病毒式传播的功能：Audio Overview。它可以将你上传的任何 PDF、文档或链接，一键转化成一段两名 AI 主持人之间的精彩播客对话。语气自然、充满幽默感，是学习新知识的神器。",
       "url": "https://notebooklm.google.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "7",
@@ -70,7 +70,7 @@ window.AI_DATA = {
       "title": "可灵 AI (Kling) 网页版上线",
       "desc": "快手团队研发的‘可灵’视频生成大模型，被誉为中国版的 Sora。它支持生成长达 2 分钟的视频（需延长），并且在人物动作幅度、吞咽食物等物理模拟上表现惊人。现在网页版已面向全球用户开放，支持图生视频和文生视频。",
       "url": "https://klingai.kuaishou.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "8",
@@ -79,7 +79,7 @@ window.AI_DATA = {
       "title": "Midjourney 网页编辑器公测",
       "desc": "Midjourney 终于摆脱了 Discord！全新的网页版编辑器上线，支持局部重绘（Inpainting）、画布扩展（Outpainting）以及通过拖拽来修改图片构图。这是一个巨大的交互飞跃，让不懂代码的设计师也能轻松使用顶级 AI 绘画。",
       "url": "https://midjourney.com",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     },
     {
       "id": "9",
@@ -88,7 +88,7 @@ window.AI_DATA = {
       "title": "Perplexity Pro 推出深度推理",
       "desc": "AI 搜索引擎 Perplexity 引入了 o1 级别的推理模型。当你询问复杂的学术或分析类问题时，它会进行多步骤的深度搜索和逻辑链推导，最后给出一份引用详实、逻辑严密的专业报告，而非简单的搜索摘要。",
       "url": "https://perplexity.ai",
-      "time": "02-02 10:43"
+      "time": "02-03 10:39"
     }
   ],
   "ranks": {
@@ -98,21 +98,21 @@ window.AI_DATA = {
         "name": "ChatGPT (GPT-4o)",
         "desc": "OpenAI 旗舰，综合能力全球第一，支持实时语音。",
         "url": "https://chat.openai.com",
-        "score": "99.8"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "Claude 3.5 Sonnet",
         "desc": "代码编写与逻辑推理能力最强，UI 优雅。",
         "url": "https://claude.ai",
-        "score": "99.4"
+        "score": "99.3"
       },
       {
         "rank": 3,
         "name": "DeepSeek-V3",
         "desc": "国产开源天花板，数学代码比肩 GPT-4。",
         "url": "https://chat.deepseek.com",
-        "score": "98.9"
+        "score": "99.0"
       },
       {
         "rank": 4,
@@ -133,7 +133,7 @@ window.AI_DATA = {
         "name": "Perplexity",
         "desc": "AI 搜索引擎，直接给出精准答案与引用。",
         "url": "https://perplexity.ai",
-        "score": "97.5"
+        "score": "97.4"
       },
       {
         "rank": 7,
@@ -154,21 +154,21 @@ window.AI_DATA = {
         "name": "Mistral Large",
         "desc": "欧洲最强模型，逻辑严密，适合企业部署。",
         "url": "https://mistral.ai",
-        "score": "95.9"
+        "score": "96.0"
       },
       {
         "rank": 10,
         "name": "Grok-2",
         "desc": "X (推特) 旗下，接入实时社交数据。",
         "url": "https://x.ai",
-        "score": "95.4"
+        "score": "95.5"
       },
       {
         "rank": 11,
         "name": "Doubao",
         "desc": "字节跳动出品，响应极快，语音流畅。",
         "url": "https://www.doubao.com",
-        "score": "94.8"
+        "score": "94.9"
       },
       {
         "rank": 12,
@@ -182,7 +182,7 @@ window.AI_DATA = {
         "name": "Yi-Large",
         "desc": "零一万物出品，全球竞技场前列。",
         "url": "https://lingyiwanwu.com",
-        "score": "94.0"
+        "score": "93.9"
       },
       {
         "rank": 14,
@@ -196,28 +196,28 @@ window.AI_DATA = {
         "name": "Command R+",
         "desc": "专为 RAG (检索增强) 设计的企业模型。",
         "url": "https://cohere.com",
-        "score": "92.9"
+        "score": "92.8"
       },
       {
         "rank": 16,
         "name": "Copilot",
         "desc": "集成于 Office 的办公助手。",
         "url": "https://copilot.microsoft.com",
-        "score": "92.4"
+        "score": "92.3"
       },
       {
         "rank": 17,
         "name": "HuggingChat",
         "desc": "免费使用多种开源模型。",
         "url": "https://huggingface.co/chat",
-        "score": "92.0"
+        "score": "91.9"
       },
       {
         "rank": 18,
         "name": "Poe",
         "desc": "聚合所有主流大模型。",
         "url": "https://poe.com",
-        "score": "91.4"
+        "score": "91.5"
       },
       {
         "rank": 19,
@@ -231,7 +231,7 @@ window.AI_DATA = {
         "name": "Pi",
         "desc": "主打高情商陪伴聊天。",
         "url": "https://pi.ai",
-        "score": "90.3"
+        "score": "90.4"
       }
     ],
     "Image": [
@@ -247,7 +247,7 @@ window.AI_DATA = {
         "name": "Flux.1 Pro",
         "desc": "最强开源生图，手指/文字渲染极佳。",
         "url": "https://blackforestlabs.ai",
-        "score": "99.4"
+        "score": "99.3"
       },
       {
         "rank": 3,
@@ -261,63 +261,63 @@ window.AI_DATA = {
         "name": "DALL·E 3",
         "desc": "语义理解最强，集成于 GPT。",
         "url": "https://openai.com/dall-e-3",
-        "score": "98.3"
+        "score": "98.4"
       },
       {
         "rank": 5,
         "name": "Civitai",
         "desc": "全球最大模型与 LoRA 下载站。",
         "url": "https://civitai.com",
-        "score": "97.9"
+        "score": "98.0"
       },
       {
         "rank": 6,
         "name": "LiblibAI",
         "desc": "国内最大 AI 绘画社区。",
         "url": "https://www.liblib.art",
-        "score": "97.3"
+        "score": "97.4"
       },
       {
         "rank": 7,
         "name": "Leonardo.ai",
         "desc": "专注游戏资产生成。",
         "url": "https://leonardo.ai",
-        "score": "96.8"
+        "score": "96.9"
       },
       {
         "rank": 8,
         "name": "InstantID",
         "desc": "保持人脸一致性最好的项目。",
         "url": "https://github.com/InstantID/InstantID",
-        "score": "96.5"
+        "score": "96.4"
       },
       {
         "rank": 9,
         "name": "Freepik AI",
         "desc": "实时绘图，设计师灵感库。",
         "url": "https://www.freepik.com/ai",
-        "score": "95.9"
+        "score": "95.8"
       },
       {
         "rank": 10,
         "name": "Ideogram 2.0",
         "desc": "图片生成文字效果最好。",
         "url": "https://ideogram.ai",
-        "score": "95.4"
+        "score": "95.3"
       },
       {
         "rank": 11,
         "name": "Krea AI",
         "desc": "实时画布，画哪里生成哪里。",
         "url": "https://krea.ai",
-        "score": "95.0"
+        "score": "94.9"
       },
       {
         "rank": 12,
         "name": "Firefly",
         "desc": "版权合规，适合商业设计。",
         "url": "https://firefly.adobe.com",
-        "score": "94.3"
+        "score": "94.4"
       },
       {
         "rank": 13,
@@ -331,7 +331,7 @@ window.AI_DATA = {
         "name": "Tripo SR",
         "desc": "图片转 3D 模型。",
         "url": "https://www.tripo3d.ai",
-        "score": "93.3"
+        "score": "93.5"
       },
       {
         "rank": 15,
@@ -345,7 +345,7 @@ window.AI_DATA = {
         "name": "SeaArt",
         "desc": "体验接近原生 SD 的在线工具。",
         "url": "https://www.seaart.ai",
-        "score": "92.5"
+        "score": "92.3"
       },
       {
         "rank": 17,
@@ -359,7 +359,7 @@ window.AI_DATA = {
         "name": "Clipdrop",
         "desc": "移除背景/打光工具箱。",
         "url": "https://clipdrop.co",
-        "score": "91.4"
+        "score": "91.3"
       },
       {
         "rank": 19,
@@ -382,7 +382,7 @@ window.AI_DATA = {
         "name": "Runway Gen-3",
         "desc": "视频生成行业标准，运镜控制。",
         "url": "https://runwayml.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
@@ -396,28 +396,28 @@ window.AI_DATA = {
         "name": "Luma Dream",
         "desc": "生成极快，免费额度大方。",
         "url": "https://lumalabs.ai",
-        "score": "99.0"
+        "score": "98.9"
       },
       {
         "rank": 4,
         "name": "Hailuo",
         "desc": "视频动态幅度大，视觉冲击强。",
         "url": "https://hailuoai.com/video",
-        "score": "98.4"
+        "score": "98.5"
       },
       {
         "rank": 5,
         "name": "Vidu",
         "desc": "一键生成，人物一致性好。",
         "url": "https://www.vidu.studio",
-        "score": "98.0"
+        "score": "97.9"
       },
       {
         "rank": 6,
         "name": "Sora",
         "desc": "OpenAI 期货，定义行业上限。",
         "url": "https://openai.com/sora",
-        "score": "97.5"
+        "score": "97.3"
       },
       {
         "rank": 7,
@@ -438,35 +438,35 @@ window.AI_DATA = {
         "name": "Hedra",
         "desc": "专注人物对话，表情细腻。",
         "url": "https://www.hedra.com",
-        "score": "95.9"
+        "score": "96.0"
       },
       {
         "rank": 10,
         "name": "Viggle",
         "desc": "让静态角色跳舞。",
         "url": "https://viggle.ai",
-        "score": "95.4"
+        "score": "95.5"
       },
       {
         "rank": 11,
         "name": "AnimateDiff",
         "desc": "让静态图动起来的 SD 插件。",
         "url": "https://github.com/guoyww/AnimateDiff",
-        "score": "94.8"
+        "score": "95.0"
       },
       {
         "rank": 12,
         "name": "Suno",
         "desc": "音乐生成，顺带生成 MV。",
         "url": "https://suno.com",
-        "score": "94.3"
+        "score": "94.4"
       },
       {
         "rank": 13,
         "name": "Udio",
         "desc": "音质更 Hi-Fi 的音乐 AI。",
         "url": "https://www.udio.com",
-        "score": "93.9"
+        "score": "93.8"
       },
       {
         "rank": 14,
@@ -494,28 +494,28 @@ window.AI_DATA = {
         "name": "Synthesia",
         "desc": "企业级数字人演示。",
         "url": "https://www.synthesia.io",
-        "score": "91.9"
+        "score": "91.8"
       },
       {
         "rank": 18,
         "name": "Descript",
         "desc": "像编辑文档一样编辑视频。",
         "url": "https://www.descript.com",
-        "score": "91.4"
+        "score": "91.5"
       },
       {
         "rank": 19,
         "name": "OpusClip",
         "desc": "长视频自动剪辑成短视频。",
         "url": "https://www.opus.pro",
-        "score": "91.0"
+        "score": "90.8"
       },
       {
         "rank": 20,
         "name": "Kaiber",
         "desc": "风格化视频转绘。",
         "url": "https://kaiber.ai",
-        "score": "90.4"
+        "score": "90.3"
       }
     ],
     "Dev": [
@@ -524,14 +524,14 @@ window.AI_DATA = {
         "name": "Cursor",
         "desc": "AI 原生编辑器，全库理解。",
         "url": "https://cursor.com",
-        "score": "100.0"
+        "score": "99.9"
       },
       {
         "rank": 2,
         "name": "GitHub Copilot",
         "desc": "开发者必备代码补全。",
         "url": "https://github.com/features/copilot",
-        "score": "99.5"
+        "score": "99.3"
       },
       {
         "rank": 3,
@@ -545,7 +545,7 @@ window.AI_DATA = {
         "name": "Replit",
         "desc": "全自动构建 Web 应用。",
         "url": "https://replit.com",
-        "score": "98.3"
+        "score": "98.5"
       },
       {
         "rank": 5,
@@ -559,28 +559,28 @@ window.AI_DATA = {
         "name": "LangChain",
         "desc": "LLM 应用开发框架。",
         "url": "https://www.langchain.com",
-        "score": "97.5"
+        "score": "97.3"
       },
       {
         "rank": 7,
         "name": "Ollama",
         "desc": "本地运行大模型工具。",
         "url": "https://ollama.com",
-        "score": "96.8"
+        "score": "97.0"
       },
       {
         "rank": 8,
         "name": "Supermaven",
         "desc": "超长记忆代码补全，速度快。",
         "url": "https://supermaven.com",
-        "score": "96.3"
+        "score": "96.4"
       },
       {
         "rank": 9,
         "name": "Codeium",
         "desc": "免费强大的代码补全。",
         "url": "https://codeium.com",
-        "score": "95.9"
+        "score": "95.8"
       },
       {
         "rank": 10,
@@ -594,14 +594,14 @@ window.AI_DATA = {
         "name": "Gradio",
         "desc": "Python 构建 AI 演示界面。",
         "url": "https://www.gradio.app",
-        "score": "95.0"
+        "score": "94.8"
       },
       {
         "rank": 12,
         "name": "Streamlit",
         "desc": "数据仪表盘开发框架。",
         "url": "https://streamlit.io",
-        "score": "94.3"
+        "score": "94.4"
       },
       {
         "rank": 13,
@@ -615,28 +615,28 @@ window.AI_DATA = {
         "name": "Coze",
         "desc": "零代码 AI Bot 搭建。",
         "url": "https://www.coze.com",
-        "score": "93.3"
+        "score": "93.5"
       },
       {
         "rank": 15,
         "name": "Pinecone",
         "desc": "AI 向量数据库。",
         "url": "https://www.pinecone.io",
-        "score": "92.9"
+        "score": "92.8"
       },
       {
         "rank": 16,
         "name": "Vercel",
         "desc": "前端托管，支持 AI 应用。",
         "url": "https://vercel.com",
-        "score": "92.3"
+        "score": "92.4"
       },
       {
         "rank": 17,
         "name": "Tabnine",
         "desc": "私有化代码补全。",
         "url": "https://www.tabnine.com",
-        "score": "92.0"
+        "score": "91.9"
       },
       {
         "rank": 18,
@@ -650,7 +650,7 @@ window.AI_DATA = {
         "name": "W&B",
         "desc": "模型训练监控平台。",
         "url": "https://wandb.ai",
-        "score": "90.9"
+        "score": "91.0"
       },
       {
         "rank": 20,
